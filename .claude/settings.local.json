@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter pub get:*)",
+      "Bash(flutter build:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(test:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(find:*)",
+      "Bash(dart analyze:*)",
+      "Bash(dir:*)",
+      "Bash(nul)",
+      "Bash(cmd /c copy \"e:\\_VC\\acs\\lib\\theme\\custom_colors.dart\" \"e:\\_VC\\unseen\\unseen\\lib\\theme\\custom_colors.dart\" /Y)",
+      "Bash(cmd /c copy \"e:\\_VC\\acs\\lib\\theme\\app_theme.dart\" \"e:\\_VC\\unseen\\unseen\\lib\\theme\\app_theme.dart\" /Y)",
+      "Bash(cmd /c copy \"e:\\_VC\\acs\\lib\\theme\\theme_extensions_v2.dart\" \"e:\\_VC\\unseen\\unseen\\lib\\theme\\theme_extensions_v2.dart\" /Y)",
+      "Bash(cmd /c copy:*)",
+      "Bash(git ls-tree:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

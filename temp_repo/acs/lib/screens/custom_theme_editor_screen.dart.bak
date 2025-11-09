@@ -1,0 +1,1028 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
+import '../theme/theme_extensions_v2.dart';
+import '../theme/custom_colors.dart';
+import '../models/custom_theme_data.dart';
+import '../providers/theme_provider_v2.dart';
+import '../widgets/theme_editor/color_picker_tile.dart';
+import '../widgets/theme_editor/wysiwyg_color_preview.dart';
+import '../widgets/animated/animated_button.dart' as btn;
+import '../l10n/app_localizations.dart';
+
+/// Экран создания/редактирования кастомной темы
+class CustomThemeEditorScreen extends StatefulWidget {
+  /// ID темы для редактирования (null для создания новой)
+  final String? themeId;
+
+  const CustomThemeEditorScreen({super.key, this.themeId});
+
+  @override
+  State<CustomThemeEditorScreen> createState() =>
+      _CustomThemeEditorScreenState();
+}
+
+class _CustomThemeEditorScreenState extends State<CustomThemeEditorScreen> {
+  late TextEditingController _nameController;
+  late CustomColors _editingColors;
+  late bool _isDark;
+  AppThemeType? _baseTheme;
+  bool _isLoading = false;
+  bool _hasChanges = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeEditor();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  /// Инициализация редактора
+  void _initializeEditor() {
+    final themeProvider = Provider.of<ThemeProviderV2>(context, listen: false);
+
+    if (widget.themeId != null) {
+      // Редактирование существующей темы
+      final existingTheme = themeProvider.customThemes.firstWhere(
+        (t) => t.id == widget.themeId,
+        orElse: () => throw Exception('Theme not found'),
+      );
+      _nameController = TextEditingController(text: existingTheme.name);
+      _editingColors = existingTheme.colors;
+      _isDark = existingTheme.isDark;
+      // Определяем базовую тему из basedOn или используем текущую
+      _baseTheme = existingTheme.basedOn != null
+          ? _parseThemeType(existingTheme.basedOn!)
+          : themeProvider.currentTheme;
+    } else {
+      // Создание новой темы - базовая тема не выбрана
+      _nameController = TextEditingController(text: 'My Custom Theme');
+      _editingColors = CustomColors.fromAppColors(themeProvider.currentColors);
+      _isDark = themeProvider.isDarkTheme;
+      _baseTheme = null; // Пользователь должен выбрать базовую тему
+    }
+  }
+
+  /// Парсинг строки в AppThemeType
+  AppThemeType _parseThemeType(String themeString) {
+    try {
+      return AppThemeType.values.firstWhere(
+        (t) => t.name.toLowerCase() == themeString.toLowerCase(),
+      );
+    } catch (e) {
+      return AppThemeType.light;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      backgroundColor: context.colors.background,
+      body: Stack(
+        children: [
+          // Main WYSIWYG Preview (fills entire screen)
+          Column(
+            children: [
+              // WYSIWYG Preview with fake AppBar
+              Expanded(
+                child: SingleChildScrollView(
+                  child: WysiwygColorPreview(
+                    colors: _editingColors,
+                    onColorsChanged: (newColors) {
+                      setState(() {
+                        _editingColors = newColors;
+                        _markAsChanged();
+                      });
+                      // Применяем изменения к интерфейсу
+                      final themeProvider = Provider.of<ThemeProviderV2>(context, listen: false);
+                      themeProvider.setTheme(themeProvider.currentTheme);
+                    },
+                  ),
+                ),
+              ),
+
+              // Settings panel at bottom
+              _buildSettingsPanel(l10n),
+            ],
+          ),
+
+          // Loading overlay
+          if (_isLoading)
+            Container(
+              color: Colors.black.withValues(alpha: 0.5),
+              child: const Center(child: CircularProgressIndicator()),
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// Панель настроек внизу экрана
+  Widget _buildSettingsPanel(AppLocalizations l10n) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        boxShadow: [
+          BoxShadow(
+            color: context.colors.shadowColor.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Theme name + mode toggle
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      hintText: 'Theme name',
+                      filled: true,
+                      fillColor: context.colors.background,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppTheme.radiusStandard),
+                        borderSide: BorderSide(
+                          color: context.colors.onSurface.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppTheme.radiusStandard),
+                        borderSide: BorderSide(
+                          color: context.colors.onSurface.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppTheme.radiusStandard),
+                        borderSide: BorderSide(
+                          color: context.colors.primary,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    style: TextStyle(color: context.colors.onSurface),
+                    onChanged: (_) => _markAsChanged(),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: () => _handleModeChange(!_isDark),
+                  icon: Icon(
+                    _isDark ? Icons.light_mode : Icons.dark_mode,
+                    color: context.colors.onSurface,
+                  ),
+                  tooltip: _isDark ? l10n.lightMode : 'Dark',
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Based on dropdown + reset
+            Row(
+              children: [
+                Expanded(
+                  child: _buildBasedOnDropdown(l10n),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: _handleResetToBaseTheme,
+                  icon: Icon(Icons.refresh, color: context.colors.onSurface),
+                  tooltip: l10n.resetToBaseTheme,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Save and Back buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => _handleBack(),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      side: BorderSide(color: context.colors.onSurface),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppTheme.radiusStandard),
+                      ),
+                    ),
+                    child: Text(
+                      'Back',
+                      style: AppTheme.body.copyWith(color: context.colors.onSurface),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _handleSave,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      backgroundColor: context.colors.primary,
+                      foregroundColor: context.colors.onPrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppTheme.radiusStandard),
+                      ),
+                    ),
+                    child: Text(
+                      l10n.save,
+                      style: AppTheme.body.copyWith(
+                        color: context.colors.onPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Based on dropdown (extracted for reuse)
+  Widget _buildBasedOnDropdown(AppLocalizations l10n) {
+    final List<AppThemeType> availableThemes = AppThemeType.values
+        .where(
+          (theme) =>
+              !theme.name.startsWith('dark') && theme != AppThemeType.dark,
+        )
+        .toList();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.background,
+        borderRadius: BorderRadius.circular(AppTheme.radiusStandard),
+        border: Border.all(
+          color: context.colors.onSurface.withValues(alpha: 0.2),
+        ),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<AppThemeType>(
+          value: _baseTheme,
+          hint: Text(
+            l10n.basedOn,
+            style: TextStyle(color: context.colors.onSurface.withValues(alpha: 0.5)),
+          ),
+          isExpanded: true,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          dropdownColor: context.colors.surface,
+          style: TextStyle(color: context.colors.onSurface),
+          items: availableThemes.map((theme) {
+            return DropdownMenuItem<AppThemeType>(
+              value: theme,
+              child: Text(_getThemeDisplayName(theme, l10n)),
+            );
+          }).toList(),
+          onChanged: (AppThemeType? newTheme) {
+            if (newTheme != null) {
+              final themeProvider = Provider.of<ThemeProviderV2>(
+                context,
+                listen: false,
+              );
+
+              AppThemeType targetTheme = newTheme;
+              if (_isDark) {
+                targetTheme = _getDarkVariant(newTheme);
+              }
+
+              themeProvider.setTheme(targetTheme);
+
+              setState(() {
+                _baseTheme = newTheme;
+                _editingColors = CustomColors.fromAppColors(
+                  themeProvider.currentColors,
+                );
+                _markAsChanged();
+              });
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Секция "Based on" dropdown
+  Widget _buildBasedOnSection(AppLocalizations l10n) {
+    // Получаем список светлых тем (без темных вариантов)
+    final List<AppThemeType> availableThemes = AppThemeType.values
+        .where(
+          (theme) =>
+              !theme.name.startsWith('dark') && theme != AppThemeType.dark,
+        )
+        .toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.basedOn,
+          style: AppTheme.h4.copyWith(color: context.colors.onBackground),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            // Дропдаун выбора темы
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: context.colors.surface,
+                  borderRadius: BorderRadius.circular(AppTheme.radiusStandard),
+                  border: Border.all(
+                    color: context.colors.onBackground.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: ButtonTheme(
+                    alignedDropdown: true,
+                    child: DropdownButton<AppThemeType>(
+                      value: _baseTheme,
+                      hint: Text(
+                        'Select base theme',
+                        style: TextStyle(color: context.colors.onBackground.withValues(alpha: 0.5)),
+                      ),
+                      isExpanded: true,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
+                      dropdownColor: context.colors.surface,
+                      style: TextStyle(color: context.colors.onBackground),
+                      items: availableThemes.map((theme) {
+                        return DropdownMenuItem<AppThemeType>(
+                          value: theme,
+                          child: SizedBox(
+                            width: 200, // Ограничиваем ширину элемента в списке
+                            child: Text(_getThemeDisplayName(theme, l10n)),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (AppThemeType? newTheme) {
+                        if (newTheme != null) {
+                          final themeProvider = Provider.of<ThemeProviderV2>(
+                            context,
+                            listen: false,
+                          );
+
+                          // Определяем какую тему применить (с учетом режима Dark/Light)
+                          AppThemeType targetTheme = newTheme;
+                          if (_isDark) {
+                            targetTheme = _getDarkVariant(newTheme);
+                          }
+
+                          // Применяем тему для preview интерфейса
+                          themeProvider.setTheme(targetTheme);
+
+                          // Обновляем цвета в редакторе (для color pickers и preview)
+                          setState(() {
+                            _baseTheme = newTheme;
+                            _editingColors = CustomColors.fromAppColors(
+                              themeProvider.currentColors,
+                            );
+                            _markAsChanged();
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Кнопка сброса цветов
+            IconButton(
+              onPressed: _handleResetToBaseTheme,
+              icon: Icon(
+                Icons.refresh,
+                color: context.colors.onBackground,
+                size: 24,
+              ),
+              tooltip: l10n.resetToBaseTheme,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Секция с кнопками действий (AI Generation)
+  Widget _buildActionButtonsSection(AppLocalizations l10n) {
+    return Row(
+      children: [
+        Expanded(
+          child: btn.AnimatedButton(
+            buttonType: btn.ButtonType.elevated,
+            animationStyle: btn.AnimationStyle.scale,
+            backgroundColor: context.colors.primary.withValues(alpha: 0.15),
+            foregroundColor: context.colors.primary,
+            borderRadius: BorderRadius.circular(AppTheme.radiusStandard),
+            onPressed: _handleGenerateWithAI,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.auto_awesome, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.generateWithAI,
+                  style: AppTheme.buttonText.copyWith(
+                    color: context.colors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Секция с названием темы и переключателем режима
+  Widget _buildThemeNameSection(AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Theme Name',
+          style: AppTheme.h4.copyWith(color: context.colors.onBackground),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            // Поле для имени темы
+            Expanded(
+              child: TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  hintText: 'Enter theme name',
+                  filled: true,
+                  fillColor: context.colors.surface,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppTheme.radiusStandard,
+                    ),
+                    borderSide: BorderSide(
+                      color: context.colors.onBackground.withValues(alpha: 0.2),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppTheme.radiusStandard,
+                    ),
+                    borderSide: BorderSide(
+                      color: context.colors.onBackground.withValues(alpha: 0.2),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppTheme.radiusStandard,
+                    ),
+                    borderSide: BorderSide(
+                      color: context.colors.primary,
+                      width: 2,
+                    ),
+                  ),
+                ),
+                style: TextStyle(color: context.colors.onBackground),
+                onChanged: (_) => _markAsChanged(),
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Переключатель режима в виде иконки
+            IconButton(
+              onPressed: () {
+                _handleModeChange(!_isDark);
+              },
+              icon: Icon(
+                _isDark ? Icons.light_mode : Icons.dark_mode,
+                color: context.colors.onBackground,
+                size: 24,
+              ),
+              tooltip: _isDark ? l10n.lightTheme : l10n.darkTheme,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Секция превью
+  Widget _buildPreviewSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Preview',
+          style: AppTheme.h4.copyWith(color: context.colors.onBackground),
+        ),
+        const SizedBox(height: 12),
+        WysiwygColorPreview(
+          colors: _editingColors,
+          onColorsChanged: (newColors) {
+            setState(() {
+              _editingColors = newColors;
+              _markAsChanged();
+            });
+            // Применяем изменения к интерфейсу
+            final themeProvider = Provider.of<ThemeProviderV2>(context, listen: false);
+            themeProvider.setTheme(themeProvider.currentTheme);
+          },
+        ),
+      ],
+    );
+  }
+
+  /// Секция выбора цветов
+  Widget _buildColorPickersSection(AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Colors',
+          style: AppTheme.h4.copyWith(color: context.colors.onBackground),
+        ),
+        const SizedBox(height: 16),
+
+        // Primary Colors
+        _buildColorGroup('Primary Colors', 'Main accent colors', [
+          _buildColorPicker(
+            'Primary',
+            'Main brand color',
+            _editingColors.primary,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(primary: color)),
+          ),
+          _buildColorPicker(
+            'Primary Light',
+            'Lighter shade for gradients',
+            _editingColors.primaryLight,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(primaryLight: color)),
+          ),
+          _buildColorPicker(
+            'Primary Pale',
+            'Palest shade for gradients',
+            _editingColors.primaryPale,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(primaryPale: color)),
+          ),
+          _buildColorPicker(
+            'Primary Dark',
+            'Darker shade',
+            _editingColors.primaryDark,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(primaryDark: color)),
+          ),
+        ]),
+        const SizedBox(height: 24),
+
+        // Secondary Colors
+        _buildColorGroup('Secondary Colors', 'Supporting colors', [
+          _buildColorPicker(
+            'Secondary',
+            'Secondary brand color',
+            _editingColors.secondary,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(secondary: color)),
+          ),
+          _buildColorPicker(
+            'Secondary Dark',
+            'Darker secondary',
+            _editingColors.secondaryDark,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(secondaryDark: color)),
+          ),
+        ]),
+        const SizedBox(height: 24),
+
+        // Neutral Colors
+        _buildColorGroup('Neutral Colors', 'Gray tones', [
+          _buildColorPicker(
+            'Neutral',
+            'For borders and disabled states',
+            _editingColors.neutral,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(neutral: color)),
+          ),
+        ]),
+        const SizedBox(height: 24),
+
+        // Background Colors
+        _buildColorGroup('Background Colors', 'Surfaces and backgrounds', [
+          _buildColorPicker(
+            'Background',
+            'Main background',
+            _editingColors.background,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(background: color)),
+          ),
+          _buildColorPicker(
+            'Surface',
+            'Card/surface background',
+            _editingColors.surface,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(surface: color)),
+          ),
+        ]),
+        const SizedBox(height: 24),
+
+        // Text Colors
+        _buildColorGroup('Text Colors', 'Text on various backgrounds', [
+          _buildColorPicker(
+            'On Background',
+            'Text on background',
+            _editingColors.onBackground,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(onBackground: color)),
+          ),
+          _buildColorPicker(
+            'On Surface',
+            'Text on surface',
+            _editingColors.onSurface,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(onSurface: color)),
+          ),
+        ]),
+        const SizedBox(height: 24),
+
+        // Semantic Colors
+        _buildColorGroup('Semantic Colors', 'Status and feedback colors', [
+          _buildColorPicker(
+            'Success',
+            'For success messages',
+            _editingColors.success,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(success: color)),
+          ),
+          _buildColorPicker(
+            'Warning',
+            'For warnings',
+            _editingColors.warning,
+            (color) =>
+                _updateColor((colors) => colors.copyWith(warning: color)),
+          ),
+          _buildColorPicker(
+            'Error',
+            'For errors',
+            _editingColors.error,
+            (color) => _updateColor((colors) => colors.copyWith(error: color)),
+          ),
+          _buildColorPicker(
+            'Info',
+            'For informational messages',
+            _editingColors.info,
+            (color) => _updateColor((colors) => colors.copyWith(info: color)),
+          ),
+        ]),
+      ],
+    );
+  }
+
+  /// Группа цветов с заголовком
+  Widget _buildColorGroup(
+    String title,
+    String description,
+    List<Widget> pickers,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: AppTheme.bodyLarge.copyWith(
+            color: context.colors.onBackground,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          description,
+          style: AppTheme.bodySmall.copyWith(color: context.colors.onSecondary),
+        ),
+        const SizedBox(height: 12),
+        ...pickers.map(
+          (picker) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: picker,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Создать ColorPickerTile
+  Widget _buildColorPicker(
+    String label,
+    String description,
+    Color color,
+    ValueChanged<Color> onChanged,
+  ) {
+    return ColorPickerTile(
+      label: label,
+      description: description,
+      color: color,
+      onColorChanged: onChanged,
+    );
+  }
+
+  /// Кнопка сохранения
+  Widget _buildSaveButton(AppLocalizations l10n) {
+    return btn.AnimatedButton(
+      buttonType: btn.ButtonType.elevated,
+      animationStyle: btn.AnimationStyle.scale,
+      backgroundColor: context.colors.primary,
+      foregroundColor: context.colors.isDark
+          ? context.colors.secondaryDark
+          : Colors.white,
+      borderRadius: BorderRadius.circular(AppTheme.radiusStandard),
+      onPressed: _isLoading ? null : _handleSave,
+      child: SizedBox(
+        height: 50,
+        child: Center(
+          child: Text(
+            'Save Theme',
+            style: AppTheme.buttonText.copyWith(
+              color: context.colors.isDark
+                  ? context.colors.secondaryDark
+                  : Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Обновить цвет
+  void _updateColor(CustomColors Function(CustomColors) updater) {
+    setState(() {
+      _editingColors = updater(_editingColors);
+      _markAsChanged();
+    });
+  }
+
+  /// Отметить что были изменения
+  void _markAsChanged() {
+    if (!_hasChanges) {
+      setState(() {
+        _hasChanges = true;
+      });
+    }
+  }
+
+  /// Сохранить тему
+  Future<void> _handleSave() async {
+    final name = _nameController.text.trim();
+
+    if (name.isEmpty) {
+      _showError('Please enter a theme name');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final themeProvider = Provider.of<ThemeProviderV2>(
+        context,
+        listen: false,
+      );
+
+      CustomThemeData theme;
+
+      if (widget.themeId != null) {
+        // Обновление существующей темы
+        final existing = themeProvider.customThemes.firstWhere(
+          (t) => t.id == widget.themeId,
+        );
+        theme = existing.copyWith(
+          name: name,
+          colors: _editingColors,
+          isDark: _isDark,
+          basedOn: _baseTheme?.name,
+        );
+        await themeProvider.updateCustomTheme(theme);
+      } else {
+        // Создание новой темы
+        theme = CustomThemeData.create(
+          name: name,
+          colors: _editingColors,
+          isDark: _isDark,
+          basedOn: _baseTheme?.name,
+        );
+
+        final canAdd = await themeProvider.canAddMoreThemes();
+        if (!canAdd) {
+          _showError('Maximum of 10 custom themes reached');
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+
+        await themeProvider.addCustomTheme(theme);
+      }
+
+      // Применить созданную/обновленную тему
+      await themeProvider.setCustomTheme(theme);
+
+      if (!mounted) return;
+
+      // Вернуться назад
+      context.pop();
+    } catch (e) {
+      _showError('Error saving theme: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  /// Обработка кнопки назад
+  void _handleBack() {
+    if (_hasChanges) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Discard changes?'),
+          content: const Text(
+            'You have unsaved changes. Are you sure you want to leave?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                context.pop();
+              },
+              child: const Text('Discard'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      context.pop();
+    }
+  }
+
+  /// Обработка смены режима Light/Dark
+  void _handleModeChange(bool isDark) {
+    // Если базовая тема не выбрана, только меняем флаг
+    if (_baseTheme == null) {
+      setState(() {
+        _isDark = isDark;
+        _markAsChanged();
+      });
+      return;
+    }
+
+    final themeProvider = Provider.of<ThemeProviderV2>(context, listen: false);
+
+    // Определяем какую тему применить
+    AppThemeType targetTheme = _baseTheme!;
+    if (isDark) {
+      // Переключили на Dark
+      targetTheme = _getDarkVariant(_baseTheme!);
+    }
+
+    // Применяем тему для preview интерфейса
+    themeProvider.setTheme(targetTheme);
+
+    // Обновляем цвета в редакторе (для color pickers и preview)
+    setState(() {
+      _isDark = isDark;
+      _editingColors = CustomColors.fromAppColors(themeProvider.currentColors);
+      _markAsChanged();
+    });
+  }
+
+  /// Обработка генерации с AI (заглушка)
+  void _handleGenerateWithAI() {
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.aiGenerationComingSoon),
+        backgroundColor: context.colors.info,
+      ),
+    );
+  }
+
+  /// Обработка сброса к базовой теме
+  void _handleResetToBaseTheme() {
+    // Если базовая тема не выбрана, показываем ошибку
+    if (_baseTheme == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select a base theme first'),
+          backgroundColor: context.colors.error,
+        ),
+      );
+      return;
+    }
+
+    final themeProvider = Provider.of<ThemeProviderV2>(context, listen: false);
+
+    // Определяем какую тему загружать (светлую или темную версию)
+    AppThemeType targetTheme = _baseTheme!;
+    if (_isDark) {
+      targetTheme = _getDarkVariant(_baseTheme!);
+    }
+
+    // Применяем тему временно чтобы получить её цвета
+    final previousTheme = themeProvider.currentTheme;
+    themeProvider.setTheme(targetTheme);
+
+    setState(() {
+      _editingColors = CustomColors.fromAppColors(themeProvider.currentColors);
+      _markAsChanged();
+    });
+
+    // Восстанавливаем предыдущую тему
+    themeProvider.setTheme(previousTheme);
+
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          l10n.colorsResetTo(_getThemeDisplayName(targetTheme, l10n)),
+        ),
+        backgroundColor: context.colors.success,
+      ),
+    );
+  }
+
+  /// Получить темную версию светлой темы
+  AppThemeType _getDarkVariant(AppThemeType lightTheme) {
+    switch (lightTheme) {
+      case AppThemeType.light:
+        return AppThemeType.dark;
+      case AppThemeType.ocean:
+        return AppThemeType.darkOcean;
+      case AppThemeType.forest:
+        return AppThemeType.darkForest;
+      case AppThemeType.sunset:
+        return AppThemeType.darkSunset;
+      case AppThemeType.sunny:
+        return AppThemeType.darkSunny;
+      case AppThemeType.vibrant:
+        return AppThemeType.darkVibrant;
+      default:
+        return AppThemeType.dark;
+    }
+  }
+
+  /// Получить отображаемое имя темы
+  String _getThemeDisplayName(AppThemeType theme, AppLocalizations l10n) {
+    switch (theme) {
+      case AppThemeType.light:
+        return l10n.lightTheme;
+      case AppThemeType.dark:
+        return l10n.darkTheme;
+      case AppThemeType.ocean:
+        return l10n.oceanTheme;
+      case AppThemeType.darkOcean:
+        return 'Dark Ocean';
+      case AppThemeType.forest:
+        return l10n.forestTheme;
+      case AppThemeType.darkForest:
+        return 'Dark Forest';
+      case AppThemeType.sunset:
+        return l10n.sunsetTheme;
+      case AppThemeType.darkSunset:
+        return 'Dark Sunset';
+      case AppThemeType.sunny:
+        return l10n.sunnyTheme;
+      case AppThemeType.darkSunny:
+        return 'Dark Sunny';
+      case AppThemeType.vibrant:
+        return l10n.vibrantTheme;
+      case AppThemeType.darkVibrant:
+        return 'Dark Vibrant';
+    }
+  }
+
+  /// Показать ошибку
+  void _showError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: context.colors.error),
+    );
+  }
+}
