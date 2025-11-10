@@ -680,72 +680,62 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
         color: context.colors.surface,
         borderRadius: BorderRadius.circular(AppDimensions.radius12),
       ),
-      child: Row(
-        children: [
-          // Cancel button
-          SizedBox(
-            width: 40,
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
-              onPressed: _isSubmitting
-                  ? null
-                  : () {
-                      setState(() {
-                        _showAddOption = false;
-                        _customOptionController.clear();
-                      });
-                    },
-              icon: Icon(
-                Icons.close,
-                size: 20,
-                color: _isSubmitting
-                    ? context.colors.onSecondary.withValues(alpha: 0.3)
-                    : context.colors.onSecondary,
-              ),
+      child: TextField(
+        controller: _customOptionController,
+        enabled: !_isSubmitting,
+        decoration: InputDecoration(
+          hintText: l10n.enterYourOption,
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: AppDimensions.space12,
+            vertical: AppDimensions.space12,
+          ),
+          // Cancel button as prefix
+          prefixIcon: IconButton(
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+            onPressed: _isSubmitting
+                ? null
+                : () {
+                    setState(() {
+                      _showAddOption = false;
+                      _customOptionController.clear();
+                    });
+                  },
+            icon: Icon(
+              Icons.close,
+              size: 20,
+              color: _isSubmitting
+                  ? context.colors.onSecondary.withValues(alpha: 0.3)
+                  : context.colors.onSecondary,
             ),
           ),
-          // TextField
-          Expanded(
-            child: TextField(
-              controller: _customOptionController,
-              enabled: !_isSubmitting,
-              decoration: InputDecoration(
-                hintText: l10n.enterYourOption,
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: AppDimensions.space8,
-                  vertical: AppDimensions.space12,
-                ),
-              ),
-              maxLength: 100,
-              buildCounter: (context, {required currentLength, required isFocused, maxLength}) => null,
-            ),
-          ),
-          // Accept button
-          SizedBox(
-            width: 40,
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
-              onPressed: _isSubmitting ? null : _addCustomOption,
-              icon: _isSubmitting
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: context.colors.primary,
-                      ),
-                    )
-                  : Icon(
-                      Icons.check,
-                      size: 20,
+          // Accept button as suffix
+          suffixIcon: _isSubmitting
+              ? Padding(
+                  padding: EdgeInsets.all(AppDimensions.space12),
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
                       color: context.colors.primary,
                     ),
-            ),
-          ),
-        ],
+                  ),
+                )
+              : IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                  onPressed: _addCustomOption,
+                  icon: Icon(
+                    Icons.check,
+                    size: 20,
+                    color: context.colors.primary,
+                  ),
+                ),
+        ),
+        maxLength: 100,
+        buildCounter: (context, {required currentLength, required isFocused, maxLength}) => null,
       ),
     );
   }
