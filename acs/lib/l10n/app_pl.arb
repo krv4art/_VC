@@ -438,7 +438,6 @@
   },
   "pollTitle": "Czego brakuje?",
   "pollCardTitle": "Czego brakuje w aplikacji?",
-  "pollCardSubtitle": "Które 3 funkcje powinny zostać dodane?",
   "pollDescription": "Głosuj na opcje, które chcesz zobaczyć",
   "submitVote": "Głosuj",
   "submitting": "Wysyłanie...",

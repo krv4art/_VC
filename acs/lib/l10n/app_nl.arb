@@ -438,7 +438,6 @@
   },
   "pollTitle": "Wat ontbreekt er?",
   "pollCardTitle": "Wat ontbreekt er in de app?",
-  "pollCardSubtitle": "Welke 3 functies moeten worden toegevoegd?",
   "pollDescription": "Stem op de opties die u wilt zien",
   "submitVote": "Stemmen",
   "submitting": "Verzenden...",

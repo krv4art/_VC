@@ -416,7 +416,6 @@
   },
   "pollTitle": "Qu'est-ce qui manque?",
   "pollCardTitle": "Qu'est-ce qui manque dans l'application?",
-  "pollCardSubtitle": "Quelles 3 fonctionnalités devraient être ajoutées?",
   "pollDescription": "Votez pour les options que vous souhaitez voir",
   "submitVote": "Voter",
   "submitting": "Envoi en cours...",
