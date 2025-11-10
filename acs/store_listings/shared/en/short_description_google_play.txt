@@ -1,1 +1,1 @@
-AI cosmetic scanner: analyze ingredients, check safety, find toxic components
+AI cosmetic scanner: analyze ingredients, check safety, detect toxins

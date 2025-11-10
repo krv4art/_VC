@@ -57,10 +57,26 @@ class _LanguageScreenState extends State<LanguageScreen>
       {'code': 'el', 'flag': '🇬🇷'},
       {'code': 'en', 'flag': '🇺🇸'},
       {'code': 'es', 'flag': '🇪🇸'},
+      {'code': 'fi', 'flag': '🇫🇮'},
       {'code': 'fr', 'flag': '🇫🇷'},
+      {'code': 'hi', 'flag': '🇮🇳'},
+      {'code': 'hu', 'flag': '🇭🇺'},
+      {'code': 'id', 'flag': '🇮🇩'},
       {'code': 'it', 'flag': '🇮🇹'},
+      {'code': 'ja', 'flag': '🇯🇵'},
+      {'code': 'ko', 'flag': '🇰🇷'},
+      {'code': 'nl', 'flag': '🇳🇱'},
+      {'code': 'no', 'flag': '🇳🇴'},
+      {'code': 'pl', 'flag': '🇵🇱'},
+      {'code': 'pt', 'flag': '🇵🇹'},
+      {'code': 'ro', 'flag': '🇷🇴'},
       {'code': 'ru', 'flag': '🇷🇺'},
+      {'code': 'sv', 'flag': '🇸🇪'},
+      {'code': 'th', 'flag': '🇹🇭'},
+      {'code': 'tr', 'flag': '🇹🇷'},
       {'code': 'uk', 'flag': '🇺🇦'},
+      {'code': 'vi', 'flag': '🇻🇳'},
+      {'code': 'zh', 'flag': '🇨🇳'},
     ];
 
     final List<Map<String, String>> sortedLanguages = [];
@@ -86,13 +102,13 @@ class _LanguageScreenState extends State<LanguageScreen>
   void _initializeAnimations() {
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 1800),
     );
 
     // Create staggered animations for language cards
-    // With 12 elements (11 languages + 1 button), each starting at 0.06 intervals
-    _animations = List.generate(12, (index) {
-      final startTime = index * 0.06; // 36ms delay between elements
+    // With 28 elements (27 languages + 1 button), each starting at 0.04 intervals
+    _animations = List.generate(28, (index) {
+      final startTime = index * 0.04; // 24ms delay between elements
       final endTime = (startTime + 0.35).clamp(
         0.0,
         1.0,
@@ -146,16 +162,115 @@ class _LanguageScreenState extends State<LanguageScreen>
           return l10n.language_en;
         case 'es':
           return l10n.language_es;
+        case 'fi':
+          return l10n.language_fi;
         case 'fr':
           return l10n.language_fr;
+        case 'hi':
+          return l10n.language_hi;
+        case 'hu':
+          return l10n.language_hu;
+        case 'id':
+          return l10n.language_id;
         case 'it':
           return l10n.language_it;
+        case 'ja':
+          return l10n.language_ja;
+        case 'ko':
+          return l10n.language_ko;
+        case 'nl':
+          return l10n.language_nl;
+        case 'no':
+          return l10n.language_no;
+        case 'pl':
+          return l10n.language_pl;
+        case 'pt':
+          return l10n.language_pt;
+        case 'ro':
+          return l10n.language_ro;
         case 'ru':
           return l10n.language_ru;
+        case 'sv':
+          return l10n.language_sv;
+        case 'th':
+          return l10n.language_th;
+        case 'tr':
+          return l10n.language_tr;
         case 'uk':
           return l10n.language_uk;
+        case 'vi':
+          return l10n.language_vi;
+        case 'zh':
+          return l10n.language_zh;
         default:
           return code;
+      }
+    }
+
+    String getSaveButtonText() {
+      // Get the 'save' text in the language of the selected locale
+      if (_selectedLocale == null) {
+        return l10n.save;
+      }
+
+      final selectedLanguageCode = _selectedLocale!.languageCode;
+      switch (selectedLanguageCode) {
+        case 'ar':
+          return 'حفظ';
+        case 'cs':
+          return 'Uložit';
+        case 'da':
+          return 'Gem';
+        case 'de':
+          return 'Speichern';
+        case 'el':
+          return 'Αποθήκευση';
+        case 'en':
+          return 'Save';
+        case 'es':
+          return 'Guardar';
+        case 'fi':
+          return 'Tallenna';
+        case 'fr':
+          return 'Enregistrer';
+        case 'hi':
+          return 'सहेजें';
+        case 'hu':
+          return 'Mentés';
+        case 'id':
+          return 'Simpan';
+        case 'it':
+          return 'Salva';
+        case 'ja':
+          return '保存';
+        case 'ko':
+          return '저장';
+        case 'nl':
+          return 'Opslaan';
+        case 'no':
+          return 'Lagre';
+        case 'pl':
+          return 'Zapisz';
+        case 'pt':
+          return 'Guardar';
+        case 'ro':
+          return 'Salvează';
+        case 'ru':
+          return 'Сохранить';
+        case 'sv':
+          return 'Spara';
+        case 'th':
+          return 'บันทึก';
+        case 'tr':
+          return 'Kaydet';
+        case 'uk':
+          return 'Зберегти';
+        case 'vi':
+          return 'Lưu';
+        case 'zh':
+          return '保存';
+        default:
+          return l10n.save;
       }
     }
 
@@ -327,36 +442,6 @@ class _LanguageScreenState extends State<LanguageScreen>
                                                                 .onBackground,
                                                     ),
                                                   ),
-                                                  AppSpacer.v4(),
-                                                  Text(
-                                                    getLanguageName(
-                                                      lang['code']!,
-                                                    ),
-                                                    style: AppTheme.bodySmall.copyWith(
-                                                      color: isSelected
-                                                          ? (context
-                                                                    .colors
-                                                                    .isDark
-                                                                ? const Color(
-                                                                        0xFF1A1A1A,
-                                                                      ) // Very dark gray for dark theme
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.9,
-                                                                      )
-                                                                : Colors.white
-                                                                      .withValues(
-                                                                        alpha:
-                                                                            0.9,
-                                                                      ))
-                                                          : context
-                                                                .colors
-                                                                .onBackground
-                                                                .withValues(
-                                                                  alpha: 0.8,
-                                                                ),
-                                                    ),
-                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -420,7 +505,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                                   );
                                 },
                                 child: Text(
-                                  l10n.save,
+                                  getSaveButtonText(),
                                   style: AppTheme.buttonText.copyWith(
                                     color: context.colors.isDark
                                         ? const Color(

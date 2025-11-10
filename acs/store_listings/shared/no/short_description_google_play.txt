@@ -1,1 +1,1 @@
-AI Kosmetikk Skanner: Ingrediensanalyse, sikkerhetskontroll, deteksjon av skadelige ingredienser
+Kosmetikk skanner: ingrediensanalyse, sikkerhetskontroll, deteksjon giftstoffer

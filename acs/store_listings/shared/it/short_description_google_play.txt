@@ -1,1 +1,1 @@
-Scanner cosmetico IA: analizza ingredienti, verifica sicurezza, trova componenti tossici
+Scanner cosmetico: analizza ingredienti, verifica sicurezza, rileva tossici

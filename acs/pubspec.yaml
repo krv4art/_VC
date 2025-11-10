@@ -115,7 +115,6 @@ flutter:
     - assets/icon/
     - assets/config/
     - assets/images/
-    - assets/images/bot_avatars/
     - assets/images/paywall/
 
   # An image asset can refer to one or more resolution-specific "variants", see

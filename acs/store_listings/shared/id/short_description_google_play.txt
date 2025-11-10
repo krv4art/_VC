@@ -1,1 +1,1 @@
-AI Pemindai Kosmetik: Analisis bahan, pemeriksaan keamanan, deteksi bahan berbahaya
+Pemindai kosmetik: analisis bahan, pemeriksaan keamanan, deteksi beracun

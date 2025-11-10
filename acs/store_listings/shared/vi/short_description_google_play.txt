@@ -1,1 +1,1 @@
-AI quét mỹ phẩm: phân tích thành phần, kiểm tra an toàn, phát hiện thành phần độc hại
+Quét mỹ phẩm: phân tích thành phần, kiểm tra an toàn, phát hiện độc hại

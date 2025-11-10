@@ -1,1 +1,1 @@
-AI Cosmetica Scanner: Ingrediëntenanalyse, veiligheidscontrole, detectie van schadelijke ingrediënten
+Cosmetica Scanner: ingrediëntenanalyse, veiligheidscontrole, detectie giftstoffen

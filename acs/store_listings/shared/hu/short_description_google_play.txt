@@ -1,1 +1,1 @@
-AI Kozmetikai Szkenner: Összetevő-elemzés, biztonsági ellenőrzés, káros összetevők felismerése
+Kozmetikai szkenner: összetevő-elemzés, biztonsági ellenőrzés, méreg felismerés

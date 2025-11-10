@@ -1,1 +1,1 @@
-AI Scanner de Cosméticos: Análise de ingredientes, controle de segurança, detecção de ingredientes prejudiciais
+Scanner cosmético: análise ingredientes, controle segurança, detecção tóxicos
