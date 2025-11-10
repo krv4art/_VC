@@ -292,121 +292,121 @@ abstract class AppLocalizations {
   /// No description provided for @language_ar.
   ///
   /// In en, this message translates to:
-  /// **'العربية'**
+  /// **'Arabic'**
   String get language_ar;
 
   /// No description provided for @language_ko.
   ///
   /// In en, this message translates to:
-  /// **'한국어'**
+  /// **'Korean'**
   String get language_ko;
 
   /// No description provided for @language_cs.
   ///
   /// In en, this message translates to:
-  /// **'Čeština'**
+  /// **'Czech'**
   String get language_cs;
 
   /// No description provided for @language_da.
   ///
   /// In en, this message translates to:
-  /// **'Dansk'**
+  /// **'Danish'**
   String get language_da;
 
   /// No description provided for @language_el.
   ///
   /// In en, this message translates to:
-  /// **'Ελληνικά'**
+  /// **'Greek'**
   String get language_el;
 
   /// No description provided for @language_fi.
   ///
   /// In en, this message translates to:
-  /// **'Suomi'**
+  /// **'Finnish'**
   String get language_fi;
 
   /// No description provided for @language_hi.
   ///
   /// In en, this message translates to:
-  /// **'हिन्दी'**
+  /// **'Hindi'**
   String get language_hi;
 
   /// No description provided for @language_hu.
   ///
   /// In en, this message translates to:
-  /// **'Magyar'**
+  /// **'Hungarian'**
   String get language_hu;
 
   /// No description provided for @language_id.
   ///
   /// In en, this message translates to:
-  /// **'Bahasa Indonesia'**
+  /// **'Indonesian'**
   String get language_id;
 
   /// No description provided for @language_ja.
   ///
   /// In en, this message translates to:
-  /// **'日本語'**
+  /// **'Japanese'**
   String get language_ja;
 
   /// No description provided for @language_nl.
   ///
   /// In en, this message translates to:
-  /// **'Nederlands'**
+  /// **'Dutch'**
   String get language_nl;
 
   /// No description provided for @language_no.
   ///
   /// In en, this message translates to:
-  /// **'Norsk'**
+  /// **'Norwegian'**
   String get language_no;
 
   /// No description provided for @language_pl.
   ///
   /// In en, this message translates to:
-  /// **'Polski'**
+  /// **'Polish'**
   String get language_pl;
 
   /// No description provided for @language_pt.
   ///
   /// In en, this message translates to:
-  /// **'Português'**
+  /// **'Portuguese'**
   String get language_pt;
 
   /// No description provided for @language_ro.
   ///
   /// In en, this message translates to:
-  /// **'Română'**
+  /// **'Romanian'**
   String get language_ro;
 
   /// No description provided for @language_sv.
   ///
   /// In en, this message translates to:
-  /// **'Svenska'**
+  /// **'Swedish'**
   String get language_sv;
 
   /// No description provided for @language_th.
   ///
   /// In en, this message translates to:
-  /// **'ไทย'**
+  /// **'Thai'**
   String get language_th;
 
   /// No description provided for @language_tr.
   ///
   /// In en, this message translates to:
-  /// **'Türkçe'**
+  /// **'Turkish'**
   String get language_tr;
 
   /// No description provided for @language_vi.
   ///
   /// In en, this message translates to:
-  /// **'Tiếng Việt'**
+  /// **'Vietnamese'**
   String get language_vi;
 
   /// No description provided for @language_zh.
   ///
   /// In en, this message translates to:
-  /// **'中文'**
+  /// **'Chinese'**
   String get language_zh;
 
   /// No description provided for @selectIngredientsAllergicSensitive.

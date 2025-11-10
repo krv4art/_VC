@@ -15,7 +15,8 @@
       "Bash(cmd /c copy \"e:\\_VC\\acs\\lib\\theme\\app_theme.dart\" \"e:\\_VC\\unseen\\unseen\\lib\\theme\\app_theme.dart\" /Y)",
       "Bash(cmd /c copy \"e:\\_VC\\acs\\lib\\theme\\theme_extensions_v2.dart\" \"e:\\_VC\\unseen\\unseen\\lib\\theme\\theme_extensions_v2.dart\" /Y)",
       "Bash(cmd /c copy:*)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []

@@ -78,64 +78,64 @@ class AppLocalizationsDe extends AppLocalizations {
   String get language_it => 'Italienisch';
 
   @override
-  String get language_ar => 'العربية';
+  String get language_ar => 'Arabisch';
 
   @override
-  String get language_ko => '한국어';
+  String get language_ko => 'Koreanisch';
 
   @override
-  String get language_cs => 'Čeština';
+  String get language_cs => 'Tschechisch';
 
   @override
-  String get language_da => 'Dansk';
+  String get language_da => 'Dänisch';
 
   @override
-  String get language_el => 'Ελληνικά';
+  String get language_el => 'Griechisch';
 
   @override
-  String get language_fi => 'Suomi';
+  String get language_fi => 'Finnisch';
 
   @override
-  String get language_hi => 'हिन्दी';
+  String get language_hi => 'Hindi';
 
   @override
-  String get language_hu => 'Magyar';
+  String get language_hu => 'Ungarisch';
 
   @override
-  String get language_id => 'Bahasa Indonesia';
+  String get language_id => 'Indonesisch';
 
   @override
-  String get language_ja => '日本語';
+  String get language_ja => 'Japanisch';
 
   @override
-  String get language_nl => 'Nederlands';
+  String get language_nl => 'Niederländisch';
 
   @override
-  String get language_no => 'Norsk';
+  String get language_no => 'Norwegisch';
 
   @override
-  String get language_pl => 'Polski';
+  String get language_pl => 'Polnisch';
 
   @override
-  String get language_pt => 'Português';
+  String get language_pt => 'Portugiesisch';
 
   @override
-  String get language_ro => 'Română';
+  String get language_ro => 'Rumänisch';
 
   @override
-  String get language_sv => 'Svenska';
+  String get language_sv => 'Schwedisch';
 
   @override
-  String get language_th => 'ไทย';
+  String get language_th => 'Thailändisch';
 
   @override
-  String get language_tr => 'Türkçe';
+  String get language_tr => 'Türkisch';
 
   @override
-  String get language_vi => 'Tiếng Việt';
+  String get language_vi => 'Vietnamesisch';
 
   @override
-  String get language_zh => '中文';
+  String get language_zh => 'Chinesisch';
 
   @override
   String get selectIngredientsAllergicSensitive => 'Wählen Sie Inhaltsstoffe, auf die Sie eine erhöhte Empfindlichkeit haben';

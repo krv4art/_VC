@@ -78,64 +78,64 @@ class AppLocalizationsUk extends AppLocalizations {
   String get language_it => 'Італійська';
 
   @override
-  String get language_ar => 'العربية';
+  String get language_ar => 'Арабська';
 
   @override
-  String get language_ko => '한국어';
+  String get language_ko => 'Корейська';
 
   @override
-  String get language_cs => 'Čeština';
+  String get language_cs => 'Чеська';
 
   @override
-  String get language_da => 'Dansk';
+  String get language_da => 'Данська';
 
   @override
-  String get language_el => 'Ελληνικά';
+  String get language_el => 'Грецька';
 
   @override
-  String get language_fi => 'Suomi';
+  String get language_fi => 'Фінська';
 
   @override
-  String get language_hi => 'हिन्दी';
+  String get language_hi => 'Хінді';
 
   @override
-  String get language_hu => 'Magyar';
+  String get language_hu => 'Угорська';
 
   @override
-  String get language_id => 'Bahasa Indonesia';
+  String get language_id => 'Індонезійська';
 
   @override
-  String get language_ja => '日本語';
+  String get language_ja => 'Японська';
 
   @override
-  String get language_nl => 'Nederlands';
+  String get language_nl => 'Нідерландська';
 
   @override
-  String get language_no => 'Norsk';
+  String get language_no => 'Норвезька';
 
   @override
-  String get language_pl => 'Polski';
+  String get language_pl => 'Польська';
 
   @override
-  String get language_pt => 'Português';
+  String get language_pt => 'Португальська';
 
   @override
-  String get language_ro => 'Română';
+  String get language_ro => 'Румунська';
 
   @override
-  String get language_sv => 'Svenska';
+  String get language_sv => 'Шведська';
 
   @override
-  String get language_th => 'ไทย';
+  String get language_th => 'Тайська';
 
   @override
-  String get language_tr => 'Türkçe';
+  String get language_tr => 'Турецька';
 
   @override
-  String get language_vi => 'Tiếng Việt';
+  String get language_vi => 'В\'єтнамська';
 
   @override
-  String get language_zh => '中文';
+  String get language_zh => 'Китайська';
 
   @override
   String get selectIngredientsAllergicSensitive => 'Оберіть інгредієнти, на які у вас підвищена чутливість';

@@ -57,85 +57,85 @@ class AppLocalizationsEl extends AppLocalizations {
   String get save => 'Αποθήκευση';
 
   @override
-  String get language_en => 'English';
+  String get language_en => 'Αγγλικά';
 
   @override
-  String get language_ru => 'Русский';
+  String get language_ru => 'Ρωσικά';
 
   @override
-  String get language_uk => 'Українська';
+  String get language_uk => 'Ουκρανικά';
 
   @override
-  String get language_es => 'Español';
+  String get language_es => 'Ισπανικά';
 
   @override
-  String get language_de => 'Deutsch';
+  String get language_de => 'Γερμανικά';
 
   @override
-  String get language_fr => 'Français';
+  String get language_fr => 'Γαλλικά';
 
   @override
-  String get language_it => 'Italiano';
+  String get language_it => 'Ιταλικά';
 
   @override
-  String get language_ar => 'العربية';
+  String get language_ar => 'Αραβικά';
 
   @override
-  String get language_ko => '한국어';
+  String get language_ko => 'Κορεατικά';
 
   @override
-  String get language_cs => 'Čeština';
+  String get language_cs => 'Τσεχικά';
 
   @override
-  String get language_da => 'Dansk';
+  String get language_da => 'Δανικά';
 
   @override
   String get language_el => 'Ελληνικά';
 
   @override
-  String get language_fi => 'Suomi';
+  String get language_fi => 'Φινλανδικά';
 
   @override
-  String get language_hi => 'हिन्दी';
+  String get language_hi => 'Χίντι';
 
   @override
-  String get language_hu => 'Magyar';
+  String get language_hu => 'Ουγγρικά';
 
   @override
-  String get language_id => 'Bahasa Indonesia';
+  String get language_id => 'Ινδονησιακά';
 
   @override
-  String get language_ja => '日本語';
+  String get language_ja => 'Ιαπωνικά';
 
   @override
-  String get language_nl => 'Nederlands';
+  String get language_nl => 'Ολλανδικά';
 
   @override
-  String get language_no => 'Norsk';
+  String get language_no => 'Νορβηγικά';
 
   @override
-  String get language_pl => 'Polski';
+  String get language_pl => 'Πολωνικά';
 
   @override
-  String get language_pt => 'Português';
+  String get language_pt => 'Πορτογαλικά';
 
   @override
-  String get language_ro => 'Română';
+  String get language_ro => 'Ρουμανικά';
 
   @override
-  String get language_sv => 'Svenska';
+  String get language_sv => 'Σουηδικά';
 
   @override
-  String get language_th => 'ไทย';
+  String get language_th => 'Ταϊλανδικά';
 
   @override
-  String get language_tr => 'Türkçe';
+  String get language_tr => 'Τουρκικά';
 
   @override
-  String get language_vi => 'Tiếng Việt';
+  String get language_vi => 'Βιετναμέζικα';
 
   @override
-  String get language_zh => '中文';
+  String get language_zh => 'Κινεζικά';
 
   @override
   String get selectIngredientsAllergicSensitive => 'Επιλέξτε συστατικά στα οποία είστε ευαίσθητοι';

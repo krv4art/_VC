@@ -1,1 +1,1 @@
-Kozmetikai szkenner: összetevő-elemzés, biztonsági ellenőrzés, méreg felismerés
+Szkenner: összetevő-elemzés, biztonsági ellenőrzés, mérgek

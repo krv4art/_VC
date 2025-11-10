@@ -1,1 +1,1 @@
-Scanner cosmético: análise ingredientes, controle segurança, detecção tóxicos
+Scanner: análise ingredientes, controle segurança, detecção tóxicos

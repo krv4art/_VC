@@ -1,1 +1,1 @@
-Escáner cosmético IA: analiza ingredientes, verifica seguridad, detecta tóxicos
+Escáner: analiza ingredientes, verifica seguridad, detecta tóxicos

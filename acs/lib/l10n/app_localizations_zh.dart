@@ -57,82 +57,82 @@ class AppLocalizationsZh extends AppLocalizations {
   String get save => '保存';
 
   @override
-  String get language_en => 'English';
+  String get language_en => '英语';
 
   @override
-  String get language_ru => 'Russian';
+  String get language_ru => '俄语';
 
   @override
-  String get language_uk => 'Ukrainian';
+  String get language_uk => '乌克兰语';
 
   @override
-  String get language_es => 'Spanish';
+  String get language_es => '西班牙语';
 
   @override
-  String get language_de => 'German';
+  String get language_de => '德语';
 
   @override
-  String get language_fr => 'French';
+  String get language_fr => '法语';
 
   @override
-  String get language_it => 'Italian';
+  String get language_it => '意大利语';
 
   @override
-  String get language_ar => 'العربية';
+  String get language_ar => '阿拉伯语';
 
   @override
-  String get language_ko => '한국어';
+  String get language_ko => '韩语';
 
   @override
-  String get language_cs => 'Čeština';
+  String get language_cs => '捷克语';
 
   @override
-  String get language_da => 'Dansk';
+  String get language_da => '丹麦语';
 
   @override
-  String get language_el => 'Ελληνικά';
+  String get language_el => '希腊语';
 
   @override
-  String get language_fi => 'Suomi';
+  String get language_fi => '芬兰语';
 
   @override
-  String get language_hi => 'हिन्दी';
+  String get language_hi => '印地语';
 
   @override
-  String get language_hu => 'Magyar';
+  String get language_hu => '匈牙利语';
 
   @override
-  String get language_id => 'Bahasa Indonesia';
+  String get language_id => '印度尼西亚语';
 
   @override
-  String get language_ja => '日本語';
+  String get language_ja => '日语';
 
   @override
-  String get language_nl => 'Nederlands';
+  String get language_nl => '荷兰语';
 
   @override
-  String get language_no => 'Norsk';
+  String get language_no => '挪威语';
 
   @override
-  String get language_pl => 'Polski';
+  String get language_pl => '波兰语';
 
   @override
-  String get language_pt => 'Português';
+  String get language_pt => '葡萄牙语';
 
   @override
-  String get language_ro => 'Română';
+  String get language_ro => '罗马尼亚语';
 
   @override
-  String get language_sv => 'Svenska';
+  String get language_sv => '瑞典语';
 
   @override
-  String get language_th => 'ไทย';
+  String get language_th => '泰语';
 
   @override
-  String get language_tr => 'Türkçe';
+  String get language_tr => '土耳其语';
 
   @override
-  String get language_vi => 'Tiếng Việt';
+  String get language_vi => '越南语';
 
   @override
   String get language_zh => '中文';

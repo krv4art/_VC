@@ -78,64 +78,64 @@ class AppLocalizationsFr extends AppLocalizations {
   String get language_it => 'Italien';
 
   @override
-  String get language_ar => 'العربية';
+  String get language_ar => 'Arabe';
 
   @override
-  String get language_ko => '한국어';
+  String get language_ko => 'Coréen';
 
   @override
-  String get language_cs => 'Čeština';
+  String get language_cs => 'Tchèque';
 
   @override
-  String get language_da => 'Dansk';
+  String get language_da => 'Danois';
 
   @override
-  String get language_el => 'Ελληνικά';
+  String get language_el => 'Grec';
 
   @override
-  String get language_fi => 'Suomi';
+  String get language_fi => 'Finnois';
 
   @override
-  String get language_hi => 'हिन्दी';
+  String get language_hi => 'Hindi';
 
   @override
-  String get language_hu => 'Magyar';
+  String get language_hu => 'Hongrois';
 
   @override
-  String get language_id => 'Bahasa Indonesia';
+  String get language_id => 'Indonésien';
 
   @override
-  String get language_ja => '日本語';
+  String get language_ja => 'Japonais';
 
   @override
-  String get language_nl => 'Nederlands';
+  String get language_nl => 'Néerlandais';
 
   @override
-  String get language_no => 'Norsk';
+  String get language_no => 'Norvégien';
 
   @override
-  String get language_pl => 'Polski';
+  String get language_pl => 'Polonais';
 
   @override
-  String get language_pt => 'Português';
+  String get language_pt => 'Portugais';
 
   @override
-  String get language_ro => 'Română';
+  String get language_ro => 'Roumain';
 
   @override
-  String get language_sv => 'Svenska';
+  String get language_sv => 'Suédois';
 
   @override
-  String get language_th => 'ไทย';
+  String get language_th => 'Thaï';
 
   @override
-  String get language_tr => 'Türkçe';
+  String get language_tr => 'Turc';
 
   @override
-  String get language_vi => 'Tiếng Việt';
+  String get language_vi => 'Vietnamien';
 
   @override
-  String get language_zh => '中文';
+  String get language_zh => 'Chinois';
 
   @override
   String get selectIngredientsAllergicSensitive => 'Sélectionnez les ingrédients auxquels vous avez une sensibilité accrue';

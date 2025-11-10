@@ -57,85 +57,85 @@ class AppLocalizationsAr extends AppLocalizations {
   String get save => 'حفظ';
 
   @override
-  String get language_en => 'English';
+  String get language_en => 'الإنجليزية';
 
   @override
-  String get language_ru => 'Русский';
+  String get language_ru => 'الروسية';
 
   @override
-  String get language_uk => 'Українська';
+  String get language_uk => 'الأوكرانية';
 
   @override
-  String get language_es => 'Español';
+  String get language_es => 'الإسبانية';
 
   @override
-  String get language_de => 'Deutsch';
+  String get language_de => 'الألمانية';
 
   @override
-  String get language_fr => 'Français';
+  String get language_fr => 'الفرنسية';
 
   @override
-  String get language_it => 'Italiano';
+  String get language_it => 'الإيطالية';
 
   @override
   String get language_ar => 'العربية';
 
   @override
-  String get language_ko => '한국어';
+  String get language_ko => 'الكورية';
 
   @override
-  String get language_cs => 'Čeština';
+  String get language_cs => 'التشيكية';
 
   @override
-  String get language_da => 'Dansk';
+  String get language_da => 'الدنماركية';
 
   @override
-  String get language_el => 'Ελληνικά';
+  String get language_el => 'اليونانية';
 
   @override
-  String get language_fi => 'Suomi';
+  String get language_fi => 'الفنلندية';
 
   @override
-  String get language_hi => 'हिन्दी';
+  String get language_hi => 'الهندية';
 
   @override
-  String get language_hu => 'Magyar';
+  String get language_hu => 'المجرية';
 
   @override
-  String get language_id => 'Bahasa Indonesia';
+  String get language_id => 'الإندونيسية';
 
   @override
-  String get language_ja => '日本語';
+  String get language_ja => 'اليابانية';
 
   @override
-  String get language_nl => 'Nederlands';
+  String get language_nl => 'الهولندية';
 
   @override
-  String get language_no => 'Norsk';
+  String get language_no => 'النرويجية';
 
   @override
-  String get language_pl => 'Polski';
+  String get language_pl => 'البولندية';
 
   @override
-  String get language_pt => 'Português';
+  String get language_pt => 'البرتغالية';
 
   @override
-  String get language_ro => 'Română';
+  String get language_ro => 'الرومانية';
 
   @override
-  String get language_sv => 'Svenska';
+  String get language_sv => 'السويدية';
 
   @override
-  String get language_th => 'ไทย';
+  String get language_th => 'التايلاندية';
 
   @override
-  String get language_tr => 'Türkçe';
+  String get language_tr => 'التركية';
 
   @override
-  String get language_vi => 'Tiếng Việt';
+  String get language_vi => 'الفيتنامية';
 
   @override
-  String get language_zh => '中文';
+  String get language_zh => 'الصينية';
 
   @override
   String get selectIngredientsAllergicSensitive => 'اختر المكونات التي لديك حساسية منها';
