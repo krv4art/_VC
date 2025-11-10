@@ -438,7 +438,6 @@
   },
   "pollTitle": "Vad saknas?",
   "pollCardTitle": "Vad saknas i appen?",
-  "pollCardSubtitle": "Vilka 3 funktioner borde läggas till?",
   "pollDescription": "Rösta på alternativen du vill se",
   "submitVote": "Rösta",
   "submitting": "Skickar...",

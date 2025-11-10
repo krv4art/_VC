@@ -438,7 +438,6 @@
   },
   "pollTitle": "Ne eksik?",
   "pollCardTitle": "Uygulamada ne eksik?",
-  "pollCardSubtitle": "Hangi 3 özellik eklenmeli?",
   "pollDescription": "Görmek istediğiniz seçeneklere oy verin",
   "submitVote": "Oy Ver",
   "submitting": "Gönderiliyor...",

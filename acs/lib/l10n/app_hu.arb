@@ -438,7 +438,6 @@
   },
   "pollTitle": "Mi hiányzik?",
   "pollCardTitle": "Mi hiányzik az alkalmazásból?",
-  "pollCardSubtitle": "Melyik 3 funkciót kellene hozzáadni?",
   "pollDescription": "Szavazzon a kívánt lehetőségekre",
   "submitVote": "Szavazat",
   "submitting": "Beküldés...",

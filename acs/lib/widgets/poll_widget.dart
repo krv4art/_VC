@@ -69,32 +69,20 @@ class _PollWidgetState extends State<PollWidget> {
                     borderRadius: BorderRadius.circular(AppDimensions.radius12),
                   ),
                   child: Icon(
-                    Icons.poll_outlined,
+                    Icons.campaign,
                     size: AppDimensions.iconLarge,
                     color: context.colors.primary,
                   ),
                 ),
                 AppSpacer.h12(),
-                // Title and subtitle
+                // Title only
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.pollCardTitle,
-                        style: AppTheme.bodyLarge.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: context.colors.onBackground,
-                        ),
-                      ),
-                      AppSpacer.v4(),
-                      Text(
-                        l10n.pollCardSubtitle,
-                        style: AppTheme.bodySmall.copyWith(
-                          color: context.colors.onSecondary,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    l10n.pollCardTitle,
+                    style: AppTheme.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.onBackground,
+                    ),
                   ),
                 ),
               ],
@@ -508,14 +496,17 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   }
 
   Widget _buildFilters(AppLocalizations l10n) {
-    return Row(
-      children: [
-        Expanded(child: _buildFilterChip(l10n.filterNewest, PollFilter.newest)),
-        AppSpacer.h8(),
-        Expanded(child: _buildFilterChip(l10n.filterTopVoted, PollFilter.topVoted)),
-        AppSpacer.h8(),
-        Expanded(child: _buildFilterChip(l10n.filterMyOption, PollFilter.myOption)),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        children: [
+          Expanded(child: _buildFilterChip(l10n.filterNewest, PollFilter.newest)),
+          AppSpacer.h8(),
+          Expanded(child: _buildFilterChip(l10n.filterTopVoted, PollFilter.topVoted)),
+          AppSpacer.h8(),
+          Expanded(child: _buildFilterChip(l10n.filterMyOption, PollFilter.myOption)),
+        ],
+      ),
     );
   }
 
@@ -669,12 +660,13 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   Widget _buildAddOptionButton(AppLocalizations l10n) {
     return SizedBox(
       width: double.infinity,
+      height: 48,
       child: OutlinedButton(
         onPressed: () => setState(() => _showAddOption = true),
         style: OutlinedButton.styleFrom(
           foregroundColor: context.colors.primary,
           side: BorderSide(color: context.colors.primary),
-          padding: EdgeInsets.symmetric(vertical: AppDimensions.space12),
+          padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDimensions.radius12),
           ),
@@ -685,92 +677,108 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   }
 
   Widget _buildAddOptionForm(AppLocalizations l10n) {
-    return Row(
-      children: [
-        // Cancel button
-        IconButton(
-          onPressed: _isSubmitting
-              ? null
-              : () {
-                  setState(() {
-                    _showAddOption = false;
-                    _customOptionController.clear();
-                  });
-                },
-          icon: Icon(
-            Icons.close,
-            color: _isSubmitting
-                ? context.colors.onSecondary.withValues(alpha: 0.3)
-                : context.colors.onSecondary,
-          ),
-        ),
-        // TextField
-        Expanded(
-          child: TextField(
-            controller: _customOptionController,
-            enabled: !_isSubmitting,
-            decoration: InputDecoration(
-              hintText: l10n.enterYourOption,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radius8),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: AppDimensions.space12,
-                vertical: AppDimensions.space8,
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(AppDimensions.radius12),
+      ),
+      child: Row(
+        children: [
+          // Cancel button
+          SizedBox(
+            width: 40,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: _isSubmitting
+                  ? null
+                  : () {
+                      setState(() {
+                        _showAddOption = false;
+                        _customOptionController.clear();
+                      });
+                    },
+              icon: Icon(
+                Icons.close,
+                size: 20,
+                color: _isSubmitting
+                    ? context.colors.onSecondary.withValues(alpha: 0.3)
+                    : context.colors.onSecondary,
               ),
             ),
-            maxLength: 100,
           ),
-        ),
-        // Accept button
-        IconButton(
-          onPressed: _isSubmitting ? null : _addCustomOption,
-          icon: _isSubmitting
-              ? SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: context.colors.primary,
-                  ),
-                )
-              : Icon(
-                  Icons.check,
-                  color: context.colors.primary,
+          // TextField
+          Expanded(
+            child: TextField(
+              controller: _customOptionController,
+              enabled: !_isSubmitting,
+              decoration: InputDecoration(
+                hintText: l10n.enterYourOption,
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: AppDimensions.space8,
+                  vertical: AppDimensions.space12,
                 ),
-        ),
-      ],
+              ),
+              maxLength: 100,
+              buildCounter: (context, {required currentLength, required isFocused, maxLength}) => null,
+            ),
+          ),
+          // Accept button
+          SizedBox(
+            width: 40,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: _isSubmitting ? null : _addCustomOption,
+              icon: _isSubmitting
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: context.colors.primary,
+                      ),
+                    )
+                  : Icon(
+                      Icons.check,
+                      size: 20,
+                      color: context.colors.primary,
+                    ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildVoteButton(AppLocalizations l10n) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: _isSubmitting ? null : _submitVotes,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: context.colors.primary,
-          foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: AppDimensions.space16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radius12),
-          ),
+    return ElevatedButton.icon(
+      onPressed: _isSubmitting ? null : _submitVotes,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: context.colors.primary,
+        foregroundColor: Colors.white,
+        padding: EdgeInsets.symmetric(vertical: AppDimensions.space16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radius12),
         ),
-        icon: _isSubmitting
-            ? SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
-              )
-            : Icon(Icons.how_to_vote, size: AppDimensions.iconMedium),
-        label: Text(
-          _isSubmitting ? l10n.submitting : l10n.submitVote,
-          style: AppTheme.bodyLarge.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+        minimumSize: const Size(double.infinity, 0),
+      ),
+      icon: _isSubmitting
+          ? SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
+            )
+          : Icon(Icons.how_to_vote, size: AppDimensions.iconMedium),
+      label: Text(
+        _isSubmitting ? l10n.submitting : l10n.submitVote,
+        style: AppTheme.bodyLarge.copyWith(
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

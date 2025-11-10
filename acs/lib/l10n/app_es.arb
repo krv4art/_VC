@@ -416,7 +416,6 @@
   },
   "pollTitle": "¿Qué falta?",
   "pollCardTitle": "¿Qué falta en la aplicación?",
-  "pollCardSubtitle": "¿Qué 3 funciones deberían agregarse?",
   "pollDescription": "Vota por las opciones que quieres ver",
   "submitVote": "Votar",
   "submitting": "Enviando...",

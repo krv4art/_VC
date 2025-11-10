@@ -438,7 +438,6 @@
   },
   "pollTitle": "缺少什麼?",
   "pollCardTitle": "應用程式缺少什麼?",
-  "pollCardSubtitle": "應該新增哪3個功能?",
   "pollDescription": "為你想看到的選項投票",
   "submitVote": "投票",
   "submitting": "提交中...",
