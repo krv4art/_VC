@@ -584,7 +584,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get scan => '스캔';
 
   @override
-  String get aiChatNav => 'AI 화장품 스캐너';
+  String get aiChatNav => 'AI 채팅';
 
   @override
   String get profileNav => '프로필';

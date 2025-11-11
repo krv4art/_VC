@@ -64,10 +64,10 @@ class CustomColors extends AppColors {
 
   @override
   LinearGradient get primaryGradient => LinearGradient(
-        colors: [primaryLight, primaryPale],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      );
+    colors: [primaryLight, primaryPale],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 
   /// Создать CustomColors из существующей темы (preset)
   factory CustomColors.fromAppColors(AppColors colors) {
@@ -160,15 +160,17 @@ class CustomColors extends AppColors {
       warning: _hexToColor(json['warning'] as String),
       error: _hexToColor(json['error'] as String),
       info: _hexToColor(json['info'] as String),
-      brightness: json['brightness'] == 'light' ? Brightness.light : Brightness.dark,
+      brightness: json['brightness'] == 'light'
+          ? Brightness.light
+          : Brightness.dark,
     );
   }
 
   /// Конвертировать Color в hex string
   static String _colorToHex(Color color) {
-    final r = ((color.r * 255.0).round() & 0xff).toRadixString(16).padLeft(2, '0');
-    final g = ((color.g * 255.0).round() & 0xff).toRadixString(16).padLeft(2, '0');
-    final b = ((color.b * 255.0).round() & 0xff).toRadixString(16).padLeft(2, '0');
+    final r = ((color.red).round() & 0xff).toRadixString(16).padLeft(2, '0');
+    final g = ((color.green).round() & 0xff).toRadixString(16).padLeft(2, '0');
+    final b = ((color.blue).round() & 0xff).toRadixString(16).padLeft(2, '0');
     return '#$r$g$b'.toUpperCase();
   }
 

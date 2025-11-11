@@ -421,7 +421,9 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
 
                         // Extra bottom padding to prevent FAB overlap
                         // FAB height (~80px) + safe area
-                        SizedBox(height: AppDimensions.space64 + AppDimensions.space24),
+                        SizedBox(
+                          height: AppDimensions.space64 + AppDimensions.space24,
+                        ),
                       ],
                     );
                   },
@@ -1136,9 +1138,7 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
               AppSpacer.h12(),
               Text(
                 l10n.ourVerdict,
-                style: AppTheme.h3.copyWith(
-                  color: context.colors.onBackground,
-                ),
+                style: AppTheme.h3.copyWith(color: context.colors.onBackground),
               ),
             ],
           ),
@@ -1175,9 +1175,7 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
         children: [
           Text(
             l10n.quickSummary,
-            style: AppTheme.h3.copyWith(
-              color: context.colors.onBackground,
-            ),
+            style: AppTheme.h3.copyWith(color: context.colors.onBackground),
           ),
           AppSpacer.v12(),
           _buildSummaryRow(
@@ -1225,9 +1223,7 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
         AppSpacer.h8(),
         Text(
           text,
-          style: AppTheme.body.copyWith(
-            color: context.colors.onBackground,
-          ),
+          style: AppTheme.body.copyWith(color: context.colors.onBackground),
         ),
       ],
     );
@@ -1245,7 +1241,9 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
             onTap: () {
               // TODO: Implement save to favorites
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${l10n.saveToFavorites} - Coming soon')),
+                SnackBar(
+                  content: Text('${l10n.saveToFavorites} - Coming soon'),
+                ),
               );
             },
           ),
@@ -1267,7 +1265,9 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
             onTap: () {
               // TODO: Implement compare
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${l10n.compareProducts} - Coming soon')),
+                SnackBar(
+                  content: Text('${l10n.compareProducts} - Coming soon'),
+                ),
               );
             },
           ),
@@ -1335,7 +1335,9 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
             Icon(
               icon,
               size: AppDimensions.iconMedium,
-              color: isPremium ? context.colors.warning : context.colors.primary,
+              color: isPremium
+                  ? context.colors.warning
+                  : context.colors.primary,
             ),
             AppSpacer.v4(),
             Text(

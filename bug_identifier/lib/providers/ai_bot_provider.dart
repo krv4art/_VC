@@ -16,10 +16,10 @@ class AiBotProvider extends ChangeNotifier {
   String? get error => _error;
 
   // Удобные геттеры для доступа к основным полям
-  String get botName => _settings?.name ?? 'ACS';
+  String get botName => _settings?.name ?? 'Bug Identifier';
   String get botDescription =>
       _settings?.description ??
-      'Hi! I\'m ACS — AI Cosmetic Scanner. I\'ll help you understand the composition of your cosmetics. I have a huge wealth of knowledge in cosmetology and care. I\'ll be happy to answer any of your questions.';
+      'Hi! I\'m Bug Identifier — AI Bug Identifier. I\'ll help you identify bugs from photos. I have a huge wealth of knowledge in entomology. I\'ll be happy to answer any of your questions.';
 
   // Геттеры для дополнительных полей
   bool get isCustomPromptEnabled => _settings?.isCustomPromptEnabled ?? false;
@@ -72,7 +72,7 @@ class AiBotProvider extends ChangeNotifier {
 
     _clearError();
     final updatedSettings = _settings!.copyWith(
-      name: name.isEmpty ? 'ACS' : name,
+      name: name.isEmpty ? 'Bug Identifier' : name,
       updatedAt: DateTime.now(),
     );
 
@@ -124,15 +124,12 @@ class AiBotProvider extends ChangeNotifier {
   }
 
   // Обновление всех настроек сразу
-  Future<void> updateAllSettings({
-    String? name,
-    String? description,
-  }) async {
+  Future<void> updateAllSettings({String? name, String? description}) async {
     _settings ??= AiBotSettings.defaultSettings();
 
     _clearError();
     final updatedSettings = _settings!.copyWith(
-      name: name?.isEmpty == true ? 'ACS' : name,
+      name: name?.isEmpty == true ? 'Bug Identifier' : name,
       description: description?.isEmpty == true
           ? getDefaultDescription(name ?? botName)
           : description,
@@ -162,7 +159,7 @@ class AiBotProvider extends ChangeNotifier {
 
   // Получение описания по умолчанию с подстановкой имени
   String getDefaultDescription(String name) {
-    return 'Hi! I\'m $name — AI Cosmetic Scanner. I\'ll help you understand the composition of your cosmetics. I have a huge wealth of knowledge in cosmetology and care. I\'ll be happy to answer any of your questions.';
+    return 'Hi! I\'m $name — AI Bug Identifier. I\'ll help you identify bugs from photos. I have a huge wealth of knowledge in entomology. I\'ll be happy to answer any of your questions.';
   }
 
   // Приватные методы для управления состоянием

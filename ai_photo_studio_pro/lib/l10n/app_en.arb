@@ -1,0 +1,182 @@
+{
+  "appName": "AI Photo Studio Pro",
+
+  "language": "Language",
+  "selectYourPreferredLanguage": "Select your preferred language",
+  "language_en": "English",
+  "language_ru": "Russian",
+  "language_uk": "Ukrainian",
+
+  "settings": "Settings",
+  "profile": "Profile",
+  "subscription": "Subscription",
+  "save": "Save",
+  "cancel": "Cancel",
+  "continue": "Continue",
+  "done": "Done",
+  "back": "Back",
+  "next": "Next",
+  "skip": "Skip",
+  "getStarted": "Get Started",
+
+  "homepageTitle": "AI Photo Studio Pro",
+  "welcomeMessage": "Create Professional Headshots with AI",
+  "uploadPhoto": "Upload Photo",
+  "takePhoto": "Take Photo",
+  "fromGallery": "From Gallery",
+  "fromCamera": "From Camera",
+  "recentGenerations": "Recent Generations",
+  "quickActions": "Quick Actions",
+
+  "stylesCatalog": "Style Catalog",
+  "browseStyles": "Browse Styles",
+  "selectStyle": "Select Style",
+  "allStyles": "All Styles",
+  "popularStyles": "Popular",
+  "newStyles": "New",
+  "premiumStyles": "Premium",
+
+  "categoryProfessional": "Professional",
+  "categoryCasual": "Casual",
+  "categoryCreative": "Creative",
+  "categoryFormal": "Formal",
+  "categoryOutdoor": "Outdoor",
+  "categoryStudio": "Studio",
+
+  "photoCapture": "Take Photo",
+  "photoCaptureHint": "Position your face in the frame",
+  "switchCamera": "Switch Camera",
+  "flashOn": "Flash On",
+  "flashOff": "Flash Off",
+  "flashAuto": "Flash Auto",
+  "retake": "Retake",
+  "usePhoto": "Use Photo",
+
+  "photoEditor": "Edit Photo",
+  "selectYourStyle": "Select Your Style",
+  "chooseOutfit": "Choose Outfit",
+  "chooseBackground": "Choose Background",
+  "quality": "Quality",
+  "qualityStandard": "Standard",
+  "qualityHD": "HD",
+  "qualityUltraHD": "Ultra HD",
+
+  "generateButton": "Generate",
+  "generating": "Generating...",
+  "processingPhoto": "Processing your photo",
+  "almostDone": "Almost done...",
+  "thisWillTake": "This will take about {seconds} seconds",
+  "@thisWillTake": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+
+  "generationComplete": "Generation Complete!",
+  "yourHeadshot": "Your Professional Headshot",
+  "comparePhotos": "Compare",
+  "beforeAfter": "Before & After",
+  "downloadHD": "Download HD",
+  "sharePhoto": "Share",
+  "regenerate": "Regenerate",
+  "tryAnotherStyle": "Try Another Style",
+
+  "gallery": "Gallery",
+  "myGenerations": "My Generations",
+  "filterByStyle": "Filter by Style",
+  "filterByDate": "Filter by Date",
+  "sortNewest": "Newest First",
+  "sortOldest": "Oldest First",
+  "deletePhoto": "Delete Photo",
+  "deleteConfirm": "Are you sure you want to delete this photo?",
+  "photoDeleted": "Photo deleted",
+
+  "subscriptionTitle": "Go Premium",
+  "subscriptionSubtitle": "Unlock all features",
+  "freePlan": "Free",
+  "proPlan": "Pro",
+  "freeFeatures": "3 generations per day\n5 basic styles\nStandard quality\nWith watermark",
+  "proFeatures": "100 generations/month\nAll 50+ styles\nHD quality\nNo watermark\nPriority processing\nOutfit generator\nBackground changer",
+
+  "monthlyPlan": "Monthly",
+  "yearlyPlan": "Yearly",
+  "lifetimePlan": "Lifetime",
+  "monthlyPrice": "$9.99/month",
+  "yearlyPrice": "$49.99/year",
+  "yearlyDiscount": "Save 58%",
+  "lifetimePrice": "$99.99 one-time",
+  "lifetimeBestValue": "Best Value",
+
+  "subscribeTo": "Subscribe to {plan}",
+  "@subscribeTo": {
+    "placeholders": {
+      "plan": {
+        "type": "String"
+      }
+    }
+  },
+  "restorePurchases": "Restore Purchases",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+
+  "limitReached": "Daily Limit Reached",
+  "limitMessage": "You've used all {count} free generations today. Come back tomorrow or upgrade to Pro!",
+  "@limitMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "upgradeNow": "Upgrade Now",
+
+  "generationsRemaining": "{count} generations remaining today",
+  "@generationsRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "premiumOnly": "Premium Only",
+  "premiumFeature": "This is a premium feature",
+  "unlockWithPro": "Unlock with Pro subscription",
+
+  "onboardingTitle1": "Welcome to AI Photo Studio Pro",
+  "onboardingDesc1": "Create professional headshots in seconds with AI",
+  "onboardingTitle2": "Choose Your Style",
+  "onboardingDesc2": "Select from 50+ professional styles",
+  "onboardingTitle3": "Generate & Share",
+  "onboardingDesc3": "Download HD quality photos and share anywhere",
+
+  "errorTitle": "Oops!",
+  "errorGeneral": "Something went wrong. Please try again.",
+  "errorNetwork": "No internet connection. Please check your connection.",
+  "errorGenerationFailed": "Photo generation failed. Please try again.",
+  "errorPhotoUpload": "Failed to upload photo. Please try again.",
+  "errorCameraPermission": "Camera permission required",
+  "errorStoragePermission": "Storage permission required",
+  "retry": "Retry",
+
+  "statsTitle": "Your Stats",
+  "totalGenerations": "Total Generations",
+  "favoriteStyle": "Favorite Style",
+  "memberSince": "Member Since",
+
+  "storageManagement": "Storage Management",
+  "clearCache": "Clear Cache",
+  "cacheCleared": "Cache cleared successfully",
+  "totalStorage": "Total Storage Used",
+
+  "aboutApp": "About",
+  "version": "Version",
+  "rateApp": "Rate App",
+  "contactSupport": "Contact Support",
+  "logout": "Logout",
+
+  "pollQuestion": "How do you like the app?",
+  "pollSubmitted": "Thank you for your feedback!"
+}

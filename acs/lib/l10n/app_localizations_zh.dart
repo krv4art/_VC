@@ -584,7 +584,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get scan => '扫描';
 
   @override
-  String get aiChatNav => 'AI Cosmetic Scanner';
+  String get aiChatNav => 'AI 聊天';
 
   @override
   String get profileNav => '个人资料';
@@ -1816,7 +1816,7 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get scan => '扫描';
 
   @override
-  String get aiChatNav => 'AI Cosmetic Scanner';
+  String get aiChatNav => 'AI 聊天';
 
   @override
   String get profileNav => '个人资料';
@@ -3048,7 +3048,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get scan => '掃描';
 
   @override
-  String get aiChatNav => 'AI Cosmetic Scanner';
+  String get aiChatNav => 'AI 聊天';
 
   @override
   String get profileNav => '個人檔案';

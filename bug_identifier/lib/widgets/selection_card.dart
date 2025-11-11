@@ -65,15 +65,15 @@ class SelectionCard extends StatelessWidget {
                   color: isSelected
                       ? Colors.white.withValues(alpha: 0.2)
                       : context.colors.primary.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(
-                    AppDimensions.radius12,
-                  ),
+                  borderRadius: BorderRadius.circular(AppDimensions.radius12),
                 ),
                 child: Icon(
                   icon,
                   color: isSelected
                       ? (context.colors.isDark
-                            ? const Color(0xFF1A1A1A) // Very dark gray for dark theme
+                            ? const Color(
+                                0xFF1A1A1A,
+                              ) // Very dark gray for dark theme
                             : Colors.white) // White for light theme
                       : context.colors.onBackground,
                   size: AppDimensions.iconMedium,
@@ -89,7 +89,9 @@ class SelectionCard extends StatelessWidget {
                       style: AppTheme.h4.copyWith(
                         color: isSelected
                             ? (context.colors.isDark
-                                  ? const Color(0xFF1A1A1A) // Very dark gray for dark theme
+                                  ? const Color(
+                                      0xFF1A1A1A,
+                                    ) // Very dark gray for dark theme
                                   : Colors.white) // White for light theme
                             : context.colors.onBackground,
                       ),
@@ -101,10 +103,14 @@ class SelectionCard extends StatelessWidget {
                         style: AppTheme.bodySmall.copyWith(
                           color: isSelected
                               ? (context.colors.isDark
-                                    ? const Color(0xFF1A1A1A) // Very dark gray for dark theme
+                                    ? const Color(
+                                            0xFF1A1A1A,
+                                          ) // Very dark gray for dark theme
                                           .withValues(alpha: 0.9)
                                     : Colors.white.withValues(alpha: 0.9))
-                              : context.colors.onBackground.withValues(alpha: 0.8),
+                              : context.colors.onBackground.withValues(
+                                  alpha: 0.8,
+                                ),
                         ),
                       ),
                     ],

@@ -39,22 +39,32 @@ class RatingService {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      debugPrint('=== RATING SERVICE: Checking if should show rating dialog ===');
+      debugPrint(
+        '=== RATING SERVICE: Checking if should show rating dialog ===',
+      );
 
       // 1. Проверяем, не завершил ли пользователь уже оценку
       final isRatingCompleted = prefs.getBool(_ratingCompletedKey) ?? false;
-      debugPrint('=== RATING SERVICE: Rating completed: $isRatingCompleted ===');
+      debugPrint(
+        '=== RATING SERVICE: Rating completed: $isRatingCompleted ===',
+      );
       if (isRatingCompleted) {
-        debugPrint('=== RATING SERVICE: Rating already completed, not showing dialog ===');
+        debugPrint(
+          '=== RATING SERVICE: Rating already completed, not showing dialog ===',
+        );
         return false;
       }
 
       // 2. Проверяем количество показов
       final showsCount = prefs.getInt(_ratingDialogShowsKey) ?? 0;
       final maxShows = AppConfig().maxRatingDialogShows;
-      debugPrint('=== RATING SERVICE: Shows count: $showsCount / $maxShows ===');
+      debugPrint(
+        '=== RATING SERVICE: Shows count: $showsCount / $maxShows ===',
+      );
       if (showsCount >= maxShows) {
-        debugPrint('=== RATING SERVICE: Max shows reached ($showsCount/$maxShows), not showing dialog ===');
+        debugPrint(
+          '=== RATING SERVICE: Max shows reached ($showsCount/$maxShows), not showing dialog ===',
+        );
         return false;
       }
 
@@ -63,10 +73,16 @@ class RatingService {
       debugPrint('=== RATING SERVICE: Install date: $installDateString ===');
       if (installDateString != null) {
         final installDate = DateTime.parse(installDateString);
-        final hoursSinceInstall = DateTime.now().difference(installDate).inHours;
-        debugPrint('=== RATING SERVICE: Hours since install: $hoursSinceInstall (required: $_minHoursBeforeFirstShow) ===');
+        final hoursSinceInstall = DateTime.now()
+            .difference(installDate)
+            .inHours;
+        debugPrint(
+          '=== RATING SERVICE: Hours since install: $hoursSinceInstall (required: $_minHoursBeforeFirstShow) ===',
+        );
         if (hoursSinceInstall < _minHoursBeforeFirstShow) {
-          debugPrint('=== RATING SERVICE: Too soon since install ($hoursSinceInstall hours), not showing dialog ===');
+          debugPrint(
+            '=== RATING SERVICE: Too soon since install ($hoursSinceInstall hours), not showing dialog ===',
+          );
           return false;
         }
       } else {
@@ -76,19 +92,29 @@ class RatingService {
       // 4. Проверяем интервал с последнего показа (только если был хотя бы один показ)
       if (showsCount > 0) {
         final lastShowDateString = prefs.getString(_lastRatingDateKey);
-        debugPrint('=== RATING SERVICE: Last show date: $lastShowDateString ===');
+        debugPrint(
+          '=== RATING SERVICE: Last show date: $lastShowDateString ===',
+        );
         if (lastShowDateString != null) {
           final lastShowDate = DateTime.parse(lastShowDateString);
-          final daysSinceLastShow = DateTime.now().difference(lastShowDate).inDays;
-          debugPrint('=== RATING SERVICE: Days since last show: $daysSinceLastShow (required: $_minDaysBetweenShows) ===');
+          final daysSinceLastShow = DateTime.now()
+              .difference(lastShowDate)
+              .inDays;
+          debugPrint(
+            '=== RATING SERVICE: Days since last show: $daysSinceLastShow (required: $_minDaysBetweenShows) ===',
+          );
           if (daysSinceLastShow < _minDaysBetweenShows) {
-            debugPrint('=== RATING SERVICE: Too soon since last show ($daysSinceLastShow days), not showing dialog ===');
+            debugPrint(
+              '=== RATING SERVICE: Too soon since last show ($daysSinceLastShow days), not showing dialog ===',
+            );
             return false;
           }
         }
       }
 
-      debugPrint('=== RATING SERVICE: ✅ All checks passed, CAN show rating dialog ===');
+      debugPrint(
+        '=== RATING SERVICE: ✅ All checks passed, CAN show rating dialog ===',
+      );
       return true;
     } catch (e) {
       debugPrint('=== RATING SERVICE: ❌ Error checking rating dialog: $e ===');

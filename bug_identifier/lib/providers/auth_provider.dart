@@ -30,10 +30,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> signIn(String email, String password) async {
     try {
-      await _supabase.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
+      await _supabase.auth.signInWithPassword(email: email, password: password);
       notifyListeners();
       return true;
     } catch (e) {

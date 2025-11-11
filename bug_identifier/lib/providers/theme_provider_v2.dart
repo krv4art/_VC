@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_theme.dart';
+import 'package:bug_identifier/theme/app_colors.dart';
+import 'package:bug_identifier/theme/app_theme.dart';
+import 'package:bug_identifier/models/custom_theme_data.dart';
+import 'package:bug_identifier/services/theme_storage_service.dart';
 
 /// Enum для всех доступных тем
 enum AppThemeType {
@@ -20,15 +22,37 @@ enum AppThemeType {
 class ThemeProviderV2 extends ChangeNotifier {
   static const String _themeKey = 'app_theme_type_v2';
   static const String _lastLightThemeKey = 'last_light_theme_v2';
+  static const String _customThemeIdKey = 'current_custom_theme_id_v2';
 
   AppThemeType _currentTheme = AppThemeType.vibrant;
   AppThemeType _lastLightTheme = AppThemeType.vibrant;
   AppColors? _cachedColors;
 
+  // Custom themes support
+  List<CustomThemeData> _customThemes = [];
+  CustomThemeData? _currentCustomTheme;
+  final ThemeStorageService _themeStorage = ThemeStorageService();
+
   AppThemeType get currentTheme => _currentTheme;
+
+  /// Получить текущую кастомную тему (если активна)
+  CustomThemeData? get currentCustomTheme => _currentCustomTheme;
+
+  /// Получить список всех кастомных тем
+  List<CustomThemeData> get customThemes => List.unmodifiable(_customThemes);
+
+  /// Проверить, активна ли кастомная тема
+  bool get isCustomThemeActive => _currentCustomTheme != null;
 
   /// Получить текущие цвета (с кешированием)
   AppColors get currentColors {
+    // Если активна кастомная тема, возвращаем её цвета
+    if (_currentCustomTheme != null) {
+      _cachedColors ??= _currentCustomTheme!.colors;
+      return _cachedColors!;
+    }
+
+    // Иначе используем preset тему
     _cachedColors ??= _createColorsForTheme(_currentTheme);
     return _cachedColors!;
   }
@@ -77,14 +101,36 @@ class ThemeProviderV2 extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
 
+      // Загрузить все кастомные темы
+      _customThemes = await _themeStorage.loadCustomThemes();
+      debugPrint(
+        '=== THEME PROVIDER: Loaded ${_customThemes.length} custom themes ===',
+      );
+
       final savedThemeIndex = prefs.getInt(_themeKey);
       final savedLastLightIndex = prefs.getInt(_lastLightThemeKey);
+      final savedCustomThemeId = prefs.getString(_customThemeIdKey);
 
       // Загрузить последнюю светлую тему
       if (savedLastLightIndex != null &&
           savedLastLightIndex >= 0 &&
           savedLastLightIndex < AppThemeType.values.length) {
         _lastLightTheme = AppThemeType.values[savedLastLightIndex];
+      }
+
+      // Проверить, была ли активна кастомная тема
+      if (savedCustomThemeId != null) {
+        final customTheme = _customThemes.firstWhere(
+          (t) => t.id == savedCustomThemeId,
+          orElse: () => throw Exception('Custom theme not found'),
+        );
+        _currentCustomTheme = customTheme;
+        _cachedColors = null;
+        debugPrint(
+          '=== THEME PROVIDER: Loaded custom theme: ${customTheme.name} ===',
+        );
+        notifyListeners();
+        return;
       }
 
       // Загрузить текущую preset тему
@@ -99,6 +145,7 @@ class ThemeProviderV2 extends ChangeNotifier {
       // В случае ошибки используем Vibrant тему
       debugPrint('=== THEME PROVIDER: Error loading theme: $e ===');
       _currentTheme = AppThemeType.vibrant;
+      _currentCustomTheme = null;
       _cachedColors = null;
       notifyListeners();
     }
@@ -106,27 +153,31 @@ class ThemeProviderV2 extends ChangeNotifier {
 
   /// Установить конкретную тему
   Future<void> setTheme(AppThemeType theme) async {
-    if (_currentTheme == theme) return;
+    if (_currentTheme == theme && _currentCustomTheme == null) return;
 
     _currentTheme = theme;
+    _currentCustomTheme = null; // Сбросить кастомную тему при выборе пресетной
     _cachedColors = null; // Сбросить кеш при смене темы
 
     // Сохранить как последнюю светлую или темную тему
     final colors = _createColorsForTheme(theme);
     if (colors.brightness == Brightness.light) {
       _lastLightTheme = theme;
-    }
+    } else {}
 
     notifyListeners();
 
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(_themeKey, theme.index);
+      await prefs.remove(
+        _customThemeIdKey,
+      ); // Удаляем сохраненную кастомную тему
 
-      // Сохранить последние светлую/темные темы
+      // Сохранить последние светлую/темную темы
       if (colors.brightness == Brightness.light) {
         await prefs.setInt(_lastLightThemeKey, theme.index);
-      }
+      } else {}
     } catch (e) {
       // Если не удалось сохранить, продолжаем работу с текущей темой
       debugPrint('Error saving theme: $e');
@@ -259,4 +310,110 @@ class ThemeProviderV2 extends ChangeNotifier {
 
   /// Проверить, является ли текущая тема светлой
   bool get isLightTheme => currentColors.brightness == Brightness.light;
+
+  // ========== CUSTOM THEMES METHODS ==========
+
+  /// Применить кастомную тему
+  Future<void> setCustomTheme(CustomThemeData theme) async {
+    _currentCustomTheme = theme;
+    _cachedColors = null; // Сбросить кеш
+
+    // Обновить список кастомных тем если эта тема новая
+    if (!_customThemes.any((t) => t.id == theme.id)) {
+      await _reloadCustomThemes();
+    }
+
+    notifyListeners();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_customThemeIdKey, theme.id);
+      await prefs.remove(_themeKey); // Убрать preset тему
+      debugPrint('=== THEME PROVIDER: Custom theme applied: ${theme.name} ===');
+    } catch (e) {
+      debugPrint('=== THEME PROVIDER: Error saving custom theme: $e ===');
+    }
+  }
+
+  /// Вернуться к preset теме
+  Future<void> clearCustomTheme() async {
+    if (_currentCustomTheme == null) return;
+
+    _currentCustomTheme = null;
+    _cachedColors = null;
+
+    notifyListeners();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_customThemeIdKey);
+      await prefs.setInt(_themeKey, _currentTheme.index);
+      debugPrint(
+        '=== THEME PROVIDER: Cleared custom theme, back to preset ===',
+      );
+    } catch (e) {
+      debugPrint('=== THEME PROVIDER: Error clearing custom theme: $e ===');
+    }
+  }
+
+  /// Добавить новую кастомную тему
+  Future<bool> addCustomTheme(CustomThemeData theme) async {
+    final success = await _themeStorage.saveCustomTheme(theme);
+    if (success) {
+      await _reloadCustomThemes();
+      debugPrint('=== THEME PROVIDER: Added custom theme: ${theme.name} ===');
+    }
+    return success;
+  }
+
+  /// Обновить существующую кастомную тему
+  Future<bool> updateCustomTheme(CustomThemeData theme) async {
+    final success = await _themeStorage.saveCustomTheme(theme);
+    if (success) {
+      await _reloadCustomThemes();
+
+      // Если это текущая активная тема, обновить её
+      if (_currentCustomTheme?.id == theme.id) {
+        _currentCustomTheme = theme;
+        _cachedColors = null;
+        notifyListeners();
+      }
+      debugPrint('=== THEME PROVIDER: Updated custom theme: ${theme.name} ===');
+    }
+    return success;
+  }
+
+  /// Удалить кастомную тему
+  Future<bool> deleteCustomTheme(String themeId) async {
+    final success = await _themeStorage.deleteCustomTheme(themeId);
+    if (success) {
+      await _reloadCustomThemes();
+
+      // Если удалили текущую активную тему, вернуться к preset
+      if (_currentCustomTheme?.id == themeId) {
+        await clearCustomTheme();
+      }
+      debugPrint('=== THEME PROVIDER: Deleted custom theme: $themeId ===');
+    }
+    return success;
+  }
+
+  /// Перезагрузить список кастомных тем
+  Future<void> _reloadCustomThemes() async {
+    _customThemes = await _themeStorage.loadCustomThemes();
+    notifyListeners();
+  }
+
+  /// Перезагрузить все кастомные темы (публичный метод)
+  Future<void> reloadCustomThemes() async {
+    await _reloadCustomThemes();
+  }
+
+  /// Проверить, можно ли добавить еще одну тему
+  Future<bool> canAddMoreThemes() async {
+    return !(await _themeStorage.isMaxThemesReached());
+  }
+
+  /// Получить количество кастомных тем
+  int get customThemesCount => _customThemes.length;
 }

@@ -584,7 +584,7 @@ class AppLocalizationsEl extends AppLocalizations {
   String get scan => 'Σάρωση';
 
   @override
-  String get aiChatNav => 'AI Σαρωτής Καλλυντικών';
+  String get aiChatNav => 'AI Chat';
 
   @override
   String get profileNav => 'Προφίλ';

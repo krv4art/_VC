@@ -1288,7 +1288,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiChatNav.
   ///
   /// In en, this message translates to:
-  /// **'AI Cosmetic Scanner'**
+  /// **'AI Chat'**
   String get aiChatNav;
 
   /// No description provided for @profileNav.

@@ -584,7 +584,7 @@ class AppLocalizationsHu extends AppLocalizations {
   String get scan => 'Szkennelés';
 
   @override
-  String get aiChatNav => 'AI Kozmetikai Szkenner';
+  String get aiChatNav => 'AI Chat';
 
   @override
   String get profileNav => 'Profil';

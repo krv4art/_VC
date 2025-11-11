@@ -584,7 +584,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get scan => 'Pindai';
 
   @override
-  String get aiChatNav => 'AI Pemindai Kosmetik';
+  String get aiChatNav => 'Obrolan AI';
 
   @override
   String get profileNav => 'Profil';
