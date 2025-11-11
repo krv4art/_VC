@@ -438,7 +438,6 @@
   },
   "pollTitle": "ขาดอะไรไปบ้าง?",
   "pollCardTitle": "แอปขาดอะไรไป?",
-  "pollCardSubtitle": "ควรเพิ่มฟีเจอร์ใด 3 อย่าง?",
   "pollDescription": "โหวตตัวเลือกที่คุณอยากเห็น",
   "submitVote": "โหวต",
   "submitting": "กำลังส่ง...",

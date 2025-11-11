@@ -438,7 +438,6 @@
   },
   "pollTitle": "무엇이 빠졌나요?",
   "pollCardTitle": "앱에 무엇이 빠졌나요?",
-  "pollCardSubtitle": "어떤 3가지 기능을 추가해야 하나요?",
   "pollDescription": "원하는 옵션에 투표하세요",
   "submitVote": "투표",
   "submitting": "제출 중...",

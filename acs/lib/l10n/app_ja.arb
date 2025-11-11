@@ -438,7 +438,6 @@
   },
   "pollTitle": "何が足りない？",
   "pollCardTitle": "アプリに何が足りない？",
-  "pollCardSubtitle": "どの3つの機能を追加すべき？",
   "pollDescription": "見たいオプションに投票",
   "submitVote": "投票",
   "submitting": "送信中...",

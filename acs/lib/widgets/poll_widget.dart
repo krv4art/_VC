@@ -69,32 +69,20 @@ class _PollWidgetState extends State<PollWidget> {
                     borderRadius: BorderRadius.circular(AppDimensions.radius12),
                   ),
                   child: Icon(
-                    Icons.poll_outlined,
+                    Icons.campaign,
                     size: AppDimensions.iconLarge,
                     color: context.colors.primary,
                   ),
                 ),
                 AppSpacer.h12(),
-                // Title and subtitle
+                // Title only
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.pollCardTitle,
-                        style: AppTheme.bodyLarge.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: context.colors.onBackground,
-                        ),
-                      ),
-                      AppSpacer.v4(),
-                      Text(
-                        l10n.pollCardSubtitle,
-                        style: AppTheme.bodySmall.copyWith(
-                          color: context.colors.onSecondary,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    l10n.pollCardTitle,
+                    style: AppTheme.bodyLarge.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: context.colors.onBackground,
+                    ),
                   ),
                 ),
               ],
@@ -669,6 +657,7 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   Widget _buildAddOptionButton(AppLocalizations l10n) {
     return SizedBox(
       width: double.infinity,
+      height: 48, // Match the height of the form
       child: OutlinedButton(
         onPressed: () => setState(() => _showAddOption = true),
         style: OutlinedButton.styleFrom(
@@ -685,61 +674,69 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   }
 
   Widget _buildAddOptionForm(AppLocalizations l10n) {
-    return Row(
-      children: [
-        // Cancel button
-        IconButton(
-          onPressed: _isSubmitting
-              ? null
-              : () {
-                  setState(() {
-                    _showAddOption = false;
-                    _customOptionController.clear();
-                  });
-                },
-          icon: Icon(
-            Icons.close,
-            color: _isSubmitting
-                ? context.colors.onSecondary.withValues(alpha: 0.3)
-                : context.colors.onSecondary,
+    return Container(
+      height: 48, // Match button height
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(AppDimensions.radius12),
+      ),
+      child: TextField(
+        controller: _customOptionController,
+        enabled: !_isSubmitting,
+        decoration: InputDecoration(
+          hintText: l10n.enterYourOption,
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: AppDimensions.space12,
+            vertical: AppDimensions.space12,
           ),
-        ),
-        // TextField
-        Expanded(
-          child: TextField(
-            controller: _customOptionController,
-            enabled: !_isSubmitting,
-            decoration: InputDecoration(
-              hintText: l10n.enterYourOption,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radius8),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: AppDimensions.space12,
-                vertical: AppDimensions.space8,
-              ),
+          // Cancel button as prefix
+          prefixIcon: IconButton(
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+            onPressed: _isSubmitting
+                ? null
+                : () {
+                    setState(() {
+                      _showAddOption = false;
+                      _customOptionController.clear();
+                    });
+                  },
+            icon: Icon(
+              Icons.close,
+              size: 20,
+              color: _isSubmitting
+                  ? context.colors.onSecondary.withValues(alpha: 0.3)
+                  : context.colors.onSecondary,
             ),
-            maxLength: 100,
           ),
-        ),
-        // Accept button
-        IconButton(
-          onPressed: _isSubmitting ? null : _addCustomOption,
-          icon: _isSubmitting
-              ? SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: context.colors.primary,
+          // Accept button as suffix
+          suffixIcon: _isSubmitting
+              ? Padding(
+                  padding: EdgeInsets.all(AppDimensions.space12),
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: context.colors.primary,
+                    ),
                   ),
                 )
-              : Icon(
-                  Icons.check,
-                  color: context.colors.primary,
+              : IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                  onPressed: _addCustomOption,
+                  icon: Icon(
+                    Icons.check,
+                    size: 20,
+                    color: context.colors.primary,
+                  ),
                 ),
         ),
-      ],
+        maxLength: 100,
+        buildCounter: (context, {required currentLength, required isFocused, maxLength}) => null,
+      ),
     );
   }
 

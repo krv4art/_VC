@@ -437,8 +437,7 @@
     }
   },
   "pollTitle": "What's missing?",
-  "pollCardTitle": "What's missing in the app?",
-  "pollCardSubtitle": "Which 3 features should be added?",
+  "pollCardTitle": "Which feature should be added to the app",
   "pollDescription": "Vote for the options you want to see",
   "submitVote": "Vote",
   "submitting": "Submitting...",

@@ -438,7 +438,6 @@
   },
   "pollTitle": "Hva mangler?",
   "pollCardTitle": "Hva mangler i appen?",
-  "pollCardSubtitle": "Hvilke 3 funksjoner bør legges til?",
   "pollDescription": "Stem på alternativene du vil se",
   "submitVote": "Stem",
   "submitting": "Sender inn...",

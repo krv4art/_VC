@@ -416,7 +416,6 @@
   },
   "pollTitle": "Cosa manca?",
   "pollCardTitle": "Cosa manca nell'app?",
-  "pollCardSubtitle": "Quali 3 funzionalità dovrebbero essere aggiunte?",
   "pollDescription": "Vota per le opzioni che vuoi vedere",
   "submitVote": "Vota",
   "submitting": "Invio in corso...",
