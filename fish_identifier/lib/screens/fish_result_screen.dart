@@ -1,0 +1,243 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../flutter_gen/gen_l10n/app_localizations.dart';
+import '../providers/identification_provider.dart';
+import '../providers/collection_provider.dart';
+import '../models/fish_identification.dart';
+import '../models/fish_collection.dart';
+import '../constants/app_dimensions.dart';
+import '../theme/app_theme.dart';
+import 'chat_screen.dart';
+
+class FishResultScreen extends StatelessWidget {
+  final int fishId;
+
+  const FishResultScreen({super.key, required this.fishId});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final identificationProvider = context.watch<IdentificationProvider>();
+    final fish = identificationProvider.getIdentificationById(fishId);
+
+    if (fish == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text(l10n.errorTitle)),
+        body: Center(child: Text(l10n.errorGeneral)),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(fish.fishName),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () => _shareResult(context, fish),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () => _deleteResult(context, fish.id!),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Fish image
+            if (fish.imagePath.isNotEmpty)
+              Image.file(
+                File(fish.imagePath),
+                width: double.infinity,
+                height: 300,
+                fit: BoxFit.cover,
+              ),
+
+            Padding(
+              padding: const EdgeInsets.all(AppDimensions.space16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Fish name
+                  Text(fish.fishName, style: AppTheme.h2),
+                  const SizedBox(height: AppDimensions.space8),
+
+                  // Scientific name
+                  Text(
+                    fish.scientificName,
+                    style: AppTheme.body.copyWith(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.space16),
+
+                  // Confidence
+                  _buildConfidenceBar(fish.confidenceScore, context),
+                  const SizedBox(height: AppDimensions.space24),
+
+                  // Details
+                  _buildSection(l10n.habitat, fish.habitat),
+                  _buildSection(l10n.diet, fish.diet),
+
+                  if (fish.edibility != null)
+                    _buildSection(l10n.edibility, fish.edibility!),
+
+                  if (fish.cookingTips != null)
+                    _buildSection(l10n.cookingTips, fish.cookingTips!),
+
+                  if (fish.fishingTips != null)
+                    _buildSection(l10n.fishingTips, fish.fishingTips!),
+
+                  // Fun facts
+                  if (fish.funFacts.isNotEmpty) ...[
+                    const SizedBox(height: AppDimensions.space16),
+                    Text(l10n.funFacts, style: AppTheme.h4),
+                    const SizedBox(height: AppDimensions.space8),
+                    ...fish.funFacts.map((fact) => Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: AppDimensions.space8,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('• ', style: AppTheme.body),
+                              Expanded(
+                                child: Text(fact, style: AppTheme.body),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ],
+
+                  const SizedBox(height: AppDimensions.space24),
+
+                  // Action buttons
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () => _addToCollection(context, fish),
+                      icon: const Icon(Icons.add),
+                      label: Text(l10n.addToCollection),
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.space12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ChatScreen(fishId: fish.id),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.chat),
+                      label: Text(l10n.chatAboutFish),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildConfidenceBar(double confidence, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l10n.confidence, style: AppTheme.bodySmall),
+            Text(
+              '${(confidence * 100).toStringAsFixed(0)}%',
+              style: AppTheme.bodySmall.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppDimensions.space8),
+        LinearProgressIndicator(
+          value: confidence,
+          minHeight: 8,
+          borderRadius: BorderRadius.circular(AppDimensions.radius8),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSection(String title, String content) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppDimensions.space16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppTheme.h4),
+          const SizedBox(height: AppDimensions.space8),
+          Text(content, style: AppTheme.body),
+        ],
+      ),
+    );
+  }
+
+  void _addToCollection(BuildContext context, FishIdentification fish) {
+    final l10n = AppLocalizations.of(context)!;
+    final collectionProvider = context.read<CollectionProvider>();
+
+    final collection = FishCollection(
+      fishIdentificationId: fish.id!,
+      catchDate: DateTime.now(),
+      location: fish.location,
+      latitude: fish.latitude,
+      longitude: fish.longitude,
+    );
+
+    collectionProvider.addToCollection(collection);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.addToCollection)),
+    );
+  }
+
+  void _shareResult(BuildContext context, FishIdentification fish) {
+    final l10n = AppLocalizations.of(context)!;
+    // Share functionality
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.shareComingSoon)),
+    );
+  }
+
+  void _deleteResult(BuildContext context, int id) {
+    final l10n = AppLocalizations.of(context)!;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.delete),
+        content: Text(l10n.confirmClearDataMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<IdentificationProvider>().deleteIdentification(id);
+              Navigator.pop(context); // Close dialog
+              Navigator.pop(context); // Close result screen
+            },
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+  }
+}

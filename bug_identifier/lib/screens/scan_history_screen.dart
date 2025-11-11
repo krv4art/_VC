@@ -130,19 +130,17 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen>
       animation: cardAnimation,
       builder: (context, child) {
         return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, 0.3),
-            end: Offset.zero,
-          ).animate(
-            CurvedAnimation(
-              parent: _animationController,
-              curve: Interval(
-                index * 0.1,
-                (index * 0.1) + 0.5,
-                curve: Curves.easeOutCubic,
+          position: Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
+              .animate(
+                CurvedAnimation(
+                  parent: _animationController,
+                  curve: Interval(
+                    index * 0.1,
+                    (index * 0.1) + 0.5,
+                    curve: Curves.easeOutCubic,
+                  ),
+                ),
               ),
-            ),
-          ),
           child: Consumer<SubscriptionProvider>(
             builder: (context, subscriptionProvider, child) {
               final isPremium = subscriptionProvider.isPremium;
@@ -206,22 +204,22 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen>
                                         fit: BoxFit.cover,
                                         errorBuilder:
                                             (context, error, stackTrace) {
-                                          return Container(
-                                            width: AppDimensions.space64,
-                                            height: AppDimensions.space64,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade300,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    AppDimensions.radius12,
-                                                  ),
-                                            ),
-                                            child: Icon(
-                                              Icons.image_not_supported,
-                                              color: Colors.grey.shade600,
-                                            ),
-                                          );
-                                        },
+                                              return Container(
+                                                width: AppDimensions.space64,
+                                                height: AppDimensions.space64,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade300,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        AppDimensions.radius12,
+                                                      ),
+                                                ),
+                                                child: Icon(
+                                                  Icons.image_not_supported,
+                                                  color: Colors.grey.shade600,
+                                                ),
+                                              );
+                                            },
                                       )
                                     : Container(
                                         width: AppDimensions.space64,
@@ -429,15 +427,15 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen>
                                                 Navigator.of(
                                                   dialogContext,
                                                 ).pop();
-                                                context.push(
-                                                  '/modern-paywall',
-                                                );
+                                                context.push('/modern-paywall');
                                               },
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor:
                                                     context.colors.primary,
                                               ),
-                                              child: Text(l10n.upgradeToPremium),
+                                              child: Text(
+                                                l10n.upgradeToPremium,
+                                              ),
                                             ),
                                           ],
                                         ),

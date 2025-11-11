@@ -584,7 +584,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get scan => 'Digitalizar';
 
   @override
-  String get aiChatNav => 'Scanner de Cosméticos IA';
+  String get aiChatNav => 'Chat IA';
 
   @override
   String get profileNav => 'Perfil';
@@ -1816,7 +1816,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get scan => 'Escanear';
 
   @override
-  String get aiChatNav => 'Scanner de Cosméticos IA';
+  String get aiChatNav => 'Chat IA';
 
   @override
   String get profileNav => 'Perfil';
@@ -3048,7 +3048,7 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   String get scan => 'Digitalizar';
 
   @override
-  String get aiChatNav => 'Scanner de Cosméticos IA';
+  String get aiChatNav => 'Chat IA';
 
   @override
   String get profileNav => 'Perfil';

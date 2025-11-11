@@ -46,7 +46,8 @@ class SubscriptionService {
 
     try {
       CustomerInfo customerInfo = await Purchases.getCustomerInfo();
-      _isPremium = customerInfo.entitlements.all[premiumEntitlement]?.isActive ?? false;
+      _isPremium =
+          customerInfo.entitlements.all[premiumEntitlement]?.isActive ?? false;
       debugPrint('Subscription status: isPremium = $_isPremium');
       return _isPremium;
     } catch (e) {
@@ -66,8 +67,10 @@ class SubscriptionService {
     try {
       Offerings offerings = await Purchases.getOfferings();
 
-      if (offerings.current != null && offerings.current!.availablePackages.isNotEmpty) {
-        debugPrint('Available packages: ${offerings.current!.availablePackages.length}');
+      if (offerings.current != null &&
+          offerings.current!.availablePackages.isNotEmpty) {
+        debugPrint(
+            'Available packages: ${offerings.current!.availablePackages.length}');
         return offerings;
       } else {
         debugPrint('No offerings available');
@@ -89,7 +92,8 @@ class SubscriptionService {
 
     try {
       CustomerInfo customerInfo = await Purchases.purchasePackage(package);
-      _isPremium = customerInfo.entitlements.all[premiumEntitlement]?.isActive ?? false;
+      _isPremium =
+          customerInfo.entitlements.all[premiumEntitlement]?.isActive ?? false;
 
       if (_isPremium) {
         debugPrint('Purchase successful! Premium status: $_isPremium');
@@ -127,7 +131,8 @@ class SubscriptionService {
 
     try {
       CustomerInfo customerInfo = await Purchases.restorePurchases();
-      _isPremium = customerInfo.entitlements.all[premiumEntitlement]?.isActive ?? false;
+      _isPremium =
+          customerInfo.entitlements.all[premiumEntitlement]?.isActive ?? false;
 
       debugPrint('Restore purchases: isPremium = $_isPremium');
       return _isPremium;

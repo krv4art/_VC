@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/analysis_result.dart';
-import '../models/bug_analysis.dart'; // NEW: Insect models
+import '../models/bug_analysis.dart';
 import '../models/chat_message.dart';
 import '../config/prompts_manager.dart';
 import '../exceptions/api_exceptions.dart';
@@ -17,7 +17,7 @@ class GeminiService {
   final List<ChatMessage> _history = [];
 
   GeminiService({this.useProxy = true, SupabaseClient? supabaseClient})
-    : _supabaseClient = supabaseClient {
+      : _supabaseClient = supabaseClient {
     if (useProxy && _supabaseClient == null) {
       throw ArgumentError(
         'SupabaseClient must be provided when useProxy is true.',
@@ -60,91 +60,6 @@ class GeminiService {
         'IMPORTANT: Provide the entire response in ENGLISH. All descriptions, warnings, and recommendations should be in English.';
   }
 
-  /// Analyze insect image and return BugAnalysis
-  Future<BugAnalysis> analyzeBugImage(
-    String base64Image,
-    String prompt, {
-    String languageCode = 'en',
-  }) async {
-    if (!useProxy || _supabaseClient == null) {
-      throw Exception(
-        'This function requires proxy mode with a Supabase client.',
-      );
-    }
-
-    final functionUrl =
-        'https://yerbryysrnaraqmbhqdm.supabase.co/functions/v1/gemini-vision-proxy';
-
-    // Add language instruction to the prompt
-    final languageInstruction = _getLanguageInstruction(languageCode);
-    final fullPrompt = '$prompt\n\n$languageInstruction';
-
-    final requestBody = {
-      'contents': [
-        {
-          'parts': [
-            {
-              'inline_data': {'mime_type': 'image/png', 'data': base64Image},
-            },
-            {'text': fullPrompt},
-          ],
-        },
-      ],
-    };
-
-    try {
-      final httpResponse = await http.post(
-        Uri.parse(functionUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(requestBody),
-      );
-
-      if (httpResponse.statusCode != 200) {
-        final errorBody = jsonDecode(httpResponse.body);
-        final errorMessage = errorBody['error'] ?? httpResponse.reasonPhrase;
-
-        // Parse error and throw appropriate custom exception
-        throw _parseApiError(errorMessage, httpResponse.statusCode);
-      }
-
-      final responseData = jsonDecode(httpResponse.body);
-      final contentText =
-          responseData['candidates'][0]['content']['parts'][0]['text']
-              as String;
-
-      debugPrint('=== GEMINI VISION DEBUG (INSECT): Raw response text ===');
-      debugPrint(contentText);
-
-      // Extract JSON from response
-      String jsonString = contentText.trim();
-
-      // Remove markdown code blocks if present
-      jsonString = jsonString
-          .replaceAll('```json', '')
-          .replaceAll('```', '')
-          .trim();
-
-      // Find first { and last } to extract only JSON
-      final firstBrace = jsonString.indexOf('{');
-      final lastBrace = jsonString.lastIndexOf('}');
-
-      if (firstBrace != -1 && lastBrace != -1 && lastBrace > firstBrace) {
-        jsonString = jsonString.substring(firstBrace, lastBrace + 1);
-      }
-
-      debugPrint('=== GEMINI VISION DEBUG (INSECT): Extracted JSON ===');
-      debugPrint(jsonString);
-
-      final analysisJson = jsonDecode(jsonString) as Map<String, dynamic>;
-
-      return BugAnalysis.fromJson(analysisJson);
-    } catch (e) {
-      debugPrint('Exception during insect image analysis: $e');
-      rethrow;
-    }
-  }
-
-  /// Analyze cosmetic image (LEGACY - for cosmetics)
   Future<AnalysisResult> analyzeImage(
     String base64Image,
     String prompt, {
@@ -192,9 +107,8 @@ class GeminiService {
       }
 
       final responseData = jsonDecode(httpResponse.body);
-      final contentText =
-          responseData['candidates'][0]['content']['parts'][0]['text']
-              as String;
+      final contentText = responseData['candidates'][0]['content']['parts'][0]
+          ['text'] as String;
 
       debugPrint('=== GEMINI VISION DEBUG: Raw response text ===');
       debugPrint(contentText);
@@ -203,10 +117,8 @@ class GeminiService {
       String jsonString = contentText.trim();
 
       // Удаляем markdown code blocks если есть
-      jsonString = jsonString
-          .replaceAll('```json', '')
-          .replaceAll('```', '')
-          .trim();
+      jsonString =
+          jsonString.replaceAll('```json', '').replaceAll('```', '').trim();
 
       // Ищем первый { и последний } чтобы извлечь только JSON
       final firstBrace = jsonString.indexOf('{');
@@ -222,6 +134,86 @@ class GeminiService {
       final analysisJson = jsonDecode(jsonString) as Map<String, dynamic>;
 
       return AnalysisResult.fromJson(analysisJson);
+    } catch (e) {
+      debugPrint('Exception during image analysis: $e');
+      rethrow;
+    }
+  }
+
+  Future<BugAnalysis> analyzeBugImage(
+    String base64Image,
+    String prompt, {
+    String languageCode = 'en',
+  }) async {
+    if (!useProxy || _supabaseClient == null) {
+      throw Exception(
+        'This function requires proxy mode with a Supabase client.',
+      );
+    }
+
+    final functionUrl =
+        'https://yerbryysrnaraqmbhqdm.supabase.co/functions/v1/gemini-vision-proxy';
+
+    // Add language instruction to the prompt
+    final languageInstruction = _getLanguageInstruction(languageCode);
+    final fullPrompt = '$prompt\n\n$languageInstruction';
+
+    final requestBody = {
+      'contents': [
+        {
+          'parts': [
+            {
+              'inline_data': {'mime_type': 'image/png', 'data': base64Image},
+            },
+            {'text': fullPrompt},
+          ],
+        },
+      ],
+    };
+
+    try {
+      final httpResponse = await http.post(
+        Uri.parse(functionUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(requestBody),
+      );
+
+      if (httpResponse.statusCode != 200) {
+        final errorBody = jsonDecode(httpResponse.body);
+        final errorMessage = errorBody['error'] ?? httpResponse.reasonPhrase;
+
+        // Parse error and throw appropriate custom exception
+        throw _parseApiError(errorMessage, httpResponse.statusCode);
+      }
+
+      final responseData = jsonDecode(httpResponse.body);
+      final contentText = responseData['candidates'][0]['content']['parts'][0]
+          ['text'] as String;
+
+      debugPrint('=== GEMINI VISION DEBUG: Raw response text ===');
+      debugPrint(contentText);
+
+      // Улучшенное извлечение JSON
+      String jsonString = contentText.trim();
+
+      // Удаляем markdown code blocks если есть
+      jsonString =
+          jsonString.replaceAll('```json', '').replaceAll('```', '').trim();
+
+      // Ищем первый { и последний } чтобы извлечь только JSON
+      final firstBrace = jsonString.indexOf('{');
+      final lastBrace = jsonString.lastIndexOf('}');
+
+      if (firstBrace != -1 && lastBrace != -1 && lastBrace > firstBrace) {
+        jsonString = jsonString.substring(firstBrace, lastBrace + 1);
+      }
+
+      debugPrint('=== GEMINI VISION DEBUG: Extracted JSON ===');
+      debugPrint(jsonString);
+
+      final analysisJson = jsonDecode(jsonString) as Map<String, dynamic>;
+
+      return BugAnalysis.fromJson(analysisJson);
     } catch (e) {
       debugPrint('Exception during image analysis: $e');
       rethrow;
@@ -244,8 +236,7 @@ class GeminiService {
       // Add system prompt and language instruction to the first message if history is empty
       if (_history.isEmpty) {
         // Add system prompt (use provided one or default)
-        final promptToUse =
-            systemPrompt ??
+        final promptToUse = systemPrompt ??
             PromptsManager.getChatSystemPromptWithCustom(
               type: 'default',
               customPrompt: customPrompt,

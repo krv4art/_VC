@@ -90,7 +90,7 @@ class BottomNavigationWrapper extends StatelessWidget {
                   context,
                   icon: Icons.chat_bubble_outline,
                   activeIcon: Icons.chat_bubble,
-                  label: l10n.aiChat,
+                  label: l10n.aiChatNav,
                   index: 2,
                   isActive: currentIndex == 2,
                 ),

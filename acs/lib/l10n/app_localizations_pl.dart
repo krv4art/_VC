@@ -584,7 +584,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get scan => 'Skanuj';
 
   @override
-  String get aiChatNav => 'Skaner Kosmetyków AI';
+  String get aiChatNav => 'Czat AI';
 
   @override
   String get profileNav => 'Profil';

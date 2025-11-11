@@ -20,7 +20,6 @@ import 'config/app_config.dart';
 import 'config/prompts_manager.dart';
 import 'services/rating_service.dart';
 import 'services/usage_tracking_service.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 import 'providers/chat_provider.dart';
 
 void main() async {
@@ -48,21 +47,14 @@ void main() async {
     url: SupabaseConfig.supabaseUrl.isNotEmpty
         ? SupabaseConfig.supabaseUrl
         : (kDebugMode
-              ? SupabaseConfig.devSupabaseUrl
-              : SupabaseConfig.prodSupabaseUrl),
+            ? SupabaseConfig.devSupabaseUrl
+            : SupabaseConfig.prodSupabaseUrl),
     anonKey: SupabaseConfig.supabaseAnonKey.isNotEmpty
         ? SupabaseConfig.supabaseAnonKey
         : (kDebugMode
-              ? SupabaseConfig.devSupabaseAnonKey
-              : SupabaseConfig.prodSupabaseAnonKey),
+            ? SupabaseConfig.devSupabaseAnonKey
+            : SupabaseConfig.prodSupabaseAnonKey),
   );
-
-  // Initialize RevenueCat (only on mobile platforms)
-  if (!kIsWeb) {
-    await Purchases.configure(
-      PurchasesConfiguration("goog_UKfcCZSMJPjqYxRVOMbiPXbkRoS"),
-    );
-  }
 
   runApp(
     MultiProvider(

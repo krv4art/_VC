@@ -29,7 +29,8 @@ import '../../theme/theme_extensions_v2.dart';
 class ImageAnalysisResult {
   final bool shouldShowJoke;
   final String? jokeText;
-  final BugAnalysis? bugAnalysis; // NEW: Use BugAnalysis instead of AnalysisResult
+  final BugAnalysis?
+      bugAnalysis; // NEW: Use BugAnalysis instead of AnalysisResult
   final String? imagePath;
 
   const ImageAnalysisResult({
@@ -40,16 +41,16 @@ class ImageAnalysisResult {
   });
 
   // Legacy support: convert to AnalysisResult for backward compatibility
-  AnalysisResult? get analysisResult => bugAnalysis != null
-      ? _convertToLegacyFormat(bugAnalysis!)
-      : null;
+  AnalysisResult? get analysisResult =>
+      bugAnalysis != null ? _convertToLegacyFormat(bugAnalysis!) : null;
 
   /// Convert BugAnalysis to legacy AnalysisResult format for database storage
   static AnalysisResult _convertToLegacyFormat(BugAnalysis bug) {
     return AnalysisResult(
       isCosmeticLabel: bug.isInsect, // Map isInsect to isCosmeticLabel for DB
       humorousMessage: bug.humorousMessage,
-      ingredients: bug.characteristics, // Characteristics → ingredients
+      ingredients: List<String>.from(
+          bug.characteristics), // Characteristics → ingredients
       overallSafetyScore: bug.dangerLevel, // dangerLevel → overallSafetyScore
       highRiskIngredients: bug.dangerousTraits
           .map((t) => IngredientInfo(name: t.name, hint: t.description))
@@ -60,7 +61,7 @@ class ImageAnalysisResult {
       lowRiskIngredients: bug.commonTraits
           .map((t) => IngredientInfo(name: t.name, hint: t.description))
           .toList(),
-      personalizedWarnings: bug.personalizedWarnings,
+      personalizedWarnings: List<String>.from(bug.personalizedWarnings),
       benefitsAnalysis: bug.ecologicalRole, // ecologicalRole → benefitsAnalysis
       recommendedAlternatives: bug.similarSpecies
           .map((s) => RecommendedAlternative(
@@ -153,14 +154,17 @@ class ImageAnalysisService {
 
       // TODO: Add location-based preferences when available
       // For now, use generic profile
-      userProfileParts.add('Interests: Insect identification, nature observation');
+      userProfileParts
+          .add('Interests: Insect identification, nature observation');
 
       // Use allergies as sensitivity warnings (bee stings, etc.)
       if (userState.allergies.isNotEmpty) {
-        userProfileParts.add('Sensitivities: ${userState.allergies.join(', ')}');
+        userProfileParts
+            .add('Sensitivities: ${userState.allergies.join(', ')}');
       }
 
-      final String userProfilePrompt = 'USER PROFILE: ${userProfileParts.join(', ')}';
+      final String userProfilePrompt =
+          'USER PROFILE: ${userProfileParts.join(', ')}';
 
       final promptBuilder = const PromptBuilderService();
       final String fullPrompt = promptBuilder.buildInsectAnalysisPrompt(
@@ -242,20 +246,14 @@ class ImageAnalysisService {
         'is_insect': result.isInsect,
         'characteristics': result.characteristics,
         'danger_level': result.dangerLevel,
-        'dangerous_traits': result.dangerousTraits
-            .map((e) => e.toJson())
-            .toList(),
-        'notable_traits': result.notableTraits
-            .map((e) => e.toJson())
-            .toList(),
-        'common_traits': result.commonTraits
-            .map((e) => e.toJson())
-            .toList(),
+        'dangerous_traits':
+            result.dangerousTraits.map((e) => e.toJson()).toList(),
+        'notable_traits': result.notableTraits.map((e) => e.toJson()).toList(),
+        'common_traits': result.commonTraits.map((e) => e.toJson()).toList(),
         'personalized_warnings': result.personalizedWarnings,
         'ecological_role': result.ecologicalRole,
-        'similar_species': result.similarSpecies
-            .map((s) => s.toJson())
-            .toList(),
+        'similar_species':
+            result.similarSpecies.map((s) => s.toJson()).toList(),
         'ai_summary': result.aiSummary,
         'habitat': result.habitat,
         'common_name': result.commonName,

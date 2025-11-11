@@ -584,7 +584,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get scan => 'Quét';
 
   @override
-  String get aiChatNav => 'AI Cosmetic Scanner';
+  String get aiChatNav => 'Trò chuyện AI';
 
   @override
   String get profileNav => 'Hồ Sơ';

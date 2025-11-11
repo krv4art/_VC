@@ -1816,7 +1816,7 @@ class AppLocalizationsEs419 extends AppLocalizationsEs {
   String get scan => 'Escanear';
 
   @override
-  String get aiChatNav => 'AI Cosmetic Scanner';
+  String get aiChatNav => 'Chat IA';
 
   @override
   String get profileNav => 'Perfil';
@@ -3048,7 +3048,7 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
   String get scan => 'Escanear';
 
   @override
-  String get aiChatNav => 'AI Cosmetic Scanner';
+  String get aiChatNav => 'Chat IA';
 
   @override
   String get profileNav => 'Perfil';

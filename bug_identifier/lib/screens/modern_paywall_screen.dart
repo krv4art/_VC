@@ -183,7 +183,9 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: AppDimensions.space16 + AppDimensions.space4),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.space16 + AppDimensions.space4,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -258,7 +260,9 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
         AppSpacer.v8(),
         // Second row: Value proposition headline - centered
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppDimensions.space16 + AppDimensions.space4),
+          padding: EdgeInsets.symmetric(
+            horizontal: AppDimensions.space16 + AppDimensions.space4,
+          ),
           child: Text(
             l10n.unlockUnlimitedAccess,
             textAlign: TextAlign.center,
@@ -331,10 +335,17 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
     String text,
   ) {
     return Container(
-      height: AppDimensions.buttonLarge + AppDimensions.space4, // Уменьшить высоту для вертикального списка
+      height:
+          AppDimensions.buttonLarge +
+          AppDimensions.space4, // Уменьшить высоту для вертикального списка
       width: double.infinity, // Растянуть на всю ширину
-      margin: EdgeInsets.only(bottom: AppDimensions.space8), // Отступ между карточками
-      padding: EdgeInsets.symmetric(horizontal: AppDimensions.space16, vertical: AppDimensions.space8),
+      margin: EdgeInsets.only(
+        bottom: AppDimensions.space8,
+      ), // Отступ между карточками
+      padding: EdgeInsets.symmetric(
+        horizontal: AppDimensions.space16,
+        vertical: AppDimensions.space8,
+      ),
       decoration: BoxDecoration(
         color: context.colors.surface.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(AppDimensions.radius16),
@@ -350,11 +361,17 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
         // Изменить на Row для горизонтального расположения
         children: [
           Container(
-            width: AppDimensions.space32 + AppDimensions.space4, // Уменьшен с 48 до 36
-            height: AppDimensions.space32 + AppDimensions.space4, // Уменьшен с 48 до 36
+            width:
+                AppDimensions.space32 +
+                AppDimensions.space4, // Уменьшен с 48 до 36
+            height:
+                AppDimensions.space32 +
+                AppDimensions.space4, // Уменьшен с 48 до 36
             decoration: BoxDecoration(
               color: bgColor,
-              borderRadius: BorderRadius.circular(AppDimensions.space8 + AppDimensions.space4), // Уменьшен с 12 до 10
+              borderRadius: BorderRadius.circular(
+                AppDimensions.space8 + AppDimensions.space4,
+              ), // Уменьшен с 12 до 10
             ),
             child: Icon(
               icon,
@@ -510,7 +527,11 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
                 color: isSelected ? context.colors.primary : Colors.transparent,
               ),
               child: isSelected
-                  ? Icon(Icons.check, color: context.colors.surface, size: AppDimensions.iconSmall)
+                  ? Icon(
+                      Icons.check,
+                      color: context.colors.surface,
+                      size: AppDimensions.iconSmall,
+                    )
                   : null,
             ),
             AppSpacer.h16(),
@@ -547,7 +568,10 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
             // Savings badge
             if (savings != null)
               Container(
-                padding: EdgeInsets.symmetric(horizontal: AppDimensions.space8, vertical: AppDimensions.space4),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppDimensions.space8,
+                  vertical: AppDimensions.space4,
+                ),
                 decoration: BoxDecoration(
                   color: context.colors.surface,
                   borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
@@ -578,8 +602,13 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
           borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         ),
         padding: EdgeInsets.symmetric(horizontal: AppDimensions.iconMedium),
-        textStyle: AppTheme.buttonText.copyWith(fontSize: AppDimensions.iconSmall + AppDimensions.space4),
-        minimumSize: Size(double.infinity, AppDimensions.buttonLarge + AppDimensions.space8),
+        textStyle: AppTheme.buttonText.copyWith(
+          fontSize: AppDimensions.iconSmall + AppDimensions.space4,
+        ),
+        minimumSize: Size(
+          double.infinity,
+          AppDimensions.buttonLarge + AppDimensions.space8,
+        ),
         shadowColor: context.colors.shadowColor.withValues(alpha: 0.2),
       ),
       child: FittedBox(
@@ -599,7 +628,8 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
       textAlign: TextAlign.center,
       style: AppTheme.caption.copyWith(
         color: context.colors.onSurface, // Adapts to theme
-        fontSize: AppDimensions.radius12, // Slightly larger for better readability
+        fontSize:
+            AppDimensions.radius12, // Slightly larger for better readability
         height: 1.4,
       ),
     );

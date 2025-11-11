@@ -16,7 +16,10 @@
       "Bash(cmd /c copy \"e:\\_VC\\acs\\lib\\theme\\theme_extensions_v2.dart\" \"e:\\_VC\\unseen\\unseen\\lib\\theme\\theme_extensions_v2.dart\" /Y)",
       "Bash(cmd /c copy:*)",
       "Bash(git ls-tree:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(flutter create:*)",
+      "Bash(del l10n.yaml)",
+      "Bash(flutter gen-l10n:*)"
     ],
     "deny": [],
     "ask": []
