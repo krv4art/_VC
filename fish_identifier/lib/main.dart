@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'providers/theme_provider_v2.dart';
 import 'providers/locale_provider.dart';
 import 'providers/identification_provider.dart';
@@ -14,10 +15,13 @@ import 'flutter_gen/gen_l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Supabase
+  // Load environment variables
+  await dotenv.load(fileName: ".env");
+
+  // Initialize Supabase with environment variables
   await Supabase.initialize(
-    url: 'https://yerbryysrnaraqmbhqdm.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InllcmJyeXlzcm5hcmFxbWJoZWRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU5MjQ5NjIsImV4cCI6MjA1MTUwMDk2Mn0.dummy',
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
   runApp(const FishIdentifierApp());

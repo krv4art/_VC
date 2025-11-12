@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Service for managing premium subscriptions via RevenueCat
 class PremiumService {
@@ -7,7 +8,8 @@ class PremiumService {
   factory PremiumService() => _instance;
   PremiumService._internal();
 
-  static const String _revenueCatApiKey = 'YOUR_REVENUECAT_API_KEY';
+  static String get _revenueCatApiKey =>
+      dotenv.env['REVENUECAT_API_KEY'] ?? 'YOUR_REVENUECAT_API_KEY_HERE';
   static const String monthlyProductId = 'fish_id_premium_monthly';
   static const String yearlyProductId = 'fish_id_premium_yearly';
 
