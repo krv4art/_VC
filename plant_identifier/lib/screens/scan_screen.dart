@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
+import '../services/camera/camera_manager.dart';
 import '../services/image_picker_service.dart';
 import '../services/plant_identification_service.dart';
 import '../services/rating_service.dart';
@@ -12,7 +14,7 @@ import '../theme/app_theme.dart';
 import '../widgets/dialogs/rating_request_dialog.dart';
 import 'plant_result_screen.dart';
 
-/// Scan screen - Camera/image picker for plant identification
+/// Scan screen - Live camera preview for plant identification
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
 
@@ -21,246 +23,99 @@ class ScanScreen extends StatefulWidget {
 }
 
 class _ScanScreenState extends State<ScanScreen> {
+  final CameraManager _cameraManager = CameraManager();
   final ImagePickerService _imagePickerService = ImagePickerService();
   final RatingService _ratingService = RatingService();
-  File? _selectedImage;
   bool _isProcessing = false;
   String? _errorMessage;
 
   @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final colors = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.scanTitle),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: _isProcessing
-          ? _buildProcessingView(l10n)
-          : _selectedImage == null
-              ? _buildInitialView(l10n, colors)
-              : _buildImagePreview(l10n, colors),
-    );
+  void initState() {
+    super.initState();
+    _initializeCamera();
   }
 
-  Widget _buildInitialView(AppLocalizations l10n, ColorScheme colors) {
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppTheme.space24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.camera_alt,
-              size: 100,
-              color: colors.primary,
-            ),
-            const SizedBox(height: AppTheme.space24),
-            Text(
-              l10n.scanTitle,
-              style: AppTheme.h2.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colors.onSurface,
-              ),
-            ),
-            const SizedBox(height: AppTheme.space16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Text(
-                l10n.scanDescription,
-                textAlign: TextAlign.center,
-                style: AppTheme.body.copyWith(color: colors.onSurface),
-              ),
-            ),
-            const SizedBox(height: AppTheme.space48),
-            if (_errorMessage != null) ...[
-              Container(
-                padding: const EdgeInsets.all(AppTheme.space16),
-                margin: const EdgeInsets.only(bottom: AppTheme.space24),
-                decoration: BoxDecoration(
-                  color: Colors.red[50],
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  border: Border.all(color: Colors.red[200]!),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.error_outline, color: Colors.red[700]),
-                    const SizedBox(width: AppTheme.space12),
-                    Expanded(
-                      child: Text(
-                        _errorMessage!,
-                        style: AppTheme.body.copyWith(color: Colors.red[700]),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _pickFromCamera,
-                icon: const Icon(Icons.camera, size: 24),
-                label: Text(l10n.takePhoto),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: AppTheme.space20,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: AppTheme.space16),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: _pickFromGallery,
-                icon: const Icon(Icons.photo_library, size: 24),
-                label: Text(l10n.chooseFromGallery),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: AppTheme.space20,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImagePreview(AppLocalizations l10n, ColorScheme colors) {
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppTheme.space16),
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  child: Image.file(
-                    _selectedImage!,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: AppTheme.space24),
-                Text(
-                  'Image selected. Ready to identify!',
-                  style: AppTheme.h4.copyWith(color: colors.onSurface),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(AppTheme.space16),
-          decoration: BoxDecoration(
-            color: colors.surface,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
-          child: SafeArea(
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectedImage = null;
-                        _errorMessage = null;
-                      });
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                ),
-                const SizedBox(width: AppTheme.space16),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: _identifyPlant,
-                    icon: const Icon(Icons.search),
-                    label: Text(l10n.identifyPlant),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProcessingView(AppLocalizations l10n) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircularProgressIndicator(),
-          const SizedBox(height: AppTheme.space24),
-          Text(
-            'Analyzing plant...',
-            style: AppTheme.h4,
-          ),
-          const SizedBox(height: AppTheme.space12),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 48),
-            child: Text(
-              'This may take a few seconds',
-              textAlign: TextAlign.center,
-              style: AppTheme.body.copyWith(color: Colors.grey),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _pickFromCamera() async {
-    setState(() {
-      _errorMessage = null;
-    });
-
-    final image = await _imagePickerService.pickFromCamera();
-    if (image != null) {
-      setState(() {
-        _selectedImage = image;
-      });
+  Future<void> _initializeCamera() async {
+    await _cameraManager.initializeCamera(context);
+    if (mounted) {
+      setState(() {});
     }
   }
 
-  Future<void> _pickFromGallery() async {
+  @override
+  void dispose() {
+    _cameraManager.dispose();
+    super.dispose();
+  }
+
+  Future<void> _takeAndAnalyzePicture() async {
+    if (_cameraManager.controller == null ||
+        !_cameraManager.controller!.value.isInitialized ||
+        _isProcessing) {
+      return;
+    }
+
     setState(() {
+      _isProcessing = true;
       _errorMessage = null;
     });
 
-    final image = await _imagePickerService.pickFromGallery();
-    if (image != null) {
+    try {
+      final XFile picture = await _cameraManager.controller!.takePicture();
+
+      if (!mounted) return;
+
+      // Stop camera before processing
+      await _cameraManager.stopCamera();
+
+      // Process the image
+      await _processImage(File(picture.path));
+    } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _selectedImage = image;
+        _isProcessing = false;
+        _errorMessage = 'Failed to take picture: ${e.toString()}';
       });
+      // Reinitialize camera on error
+      await _initializeCamera();
     }
   }
 
-  Future<void> _identifyPlant() async {
-    if (_selectedImage == null) return;
+  Future<void> _pickImageFromGallery() async {
+    setState(() {
+      _isProcessing = true;
+      _errorMessage = null;
+    });
 
+    try {
+      // Stop camera before picking from gallery
+      await _cameraManager.stopCamera();
+
+      final image = await _imagePickerService.pickFromGallery();
+
+      if (image != null) {
+        await _processImage(image);
+      } else {
+        setState(() {
+          _isProcessing = false;
+        });
+        // Reinitialize camera if user cancels gallery selection
+        if (mounted) {
+          await _initializeCamera();
+        }
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isProcessing = false;
+        _errorMessage = 'Failed to pick image: ${e.toString()}';
+      });
+      // Reinitialize camera on error
+      await _initializeCamera();
+    }
+  }
+
+  Future<void> _processImage(File imageFile) async {
     setState(() {
       _isProcessing = true;
       _errorMessage = null;
@@ -272,7 +127,7 @@ class _ScanScreenState extends State<ScanScreen> {
       final historyProvider = context.read<PlantHistoryProvider>();
 
       // Convert image to base64
-      final base64Image = await _imagePickerService.imageToBase64(_selectedImage!);
+      final base64Image = await _imagePickerService.imageToBase64(imageFile);
 
       // Identify plant
       final result = await identificationService.identifyPlant(
@@ -295,9 +150,8 @@ class _ScanScreenState extends State<ScanScreen> {
           ),
         );
 
-        // Clear selected image
+        // Clear processing state
         setState(() {
-          _selectedImage = null;
           _isProcessing = false;
         });
 
@@ -313,6 +167,292 @@ class _ScanScreenState extends State<ScanScreen> {
         _isProcessing = false;
         _errorMessage = 'Failed to identify plant: ${e.toString()}';
       });
+      // Reinitialize camera after error
+      if (mounted) {
+        await _initializeCamera();
+      }
     }
+  }
+
+  void _onTapToFocus(TapDownDetails details) {
+    _cameraManager.onTapToFocus(details, context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          context.pop();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => context.pop(),
+          ),
+        ),
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Camera preview or different states
+            if (_cameraManager.cameraState == CameraState.ready &&
+                _cameraManager.controller != null)
+              GestureDetector(
+                onTapDown: _onTapToFocus,
+                child: CameraPreview(_cameraManager.controller!),
+              )
+            else if (_cameraManager.cameraState == CameraState.permissionDenied)
+              _buildPermissionDenied(l10n, colors)
+            else if (_cameraManager.cameraState == CameraState.error)
+              _buildError(l10n, colors)
+            else
+              _buildLoading(colors),
+
+            // Error message overlay
+            if (_errorMessage != null && !_isProcessing)
+              Positioned(
+                top: 100,
+                left: 16,
+                right: 16,
+                child: Container(
+                  padding: const EdgeInsets.all(AppTheme.space16),
+                  decoration: BoxDecoration(
+                    color: Colors.red[900]!.withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.white),
+                      const SizedBox(width: AppTheme.space12),
+                      Expanded(
+                        child: Text(
+                          _errorMessage!,
+                          style: AppTheme.body.copyWith(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+            // Camera controls (only show when camera is ready)
+            if (_cameraManager.cameraState == CameraState.ready &&
+                !_isProcessing)
+              _buildCameraControls(l10n),
+
+            // Processing overlay
+            if (_isProcessing) _buildProcessingOverlay(l10n),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCameraControls(AppLocalizations l10n) {
+    return Positioned(
+      bottom: 48,
+      left: 0,
+      right: 0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Gallery button on the left
+          _buildControlButton(
+            icon: Icons.photo_library,
+            onTap: _pickImageFromGallery,
+          ),
+          const SizedBox(width: 32),
+          // Camera button in the center
+          _buildCameraButton(onTap: _takeAndAnalyzePicture),
+          const SizedBox(width: 32),
+          // Cancel button on the right
+          _buildControlButton(
+            icon: Icons.close,
+            onTap: () => context.pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildControlButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 56,
+        width: 56,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white.withOpacity(0.3),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.7),
+            width: 2,
+          ),
+        ),
+        child: Icon(
+          icon,
+          color: Colors.white,
+          size: 28,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCameraButton({required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 76,
+        width: 76,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.transparent,
+          border: Border.all(
+            color: Colors.white,
+            width: 6,
+          ),
+        ),
+        child: Center(
+          child: Container(
+            height: 60,
+            width: 60,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPermissionDenied(AppLocalizations l10n, ColorScheme colors) {
+    return Container(
+      color: Colors.black,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppTheme.space24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.camera_alt_outlined,
+                color: Colors.white,
+                size: 80,
+              ),
+              const SizedBox(height: AppTheme.space24),
+              Text(
+                'Camera permission required',
+                style: AppTheme.h3.copyWith(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppTheme.space16),
+              Text(
+                'Please grant camera permission to use this feature',
+                style: AppTheme.body.copyWith(color: Colors.white70),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppTheme.space24),
+              ElevatedButton(
+                onPressed: () {
+                  _cameraManager.resetForRetry();
+                  _initializeCamera();
+                },
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildError(AppLocalizations l10n, ColorScheme colors) {
+    return Container(
+      color: Colors.black,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppTheme.space24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                color: colors.error,
+                size: 80,
+              ),
+              const SizedBox(height: AppTheme.space24),
+              Text(
+                _cameraManager.errorMessage ?? 'Failed to initialize camera',
+                style: AppTheme.body.copyWith(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppTheme.space24),
+              ElevatedButton(
+                onPressed: () {
+                  _cameraManager.resetForRetry();
+                  _initializeCamera();
+                },
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoading(ColorScheme colors) {
+    return Container(
+      color: Colors.black,
+      child: Center(
+        child: CircularProgressIndicator(
+          color: colors.primary,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProcessingOverlay(AppLocalizations l10n) {
+    return Container(
+      color: Colors.black.withOpacity(0.8),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(
+              color: Colors.white,
+            ),
+            const SizedBox(height: AppTheme.space24),
+            Text(
+              'Analyzing plant...',
+              style: AppTheme.h4.copyWith(color: Colors.white),
+            ),
+            const SizedBox(height: AppTheme.space12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 48),
+              child: Text(
+                'This may take a few seconds',
+                textAlign: TextAlign.center,
+                style: AppTheme.body.copyWith(color: Colors.white70),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
