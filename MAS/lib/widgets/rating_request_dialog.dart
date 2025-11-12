@@ -9,7 +9,7 @@ import 'animated_rating_stars.dart';
 
 enum DialogStep { initial, enjoying, feedback }
 
-/// Dialog для запроса оценки приложения Math AI Scanner
+/// Dialog для запроса оценки приложения Math AI Solver
 class RatingRequestDialog extends StatefulWidget {
   const RatingRequestDialog({super.key});
 
@@ -211,7 +211,7 @@ class _RatingRequestDialogState extends State<RatingRequestDialog> {
                     final navigator = Navigator.of(context);
                     await RatingService().markRatingCompleted();
 
-                    // TODO: Заменить на правильный package ID для Math AI Scanner
+                    // TODO: Заменить на правильный package ID для Math AI Solver
                     final Uri url = Uri.parse(
                       'https://play.google.com/store/apps/details?id=com.mathaisolver.mas',
                     );

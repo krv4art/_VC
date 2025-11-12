@@ -1,4 +1,4 @@
-# ПРОМЕЖУТОЧНЫЙ ОТЧЕТ: Исправления Math AI Scanner
+# ПРОМЕЖУТОЧНЫЙ ОТЧЕТ: Исправления Math AI Solver
 
 **Дата:** 2025-11-12
 **Текущий прогресс:** 3 из 12 задач (25-30%)
@@ -47,7 +47,7 @@
 - Все тексты mode cards хардкожены
 
 **Исправления:**
-1. Обновлен `app_en.arb` с ключами для Math AI Scanner:
+1. Обновлен `app_en.arb` с ключами для Math AI Solver:
    - appTitle, chooseMode, mathAiAssistant
    - solve, solveWithAI
    - check, checkSolution

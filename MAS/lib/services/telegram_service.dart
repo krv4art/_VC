@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../config/telegram_config.dart';
 
-/// Сервис для отправки сообщений в Telegram бота Math AI Scanner
+/// Сервис для отправки сообщений в Telegram бота Math AI Solver
 class TelegramService {
   static final TelegramService _instance = TelegramService._internal();
   factory TelegramService() => _instance;
@@ -81,7 +81,7 @@ class TelegramService {
 
     // Заголовок с эмодзи в зависимости от оценки
     final emoji = _getRatingEmoji(rating);
-    buffer.writeln('$emoji <b>Math AI Scanner - Negative Feedback</b>');
+    buffer.writeln('$emoji <b>Math AI Solver - Negative Feedback</b>');
     buffer.writeln('');
 
     // Оценка с хештегом
@@ -170,7 +170,7 @@ class TelegramService {
           'chat_id': TelegramConfig.chatId,
           'text':
               '✅ <b>Telegram bot successfully configured!</b>\n\n'
-              'Negative feedback from Math AI Scanner will now be sent here.',
+              'Negative feedback from Math AI Solver will now be sent here.',
           'parse_mode': 'HTML',
         }),
       );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Animated rating stars widget для Math AI Scanner
+/// Animated rating stars widget для Math AI Solver
 class AnimatedRatingStars extends StatefulWidget {
   final int rating;
   final int starCount;

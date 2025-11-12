@@ -1,4 +1,4 @@
-/// Конфигурация для Telegram бота Math AI Scanner
+/// Конфигурация для Telegram бота Math AI Solver
 ///
 /// Для получения токена бота и chat_id:
 /// 1. Создайте бота через @BotFather в Telegram
