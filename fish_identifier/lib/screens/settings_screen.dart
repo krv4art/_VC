@@ -8,7 +8,7 @@ import '../providers/premium_provider.dart';
 import '../services/database_service.dart';
 import '../constants/app_dimensions.dart';
 import '../theme/app_theme.dart';
-import '../widgets/rating_dialog.dart';
+import '../widgets/rating_request_dialog.dart';
 import '../widgets/survey_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -222,7 +222,8 @@ class SettingsScreen extends StatelessWidget {
   void _showRatingDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => const RatingDialog(),
+      barrierDismissible: false,
+      builder: (context) => const RatingRequestDialog(),
     );
   }
 
