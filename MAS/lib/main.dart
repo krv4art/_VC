@@ -7,9 +7,17 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'navigation/app_router.dart';
 import 'theme/app_theme.dart';
 import 'services/math_ai_service.dart';
+import 'config/app_config.dart';
+import 'services/rating_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize app configuration
+  await AppConfig().initialize();
+
+  // Initialize rating service
+  await RatingService().initialize();
 
   // Load environment variables
   try {

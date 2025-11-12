@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common/app_spacer.dart';
+import '../services/rating_service.dart';
+import '../widgets/rating_request_dialog.dart';
+import '../l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +23,27 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _initializeAnimations();
+    _checkRatingDialog();
+  }
+
+  /// Проверка и показ диалога оценки
+  Future<void> _checkRatingDialog() async {
+    // Небольшая задержка, чтобы экран успел отрисоваться
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted) return;
+
+    final shouldShow = await RatingService().shouldShowRatingDialog();
+    if (shouldShow && mounted) {
+      await RatingService().incrementRatingDialogShows();
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const RatingRequestDialog(),
+        );
+      }
+    }
   }
 
   void _initializeAnimations() {
@@ -70,19 +94,21 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MAS - Math AI Solver'),
+        title: Text(l10n.appTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () => context.push('/history'),
-            tooltip: 'История',
+            tooltip: l10n.history,
           ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => context.push('/settings'),
-            tooltip: 'Настройки',
+            tooltip: l10n.settings,
           ),
         ],
       ),
@@ -94,12 +120,12 @@ class _HomeScreenState extends State<HomeScreen>
             children: [
               // Welcome message
               Text(
-                'Выберите режим работы',
+                l10n.chooseMode,
                 style: Theme.of(context).textTheme.displayMedium,
               ),
               const SizedBox(height: 8),
               Text(
-                'AI помощник для решения математических задач',
+                l10n.mathAiAssistant,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -109,8 +135,8 @@ class _HomeScreenState extends State<HomeScreen>
               // Mode cards
               _buildAnimatedModeCard(
                 index: 0,
-                title: 'Розв\'язати',
-                subtitle: 'Решить задачу с AI',
+                title: l10n.solve,
+                subtitle: l10n.solveWithAI,
                 icon: Icons.lightbulb_outline,
                 gradient: const LinearGradient(
                   colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
@@ -121,8 +147,8 @@ class _HomeScreenState extends State<HomeScreen>
 
               _buildAnimatedModeCard(
                 index: 1,
-                title: 'Перевірити',
-                subtitle: 'Проверить своё решение',
+                title: l10n.check,
+                subtitle: l10n.checkSolution,
                 icon: Icons.check_circle_outline,
                 gradient: const LinearGradient(
                   colors: [Color(0xFF48BB78), Color(0xFF38A169)],
@@ -133,8 +159,8 @@ class _HomeScreenState extends State<HomeScreen>
 
               _buildAnimatedModeCard(
                 index: 2,
-                title: 'Тренуйся',
-                subtitle: 'Практиковаться на похожих задачах',
+                title: l10n.train,
+                subtitle: l10n.trainOnProblems,
                 icon: Icons.fitness_center,
                 gradient: const LinearGradient(
                   colors: [Color(0xFFED8936), Color(0xFFDD6B20)],
@@ -145,8 +171,8 @@ class _HomeScreenState extends State<HomeScreen>
 
               _buildAnimatedModeCard(
                 index: 3,
-                title: 'Конвертер мір',
-                subtitle: 'г→кг, см→м, °C→°F',
+                title: l10n.unitConverter,
+                subtitle: l10n.unitConverterDesc,
                 icon: Icons.straighten,
                 gradient: const LinearGradient(
                   colors: [Color(0xFF4299E1), Color(0xFF3182CE)],
@@ -157,8 +183,8 @@ class _HomeScreenState extends State<HomeScreen>
 
               _buildAnimatedModeCard(
                 index: 4,
-                title: 'Чат з AI',
-                subtitle: 'Задавай вопросы математическому AI',
+                title: l10n.mathChat,
+                subtitle: l10n.askQuestions,
                 icon: Icons.chat_bubble_outline,
                 gradient: const LinearGradient(
                   colors: [Color(0xFF9F7AEA), Color(0xFF805AD5)],
