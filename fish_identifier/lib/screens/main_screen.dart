@@ -3,6 +3,7 @@ import '../flutter_gen/gen_l10n/app_localizations.dart';
 import 'camera_screen.dart';
 import 'history_screen.dart';
 import 'collection_screen.dart';
+import 'chat_screen.dart';
 import 'settings_screen.dart';
 
 /// Main screen with bottom navigation
@@ -25,6 +26,7 @@ class _MainScreenState extends State<MainScreen> {
       const CameraScreen(),
       const HistoryScreen(),
       const CollectionScreen(),
+      const ChatScreen(fishId: null), // Universal AI chat without specific fish context
       const SettingsScreen(),
     ];
   }
@@ -58,6 +60,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: const Icon(Icons.collections),
             label: l10n.tabCollection,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.chat_bubble_outline),
+            label: l10n.tabChat,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.settings),

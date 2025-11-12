@@ -8,18 +8,48 @@ import '../models/fish_identification.dart';
 import '../models/fish_collection.dart';
 import '../constants/app_dimensions.dart';
 import '../theme/app_theme.dart';
+import '../services/rating_service.dart';
+import '../widgets/rating_request_dialog.dart';
 import 'chat_screen.dart';
 
-class FishResultScreen extends StatelessWidget {
+class FishResultScreen extends StatefulWidget {
   final int fishId;
 
   const FishResultScreen({super.key, required this.fishId});
 
   @override
+  State<FishResultScreen> createState() => _FishResultScreenState();
+}
+
+class _FishResultScreenState extends State<FishResultScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Show rating dialog after the screen is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowRatingDialog();
+    });
+  }
+
+  Future<void> _checkAndShowRatingDialog() async {
+    final shouldShow = await RatingService().shouldShowRatingDialog();
+    if (shouldShow && mounted) {
+      await RatingService().recordRatingDialogShown();
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const RatingRequestDialog(),
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final identificationProvider = context.watch<IdentificationProvider>();
-    final fish = identificationProvider.getIdentificationById(fishId);
+    final fish = identificationProvider.getIdentificationById(widget.fishId);
 
     if (fish == null) {
       return Scaffold(

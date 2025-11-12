@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import '../providers/theme_provider.dart';
+import '../providers/theme_provider_v2.dart';
 import '../providers/locale_provider.dart';
 import '../providers/premium_provider.dart';
 import '../services/database_service.dart';
 import '../constants/app_dimensions.dart';
 import '../theme/app_theme.dart';
-import '../widgets/rating_dialog.dart';
+import '../widgets/rating_request_dialog.dart';
 import '../widgets/survey_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -169,31 +169,31 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildThemeTile(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final themeProvider = context.watch<ThemeProvider>();
+    final themeProvider = context.watch<ThemeProviderV2>();
 
     final themes = {
-      'ocean_blue': l10n.settingsThemeOcean,
-      'deep_sea': l10n.settingsThemeDeep,
-      'tropical': l10n.settingsThemeTropical,
-      'khaki_camo': l10n.settingsThemeKhaki,
+      AppThemeType.oceanBlue: l10n.settingsThemeOcean,
+      AppThemeType.deepSea: l10n.settingsThemeDeep,
+      AppThemeType.tropicalWaters: l10n.settingsThemeTropical,
+      AppThemeType.khakiCamo: l10n.settingsThemeKhaki,
     };
 
     return ListTile(
       leading: const Icon(Icons.palette),
-      title: Text(themes[themeProvider.currentTheme]!),
+      title: Text(themeProvider.getThemeName(themeProvider.currentTheme)),
       onTap: () {
         showDialog(
           context: context,
           builder: (context) => SimpleDialog(
             title: Text(l10n.settingsTheme),
             children: themes.entries.map((entry) {
-              return RadioListTile<String>(
+              return RadioListTile<AppThemeType>(
                 title: Text(entry.value),
                 value: entry.key,
                 groupValue: themeProvider.currentTheme,
                 onChanged: (value) {
                   if (value != null) {
-                    context.read<ThemeProvider>().setTheme(value);
+                    context.read<ThemeProviderV2>().setTheme(value);
                     Navigator.pop(context);
                   }
                 },
@@ -207,14 +207,14 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildDarkModeTile(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final themeProvider = context.watch<ThemeProvider>();
+    final themeProvider = context.watch<ThemeProviderV2>();
 
     return SwitchListTile(
       secondary: const Icon(Icons.dark_mode),
       title: Text(l10n.settingsDarkMode),
-      value: themeProvider.isDarkMode,
+      value: themeProvider.isDarkTheme,
       onChanged: (value) {
-        context.read<ThemeProvider>().setDarkMode(value);
+        context.read<ThemeProviderV2>().toggleTheme();
       },
     );
   }
@@ -222,7 +222,8 @@ class SettingsScreen extends StatelessWidget {
   void _showRatingDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => const RatingDialog(),
+      barrierDismissible: false,
+      builder: (context) => const RatingRequestDialog(),
     );
   }
 
