@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'providers/theme_provider.dart';
+import 'providers/theme_provider_v2.dart';
 import 'providers/locale_provider.dart';
 import 'providers/identification_provider.dart';
 import 'providers/collection_provider.dart';
@@ -30,14 +30,14 @@ class FishIdentifierApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProviderV2()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => IdentificationProvider()),
         ChangeNotifierProvider(create: (_) => CollectionProvider()),
         ChangeNotifierProvider(create: (_) => PremiumProvider()),
         ChangeNotifierProvider(create: (_) => FishingSpotsProvider()),
       ],
-      child: Consumer2<ThemeProvider, LocaleProvider>(
+      child: Consumer2<ThemeProviderV2, LocaleProvider>(
         builder: (context, themeProvider, localeProvider, child) {
           return MaterialApp.router(
             title: 'Fish Identifier',
