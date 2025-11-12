@@ -1,0 +1,95 @@
+АНАЛИЗ СТРУКТУРЫ ЛОКАЛИЗАЦИЙ
+========================================================================
+
+1. ПАПКИ ЛОКАЛИЗАЦИЙ, НАЙДЕННЫЕ В БЭКАПЕ:
+   - e:\_VIBE\backup\ACS_backup\acs\lib\l10n (основная)
+   - e:\_VIBE\backup\ACS_backup\bug_identifier\lib\l10n
+   - e:\_VIBE\backup\ACS_backup\lib\l10n (корневая)
+
+2. ОСНОВНАЯ ПАПКА БЭКАПА: e:\_VIBE\backup\ACS_backup\acs\lib\l10n
+   
+   Всего файлов: 23
+   ARB файлов (исходные): 11
+   DART файлов (сгенерированные): 11 + 1 (главный)
+   
+   ARB файлы (11 языков):
+   - app_ar.arb (Арабский) - 28254 байт
+   - app_cs.arb (Чешский) - 22271 байт
+   - app_da.arb (Датский) - 21480 байт
+   - app_de.arb (Немецкий) - 20933 байт
+   - app_el.arb (Греческий) - 31719 байт
+   - app_en.arb (Английский) - 19890 байт
+   - app_es.arb (Испанский) - 20566 байт
+   - app_fr.arb (Французский) - 21300 байт
+   - app_it.arb (Итальянский) - 20168 байт
+   - app_ru.arb (Русский) - 30024 байт
+   - app_uk.arb (Украинский) - 27702 байт
+   
+   Сгенерированные DART файлы:
+   - app_localizations.dart (главный) - 71579 байт
+   - app_localizations_ar.dart
+   - app_localizations_cs.dart
+   - app_localizations_da.dart
+   - app_localizations_de.dart
+   - app_localizations_el.dart
+   - app_localizations_en.dart
+   - app_localizations_es.dart
+   - app_localizations_fr.dart
+   - app_localizations_it.dart
+   - app_localizations_ru.dart
+   - app_localizations_uk.dart
+
+3. ТЕКУЩАЯ ПАПКА: e:\_VC\acs\lib\l10n
+   
+   Всего файлов: 23
+   ARB файлов (исходные): 11 (ИДЕНТИЧНЫ БЭКАПУ)
+   DART файлов (сгенерированные): 11 + 1 (главный)
+   
+   Языки: те же 11 (AR, CS, DA, DE, EL, EN, ES, FR, IT, RU, UK)
+
+4. ДОПОЛНИТЕЛЬНАЯ ПАПКА В КОРНЕ БЭКАПА: e:\_VIBE\backup\ACS_backup\lib\l10n
+   
+   Содержит сгенерированные DART файлы для ДОПОЛНИТЕЛЬНЫХ языков (16 файлов):
+   - app_localizations_fi.dart (Финский)
+   - app_localizations_hi.dart (Хинди)
+   - app_localizations_hu.dart (Венгерский)
+   - app_localizations_id.dart (Индонезийский)
+   - app_localizations_ja.dart (Японский)
+   - app_localizations_ko.dart (Корейский)
+   - app_localizations_nl.dart (Нидерландский)
+   - app_localizations_no.dart (Норвежский)
+   - app_localizations_pl.dart (Польский)
+   - app_localizations_pt.dart (Португальский)
+   - app_localizations_ro.dart (Румынский)
+   - app_localizations_sv.dart (Шведский)
+   - app_localizations_th.dart (Тайский)
+   - app_localizations_tr.dart (Турецкий)
+   - app_localizations_vi.dart (Вьетнамский)
+   - app_localizations_zh.dart (Китайский)
+
+5. СРАВНЕНИЕ ОСНОВНЫХ ПАПОК:
+   
+   ARB файлы: ИДЕНТИЧНЫ (по 11 в каждой)
+   DART файлы для основных 11 языков: Присутствуют в обоих местах
+   
+   Размеры файлов примерно соответствуют:
+   - Бэкап: app_localizations.dart (71579 байт)
+   - Текущий: app_localizations.dart (74589 байт)
+   
+   Есть небольшие различия в размерах, что может указывать на обновления
+   или переформатирование.
+
+6. ВЫВОДЫ:
+   
+   A) Структура локализаций в бэкапе и текущем проекте совпадает для
+      основных 11 языков (AR, CS, DA, DE, EL, EN, ES, FR, IT, RU, UK)
+   
+   B) В бэкапе найдена дополнительная папка с поддержкой 16 дополнительных
+      языков, которых нет в текущем проекте
+   
+   C) ARB файлы (исходные) идентичны
+   
+   D) DART файлы имеют небольшие различия в размере, что может быть
+      результатом обновления или переформатирования
+   
+   E) Отсутствуют ARB файлы для дополнительных языков в текущем проекте
