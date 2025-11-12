@@ -61,6 +61,7 @@ dependencies:
   fl_chart: ^0.68.0  # Charts and graphs
 
   # Image processing
+  crypto: ^3.0.3  # SHA-256 hashing for cache keys
   image: ^4.5.4  # Image compression and manipulation
 
 dev_dependencies:

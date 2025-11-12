@@ -1,5 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:flutter/foundation.dart';
+import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
 import '../../models/math_solution.dart';
@@ -24,8 +26,9 @@ class LocalDatabaseService {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -69,6 +72,52 @@ class LocalDatabaseService {
         created_at TEXT NOT NULL
       )
     ''');
+
+    // Cache table for storing solutions by image hash
+    await db.execute('''
+      CREATE TABLE solution_cache (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        image_hash TEXT NOT NULL UNIQUE,
+        solution_json TEXT,
+        validation_json TEXT,
+        training_json TEXT,
+        cache_type TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        last_accessed TEXT NOT NULL,
+        access_count INTEGER DEFAULT 1
+      )
+    ''');
+
+    // Create index on image_hash for fast lookups
+    await db.execute('''
+      CREATE INDEX idx_image_hash ON solution_cache(image_hash)
+    ''');
+  }
+
+  /// Handle database upgrades
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      // Add solution_cache table for v2
+      await db.execute('''
+        CREATE TABLE solution_cache (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          image_hash TEXT NOT NULL UNIQUE,
+          solution_json TEXT,
+          validation_json TEXT,
+          training_json TEXT,
+          cache_type TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          last_accessed TEXT NOT NULL,
+          access_count INTEGER DEFAULT 1
+        )
+      ''');
+
+      await db.execute('''
+        CREATE INDEX idx_image_hash ON solution_cache(image_hash)
+      ''');
+
+      debugPrint('✅ Database upgraded to version 2: added solution_cache table');
+    }
   }
 
   /// Save math solution to database
@@ -151,11 +200,205 @@ class LocalDatabaseService {
       await db.rawQuery('SELECT COUNT(*) FROM training_sessions'),
     ) ?? 0;
 
+    final cacheCount = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM solution_cache'),
+    ) ?? 0;
+
     return {
       'solutions': solutionsCount,
       'validations': validationsCount,
       'sessions': sessionsCount,
+      'cached': cacheCount,
     };
+  }
+
+  // ========== CACHING METHODS ==========
+
+  /// Calculate SHA-256 hash of image bytes for cache key
+  String _calculateImageHash(Uint8List imageBytes) {
+    final digest = sha256.convert(imageBytes);
+    return digest.toString();
+  }
+
+  /// Get cached solution by image hash
+  Future<MathSolution?> getCachedSolution(Uint8List imageBytes) async {
+    try {
+      final db = await database;
+      final imageHash = _calculateImageHash(imageBytes);
+
+      final List<Map<String, dynamic>> results = await db.query(
+        'solution_cache',
+        where: 'image_hash = ? AND cache_type = ?',
+        whereArgs: [imageHash, 'solution'],
+      );
+
+      if (results.isEmpty) {
+        debugPrint('❌ Cache miss for solution (hash: ${imageHash.substring(0, 8)}...)');
+        return null;
+      }
+
+      // Update access statistics
+      await db.update(
+        'solution_cache',
+        {
+          'last_accessed': DateTime.now().toIso8601String(),
+          'access_count': results.first['access_count'] + 1,
+        },
+        where: 'id = ?',
+        whereArgs: [results.first['id']],
+      );
+
+      final solutionJson = jsonDecode(results.first['solution_json']) as Map<String, dynamic>;
+      debugPrint('✅ Cache HIT for solution (hash: ${imageHash.substring(0, 8)}..., accessed ${results.first['access_count']} times)');
+
+      return MathSolution.fromJson(solutionJson);
+    } catch (e) {
+      debugPrint('❌ Error getting cached solution: $e');
+      return null;
+    }
+  }
+
+  /// Cache a solution with image hash
+  Future<void> cacheSolution(Uint8List imageBytes, MathSolution solution) async {
+    try {
+      final db = await database;
+      final imageHash = _calculateImageHash(imageBytes);
+      final now = DateTime.now().toIso8601String();
+
+      await db.insert(
+        'solution_cache',
+        {
+          'image_hash': imageHash,
+          'solution_json': jsonEncode(solution.toJson()),
+          'cache_type': 'solution',
+          'created_at': now,
+          'last_accessed': now,
+          'access_count': 0,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      debugPrint('💾 Solution cached (hash: ${imageHash.substring(0, 8)}...)');
+    } catch (e) {
+      debugPrint('❌ Error caching solution: $e');
+    }
+  }
+
+  /// Get cached validation by image hash
+  Future<ValidationResult?> getCachedValidation(Uint8List imageBytes) async {
+    try {
+      final db = await database;
+      final imageHash = _calculateImageHash(imageBytes);
+
+      final List<Map<String, dynamic>> results = await db.query(
+        'solution_cache',
+        where: 'image_hash = ? AND cache_type = ?',
+        whereArgs: [imageHash, 'validation'],
+      );
+
+      if (results.isEmpty) {
+        debugPrint('❌ Cache miss for validation (hash: ${imageHash.substring(0, 8)}...)');
+        return null;
+      }
+
+      // Update access statistics
+      await db.update(
+        'solution_cache',
+        {
+          'last_accessed': DateTime.now().toIso8601String(),
+          'access_count': results.first['access_count'] + 1,
+        },
+        where: 'id = ?',
+        whereArgs: [results.first['id']],
+      );
+
+      final validationJson = jsonDecode(results.first['validation_json']) as Map<String, dynamic>;
+      debugPrint('✅ Cache HIT for validation (hash: ${imageHash.substring(0, 8)}..., accessed ${results.first['access_count']} times)');
+
+      return ValidationResult.fromJson(validationJson);
+    } catch (e) {
+      debugPrint('❌ Error getting cached validation: $e');
+      return null;
+    }
+  }
+
+  /// Cache a validation with image hash
+  Future<void> cacheValidation(Uint8List imageBytes, ValidationResult validation) async {
+    try {
+      final db = await database;
+      final imageHash = _calculateImageHash(imageBytes);
+      final now = DateTime.now().toIso8601String();
+
+      await db.insert(
+        'solution_cache',
+        {
+          'image_hash': imageHash,
+          'validation_json': jsonEncode(validation.toJson()),
+          'cache_type': 'validation',
+          'created_at': now,
+          'last_accessed': now,
+          'access_count': 0,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      debugPrint('💾 Validation cached (hash: ${imageHash.substring(0, 8)}...)');
+    } catch (e) {
+      debugPrint('❌ Error caching validation: $e');
+    }
+  }
+
+  /// Clear old cache entries (older than 30 days)
+  Future<int> clearOldCache({int daysOld = 30}) async {
+    try {
+      final db = await database;
+      final cutoffDate = DateTime.now().subtract(Duration(days: daysOld));
+
+      final deletedCount = await db.delete(
+        'solution_cache',
+        where: 'last_accessed < ?',
+        whereArgs: [cutoffDate.toIso8601String()],
+      );
+
+      debugPrint('🗑️ Cleared $deletedCount old cache entries (>$daysOld days)');
+      return deletedCount;
+    } catch (e) {
+      debugPrint('❌ Error clearing old cache: $e');
+      return 0;
+    }
+  }
+
+  /// Get cache statistics
+  Future<Map<String, dynamic>> getCacheStatistics() async {
+    try {
+      final db = await database;
+
+      final totalCached = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM solution_cache'),
+      ) ?? 0;
+
+      final solutionsCached = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM solution_cache WHERE cache_type = ?', ['solution']),
+      ) ?? 0;
+
+      final validationsCached = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM solution_cache WHERE cache_type = ?', ['validation']),
+      ) ?? 0;
+
+      final totalAccesses = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT SUM(access_count) FROM solution_cache'),
+      ) ?? 0;
+
+      return {
+        'total': totalCached,
+        'solutions': solutionsCached,
+        'validations': validationsCached,
+        'total_hits': totalAccesses,
+      };
+    } catch (e) {
+      debugPrint('❌ Error getting cache statistics: $e');
+      return {'total': 0, 'solutions': 0, 'validations': 0, 'total_hits': 0};
+    }
   }
 
   /// Close database

@@ -11,6 +11,7 @@ import '../../models/math_solution.dart';
 import '../../models/validation_result.dart';
 import '../../models/training_session.dart';
 import '../math_ai_service.dart';
+import '../database/local_database_service.dart';
 
 /// Result of math image processing with status
 class MathProcessingResult {
@@ -63,8 +64,10 @@ enum MathProcessingMode {
 /// Service for processing mathematical images
 class MathImageProcessingService {
   final MathAIService _mathAIService;
+  final LocalDatabaseService _dbService;
 
-  MathImageProcessingService(this._mathAIService);
+  MathImageProcessingService(this._mathAIService)
+      : _dbService = LocalDatabaseService.instance;
 
   /// Process image in SOLVE mode - analyze and solve the problem
   Future<MathProcessingResult> solveProblem(
@@ -86,6 +89,17 @@ class MathImageProcessingService {
       final Uint8List originalBytes = await imageFile.readAsBytes();
       final Uint8List compressedBytes = await _compressImage(originalBytes);
 
+      // Check cache first
+      final MathSolution? cachedSolution = await _dbService.getCachedSolution(compressedBytes);
+      if (cachedSolution != null) {
+        slowNetworkTimer?.cancel();
+        debugPrint('💰 Using cached solution - API call saved!');
+        return MathProcessingResult.success(
+          solution: cachedSolution,
+          imagePath: savedImagePath,
+        );
+      }
+
       // Convert to base64
       final String base64Image = base64Encode(compressedBytes);
 
@@ -94,6 +108,9 @@ class MathImageProcessingService {
         base64Image,
         languageCode: languageCode,
       );
+
+      // Cache the result
+      await _dbService.cacheSolution(compressedBytes, solution);
 
       slowNetworkTimer?.cancel();
 
@@ -127,6 +144,17 @@ class MathImageProcessingService {
       final Uint8List originalBytes = await imageFile.readAsBytes();
       final Uint8List compressedBytes = await _compressImage(originalBytes);
 
+      // Check cache first
+      final ValidationResult? cachedValidation = await _dbService.getCachedValidation(compressedBytes);
+      if (cachedValidation != null) {
+        slowNetworkTimer?.cancel();
+        debugPrint('💰 Using cached validation - API call saved!');
+        return MathProcessingResult.success(
+          validation: cachedValidation,
+          imagePath: savedImagePath,
+        );
+      }
+
       // Convert to base64
       final String base64Image = base64Encode(compressedBytes);
 
@@ -135,6 +163,9 @@ class MathImageProcessingService {
         base64Image,
         languageCode: languageCode,
       );
+
+      // Cache the result
+      await _dbService.cacheValidation(compressedBytes, validation);
 
       slowNetworkTimer?.cancel();
 
