@@ -56,6 +56,7 @@ class HistoryScreen extends StatelessWidget {
     return ListView.builder(
       padding: const EdgeInsets.all(AppDimensions.space16),
       itemCount: identifications.length,
+      cacheExtent: 500, // Preload items for smoother scrolling
       itemBuilder: (context, index) {
         final fish = identifications[index];
         return Card(
@@ -71,6 +72,8 @@ class HistoryScreen extends StatelessWidget {
                       width: 60,
                       height: 60,
                       fit: BoxFit.cover,
+                      cacheWidth: 120, // Cache at 2x resolution for better quality
+                      cacheHeight: 120,
                     ),
                   )
                 : const Icon(Icons.image, size: 60),

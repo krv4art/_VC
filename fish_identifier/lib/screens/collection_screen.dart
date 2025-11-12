@@ -99,6 +99,7 @@ class CollectionScreen extends StatelessWidget {
     return ListView.builder(
       padding: const EdgeInsets.all(AppDimensions.space16),
       itemCount: collection.length,
+      cacheExtent: 500, // Preload items for smoother scrolling
       itemBuilder: (context, index) {
         final item = collection[index];
         return Card(
