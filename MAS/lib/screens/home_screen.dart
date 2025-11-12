@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common/app_spacer.dart';
+import '../services/rating_service.dart';
+import '../widgets/rating_request_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +22,27 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _initializeAnimations();
+    _checkRatingDialog();
+  }
+
+  /// Проверка и показ диалога оценки
+  Future<void> _checkRatingDialog() async {
+    // Небольшая задержка, чтобы экран успел отрисоваться
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted) return;
+
+    final shouldShow = await RatingService().shouldShowRatingDialog();
+    if (shouldShow && mounted) {
+      await RatingService().incrementRatingDialogShows();
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const RatingRequestDialog(),
+        );
+      }
+    }
   }
 
   void _initializeAnimations() {
