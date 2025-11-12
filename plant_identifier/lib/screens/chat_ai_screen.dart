@@ -10,7 +10,7 @@ import '../services/gemini_service.dart';
 import '../services/typing_animation_service.dart';
 import '../services/greeting_service.dart';
 import '../services/chat_context_service.dart';
-import '../services/database_service.dart';
+import '../services/local_data_service.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/theme_extensions.dart';
 import '../widgets/chat/chat_message_bubble.dart';
@@ -24,7 +24,7 @@ class ChatAIScreen extends StatefulWidget {
   final int? dialogueId;
   final String? plantContext;
   final String? plantImagePath;
-  final int? plantResultId;
+  final String? plantResultId;
 
   const ChatAIScreen({
     super.key,
@@ -98,8 +98,7 @@ class _ChatAIScreenState extends State<ChatAIScreen>
       chatProvider.reset();
 
       // Check disclaimer status from database
-      final db = DatabaseService();
-      final disclaimerDismissed = await db.getDisclaimerStatus();
+      final disclaimerDismissed = await LocalDataService.instance.getDisclaimerStatus();
       if (disclaimerDismissed) {
         chatProvider.dismissDisclaimer();
       }
@@ -136,7 +135,7 @@ class _ChatAIScreenState extends State<ChatAIScreen>
             'I can see your plant identification result. Feel free to ask me any questions about the plant, care tips, or anything else!';
       } else {
         // Use random localized greeting
-        welcomeMessage = await GreetingService.getRandomGreeting(l10n);
+        welcomeMessage = await GreetingService.getRandomGreeting(languageCode);
         debugPrint('📢 Greeting: $welcomeMessage');
       }
 
@@ -300,7 +299,8 @@ class _ChatAIScreenState extends State<ChatAIScreen>
   Widget build(BuildContext context) {
     return Consumer<ChatProvider>(
       builder: (context, chatProvider, _) {
-        final colors = Theme.of(context).colorScheme;
+        // Get theme colors
+    final colors = context.colors;
 
         return PopScope(
           canPop: false,
@@ -309,7 +309,7 @@ class _ChatAIScreenState extends State<ChatAIScreen>
             _handleBackNavigation();
           },
           child: Scaffold(
-            backgroundColor: colors.surface,
+            backgroundColor: context.colors.surface,
             appBar: _buildAppBar(context, chatProvider, colors),
             body: Column(
               children: [
@@ -372,7 +372,7 @@ class _ChatAIScreenState extends State<ChatAIScreen>
                           child: AnimatedAiAvatar(
                             size: 40,
                             state: AvatarAnimationState.thinking,
-                            colors: colors,
+                            colors: colors.currentColors,
                           ),
                         ),
                       ],
@@ -398,14 +398,14 @@ class _ChatAIScreenState extends State<ChatAIScreen>
     );
   }
 
-  Widget _buildPlantResultCard(ChatProvider chatProvider, ColorScheme colors) {
+  Widget _buildPlantResultCard(ChatProvider chatProvider, ThemeColors colors) {
     final plantResult = chatProvider.linkedPlantResult!;
 
     return Container(
       margin: const EdgeInsets.all(AppTheme.space16),
       padding: const EdgeInsets.all(AppTheme.space16),
       decoration: BoxDecoration(
-        color: colors.primaryContainer,
+        color: context.colors.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
       ),
       child: Row(
@@ -429,7 +429,7 @@ class _ChatAIScreenState extends State<ChatAIScreen>
                   plantResult.commonName ?? 'Unknown Plant',
                   style: AppTheme.h4.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: colors.onPrimaryContainer,
+                    color: colors.onPrimary,
                   ),
                 ),
                 if (plantResult.scientificName != null)
@@ -437,7 +437,7 @@ class _ChatAIScreenState extends State<ChatAIScreen>
                     plantResult.scientificName!,
                     style: AppTheme.bodySmall.copyWith(
                       fontStyle: FontStyle.italic,
-                      color: colors.onPrimaryContainer.withOpacity(0.8),
+                      color: colors.onPrimary.withOpacity(0.8),
                     ),
                   ),
               ],
@@ -445,7 +445,7 @@ class _ChatAIScreenState extends State<ChatAIScreen>
           ),
           Icon(
             Icons.chevron_right,
-            color: colors.onPrimaryContainer,
+            color: colors.onPrimary,
           ),
         ],
       ),
@@ -455,12 +455,12 @@ class _ChatAIScreenState extends State<ChatAIScreen>
   AppBar _buildAppBar(
     BuildContext context,
     ChatProvider chatProvider,
-    ColorScheme colors,
+    ThemeColors colors,
   ) {
     final l10n = AppLocalizations.of(context)!;
 
     return AppBar(
-      backgroundColor: colors.primary,
+      backgroundColor: context.colors.primary,
       elevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -474,7 +474,7 @@ class _ChatAIScreenState extends State<ChatAIScreen>
             child: AnimatedAiAvatar(
               size: 40,
               state: chatProvider.avatarState,
-              colors: colors,
+              colors: colors.currentColors,
             ),
           ),
           const SizedBox(width: 12),

@@ -127,5 +127,18 @@
   "premiumFeature6": "Ad-free experience",
   "premiumPrice": "$4.99/month or $29.99/year",
   "premiumUpgrade": "Upgrade Now",
-  "premiumRestore": "Restore Purchase"
+  "premiumRestore": "Restore Purchase",
+
+  "doYouEnjoyOurApp": "Do you enjoy our app?",
+  "notReally": "Not really",
+  "yesItsGreat": "Yes, it's great!",
+  "rateOurApp": "Rate our app",
+  "bestRatingWeCanGet": "5 stars is the best rating we can get",
+  "rateOnGooglePlay": "Rate on Google Play",
+  "rate": "Rate",
+  "whatCanBeImproved": "What can be improved?",
+  "wereSorryYouDidntHaveAGreatExperience": "We're sorry you didn't have a great experience",
+  "yourFeedback": "Your feedback",
+  "sendFeedback": "Send Feedback",
+  "thankYouForYourFeedback": "Thank you for your feedback!"
 }

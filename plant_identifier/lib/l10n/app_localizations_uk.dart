@@ -249,4 +249,95 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get identifiedAt => 'Визначено';
+
+  @override
+  String get doYouEnjoyOurApp => 'Подобається наш додаток?';
+
+  @override
+  String get notReally => 'Не дуже';
+
+  @override
+  String get yesItsGreat => 'Так, чудово!';
+
+  @override
+  String get rateOurApp => 'Оцініть наш додаток';
+
+  @override
+  String get bestRatingWeCanGet => 'Найкраща оцінка';
+
+  @override
+  String get rateOnGooglePlay => 'Оцінити в Google Play';
+
+  @override
+  String get rate => 'Оцінити';
+
+  @override
+  String get whatCanBeImproved => 'Що можна покращити?';
+
+  @override
+  String get wereSorryYouDidntHaveAGreatExperience =>
+      'Нам шкода, що ви не отримали чудовий досвід. Розкажіть, що пішло не так.';
+
+  @override
+  String get yourFeedback => 'Ваш відгук...';
+
+  @override
+  String get sendFeedback => 'Надіслати відгук';
+
+  @override
+  String get thankYouForYourFeedback => 'Дякуємо за ваш відгук!';
+
+  @override
+  String get online => 'Онлайн';
+
+  @override
+  String get copiedToClipboard => 'Скопійовано в буфер обміну';
+
+  @override
+  String get typeAMessage => 'Введіть повідомлення...';
+
+  @override
+  String get sendMessage => 'Надіслати';
+
+  @override
+  String get writeAMessage => 'Write a message...';
+
+  @override
+  String get chatGreeting1 =>
+      '👋 Привіт! Я твій помічник з рослин. Є питання про рослини або потрібні поради з догляду? Давай спілкуватися!';
+
+  @override
+  String get chatGreeting2 =>
+      '🌿 Ласкаво просимо! Готовий досліджувати дивовижний світ рослин разом?';
+
+  @override
+  String get chatGreeting3 =>
+      '🌱 Привіт, любителю рослин! Чим можу допомогти тобі сьогодні?';
+
+  @override
+  String get chatGreeting4 =>
+      '🪴 Вітаю! Я тут, щоб допомогти тобі дізнатися про рослини, їх догляд та багато іншого.';
+
+  @override
+  String get chatGreeting5 =>
+      '🌸 Здрастуй! Питай мене про що завгодно - від визначення рослин до керівництв з догляду!';
+
+  @override
+  String get chatGreeting6 =>
+      '🍃 Привіт! Будь то полив, освітлення чи здоров\'я рослин - я тут, щоб допомогти!';
+
+  @override
+  String get chatGreeting7 =>
+      '🌺 З поверненням! Які питання про рослини у тебе сьогодні?';
+
+  @override
+  String get chatGreeting8 =>
+      '🌻 Привіт! Давай поговоримо про рослини - я вся увага (або, я б сказав, все листя?)!';
+
+  @override
+  String get aiDisclaimer =>
+      'Відповіді згенеровані ШІ і можуть містити неточності. Завжди перевіряйте важливу інформацію.';
+
+  @override
+  String get dismiss => 'Закрити';
 }

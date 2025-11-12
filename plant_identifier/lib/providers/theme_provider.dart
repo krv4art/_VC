@@ -12,6 +12,7 @@ class ThemeProvider extends ChangeNotifier {
   bool _isDarkMode = false;
 
   AppColors get colors => _colors;
+  AppColors get currentColors => _colors;
   bool get isDarkMode => _isDarkMode;
   ThemeData get themeData => AppTheme.getThemeData(_colors, _isDarkMode);
 

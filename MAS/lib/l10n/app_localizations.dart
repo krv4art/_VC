@@ -116,20 +116,92 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'AI Cosmetic Scanner'**
+  /// **'Math AI Solver'**
   String get appName;
 
-  /// No description provided for @skinAnalysis.
+  /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Skin Analysis'**
-  String get skinAnalysis;
+  /// **'MAS - Math AI Solver'**
+  String get appTitle;
 
-  /// No description provided for @checkYourCosmetics.
+  /// No description provided for @chooseMode.
   ///
   /// In en, this message translates to:
-  /// **'Check your cosmetics'**
-  String get checkYourCosmetics;
+  /// **'Choose Mode'**
+  String get chooseMode;
+
+  /// No description provided for @mathAiAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'AI assistant for solving math problems'**
+  String get mathAiAssistant;
+
+  /// No description provided for @solve.
+  ///
+  /// In en, this message translates to:
+  /// **'Solve'**
+  String get solve;
+
+  /// No description provided for @solveWithAI.
+  ///
+  /// In en, this message translates to:
+  /// **'Solve problem with AI'**
+  String get solveWithAI;
+
+  /// No description provided for @check.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get check;
+
+  /// No description provided for @checkSolution.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your solution'**
+  String get checkSolution;
+
+  /// No description provided for @train.
+  ///
+  /// In en, this message translates to:
+  /// **'Train'**
+  String get train;
+
+  /// No description provided for @trainOnProblems.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice on similar problems'**
+  String get trainOnProblems;
+
+  /// No description provided for @unitConverter.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit Converter'**
+  String get unitConverter;
+
+  /// No description provided for @unitConverterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'g→kg, cm→m, °C→°F'**
+  String get unitConverterDesc;
+
+  /// No description provided for @mathChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Math Chat'**
+  String get mathChat;
+
+  /// No description provided for @askQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask questions to Math AI'**
+  String get askQuestions;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
 
   /// No description provided for @startScanning.
   ///
@@ -152,7 +224,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiChat.
   ///
   /// In en, this message translates to:
-  /// **'AI Cosmetic Scanner'**
+  /// **'AI Chat'**
   String get aiChat;
 
   /// No description provided for @profile.

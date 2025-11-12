@@ -153,7 +153,8 @@ class MathAIService {
       final candidate = candidates[0] as Map<String, dynamic>?;
       final content = candidate?['content'] as Map<String, dynamic>?;
       final parts = content?['parts'] as List?;
-      final contentText = parts?.isNotEmpty == true ? (parts![0] as Map?)?['text'] as String? : null;
+      final part = (parts != null && parts.isNotEmpty) ? parts[0] as Map<String, dynamic>? : null;
+      final contentText = part?['text'] as String?;
 
       if (contentText == null || contentText.isEmpty) {
         throw InvalidResponseException(technicalDetails: 'Could not extract text from API response');
@@ -222,7 +223,8 @@ class MathAIService {
       final candidate = candidates[0] as Map<String, dynamic>?;
       final content = candidate?['content'] as Map<String, dynamic>?;
       final parts = content?['parts'] as List?;
-      final contentText = parts?.isNotEmpty == true ? (parts![0] as Map?)?['text'] as String? : null;
+      final part = (parts != null && parts.isNotEmpty) ? parts[0] as Map<String, dynamic>? : null;
+      final contentText = part?['text'] as String?;
 
       if (contentText == null || contentText.isEmpty) {
         throw InvalidResponseException(technicalDetails: 'Could not extract text from API response');

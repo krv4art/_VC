@@ -1,4 +1,5 @@
 import 'dart:convert';
+import "../utils/supabase_constants.dart";
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -19,7 +20,7 @@ class PlantIdentificationService {
     UserPreferences? userPreferences,
   }) async {
     // Use Supabase URL from configuration
-    final supabaseUrl = _supabaseClient.supabaseUrl.toString();
+    final supabaseUrl = SupabaseConfig.getSupabaseUrl();
     final functionUrl = '$supabaseUrl/functions/v1/gemini-vision-proxy';
 
     final prompt = _buildIdentificationPrompt(languageCode, userPreferences);

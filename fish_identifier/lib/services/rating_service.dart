@@ -96,6 +96,11 @@ class RatingService {
     }
   }
 
+  /// Записать факт показа диалога оценки
+  Future<void> recordRatingDialogShown() async {
+    await incrementRatingDialogShows();
+  }
+
   /// Увеличить счетчик показов диалога оценки
   Future<void> incrementRatingDialogShows() async {
     try {

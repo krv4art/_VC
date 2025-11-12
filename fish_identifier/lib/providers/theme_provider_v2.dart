@@ -81,12 +81,11 @@ class ThemeProviderV2 extends ChangeNotifier {
         foregroundColor: colors.onPrimary,
         elevation: 0,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: colors.cardBackground,
         elevation: 2,
       ),
-      bottomNavigationBarTheme: BottomNavigationBarTheme(
-        backgroundColor: colors.navBarColor,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
         selectedItemColor: colors.primary,
         unselectedItemColor: colors.neutral,
       ),

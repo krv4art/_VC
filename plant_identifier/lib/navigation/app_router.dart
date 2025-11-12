@@ -70,7 +70,7 @@ final appRouter = GoRouter(
           // If no plant result provided, redirect to home
           return const HomeScreen();
         }
-        return PlantResultScreen(plantResult: plantResult);
+        return PlantResultScreen(result: plantResult);
       },
     ),
     GoRoute(
@@ -82,7 +82,7 @@ final appRouter = GoRouter(
           dialogueId: extras?['dialogueId'] as int?,
           plantContext: extras?['plantContext'] as String?,
           plantImagePath: extras?['plantImagePath'] as String?,
-          plantResultId: extras?['plantResultId'] as int?,
+          plantResultId: (extras?['plantResultId'] as int?)?.toString(),
         );
       },
     ),

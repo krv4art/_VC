@@ -116,7 +116,7 @@ class ChatMessageBubble extends StatelessWidget {
   /// Build user avatar with photo
   Widget _buildUserAvatar(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: context.colors.onSecondary.withValues(alpha: 0.3),
+      backgroundColor: context.colors.onSecondary.withOpacity(0.3),
       radius: AppDimensions.iconMedium,
       child: Icon(
         Icons.person,
@@ -130,9 +130,6 @@ class ChatMessageBubble extends StatelessWidget {
   Widget _buildMessageBubble(BuildContext context) {
     return AnimatedCard(
       elevation: 2,
-      backgroundColor: message.isUser
-          ? context.colors.primary
-          : context.colors.surface,
       borderRadius: message.isUser
           ? BorderRadius.only(
               topLeft: Radius.circular(AppDimensions.radius24),
@@ -179,7 +176,7 @@ class ChatMessageBubble extends StatelessWidget {
     return MarkdownStyleSheet(
       p: TextStyle(
         color: message.isUser
-            ? Colors.white.withValues(alpha: 0.95)
+            ? Colors.white.withOpacity(0.95)
             : context.colors.onSurface,
         fontSize: AppDimensions.iconSmall,
       ),
@@ -190,24 +187,24 @@ class ChatMessageBubble extends StatelessWidget {
       ),
       em: TextStyle(
         color: message.isUser
-            ? Colors.white.withValues(alpha: 0.95)
+            ? Colors.white.withOpacity(0.95)
             : context.colors.onSurface,
         fontSize: AppDimensions.iconSmall,
         fontStyle: FontStyle.italic,
       ),
       code: TextStyle(
         color: message.isUser
-            ? Colors.white.withValues(alpha: 0.9)
+            ? Colors.white.withOpacity(0.9)
             : context.colors.onSurface,
         fontSize:
             AppDimensions.space8 + AppDimensions.space4 + AppDimensions.space4,
         backgroundColor: message.isUser
-            ? Colors.black.withValues(alpha: 0.2)
+            ? Colors.black.withOpacity(0.2)
             : Colors.black12,
       ),
       listBullet: TextStyle(
         color: message.isUser
-            ? Colors.white.withValues(alpha: 0.95)
+            ? Colors.white.withOpacity(0.95)
             : context.colors.onSurface,
         fontSize: AppDimensions.iconSmall,
       ),
@@ -232,7 +229,7 @@ class ChatMessageBubble extends StatelessWidget {
             child: Icon(
               Icons.copy,
               size: AppDimensions.iconSmall,
-              color: context.colors.onSecondary.withValues(alpha: 0.6),
+              color: context.colors.onSecondary.withOpacity(0.6),
             ),
           ),
         ),
@@ -246,7 +243,7 @@ class ChatMessageBubble extends StatelessWidget {
             child: Icon(
               Icons.share,
               size: AppDimensions.iconSmall,
-              color: context.colors.onSecondary.withValues(alpha: 0.6),
+              color: context.colors.onSecondary.withOpacity(0.6),
             ),
           ),
         ),

@@ -12,10 +12,46 @@ class AppLocalizationsUk extends AppLocalizations {
   String get appName => 'AI Cosmetic Scanner';
 
   @override
-  String get skinAnalysis => 'Аналіз шкіри';
+  String get appTitle => 'MAS - Math AI Solver';
 
   @override
-  String get checkYourCosmetics => 'Перевірте свої косметичні засоби';
+  String get chooseMode => 'Choose Mode';
+
+  @override
+  String get mathAiAssistant => 'AI assistant for solving math problems';
+
+  @override
+  String get solve => 'Solve';
+
+  @override
+  String get solveWithAI => 'Solve problem with AI';
+
+  @override
+  String get check => 'Check';
+
+  @override
+  String get checkSolution => 'Check your solution';
+
+  @override
+  String get train => 'Train';
+
+  @override
+  String get trainOnProblems => 'Practice on similar problems';
+
+  @override
+  String get unitConverter => 'Unit Converter';
+
+  @override
+  String get unitConverterDesc => 'g→kg, cm→m, °C→°F';
+
+  @override
+  String get mathChat => 'Math Chat';
+
+  @override
+  String get askQuestions => 'Ask questions to Math AI';
+
+  @override
+  String get history => 'History';
 
   @override
   String get startScanning => 'Почати сканування';

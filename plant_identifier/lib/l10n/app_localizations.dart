@@ -573,6 +573,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Identified at'**
   String get identifiedAt;
+
+  /// No description provided for @doYouEnjoyOurApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you enjoy our app?'**
+  String get doYouEnjoyOurApp;
+
+  /// No description provided for @notReally.
+  ///
+  /// In en, this message translates to:
+  /// **'Not really'**
+  String get notReally;
+
+  /// No description provided for @yesItsGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, it\'s great!'**
+  String get yesItsGreat;
+
+  /// No description provided for @rateOurApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate our app'**
+  String get rateOurApp;
+
+  /// No description provided for @bestRatingWeCanGet.
+  ///
+  /// In en, this message translates to:
+  /// **'Best rating we can get'**
+  String get bestRatingWeCanGet;
+
+  /// No description provided for @rateOnGooglePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate on Google Play'**
+  String get rateOnGooglePlay;
+
+  /// No description provided for @rate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get rate;
+
+  /// No description provided for @whatCanBeImproved.
+  ///
+  /// In en, this message translates to:
+  /// **'What can be improved?'**
+  String get whatCanBeImproved;
+
+  /// No description provided for @wereSorryYouDidntHaveAGreatExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re sorry you didn\'t have a great experience. Please tell us what went wrong.'**
+  String get wereSorryYouDidntHaveAGreatExperience;
+
+  /// No description provided for @yourFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Your feedback...'**
+  String get yourFeedback;
+
+  /// No description provided for @sendFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Feedback'**
+  String get sendFeedback;
+
+  /// No description provided for @thankYouForYourFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your feedback!'**
+  String get thankYouForYourFeedback;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @copiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get copiedToClipboard;
+
+  /// No description provided for @typeAMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeAMessage;
+
+  /// No description provided for @sendMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get sendMessage;
+
+  /// No description provided for @writeAMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a message...'**
+  String get writeAMessage;
+
+  /// No description provided for @chatGreeting1.
+  ///
+  /// In en, this message translates to:
+  /// **'👋 Hello! I\'m your plant expert assistant. Got questions about plants or need care tips? Let\'s chat!'**
+  String get chatGreeting1;
+
+  /// No description provided for @chatGreeting2.
+  ///
+  /// In en, this message translates to:
+  /// **'🌿 Welcome! Ready to explore the fascinating world of plants together?'**
+  String get chatGreeting2;
+
+  /// No description provided for @chatGreeting3.
+  ///
+  /// In en, this message translates to:
+  /// **'🌱 Hey there, plant lover! What can I help you discover today?'**
+  String get chatGreeting3;
+
+  /// No description provided for @chatGreeting4.
+  ///
+  /// In en, this message translates to:
+  /// **'🪴 Greetings! I\'m here to help you learn about plants, their care, and much more.'**
+  String get chatGreeting4;
+
+  /// No description provided for @chatGreeting5.
+  ///
+  /// In en, this message translates to:
+  /// **'🌸 Hello! Ask me anything about plants - from identification to care guides!'**
+  String get chatGreeting5;
+
+  /// No description provided for @chatGreeting6.
+  ///
+  /// In en, this message translates to:
+  /// **'🍃 Hi! Whether it\'s about watering, sunlight, or plant health, I\'m here to help!'**
+  String get chatGreeting6;
+
+  /// No description provided for @chatGreeting7.
+  ///
+  /// In en, this message translates to:
+  /// **'🌺 Welcome back! What plant questions do you have for me today?'**
+  String get chatGreeting7;
+
+  /// No description provided for @chatGreeting8.
+  ///
+  /// In en, this message translates to:
+  /// **'🌻 Hey! Let\'s talk plants - I\'m all ears (or should I say, leaves?)!'**
+  String get chatGreeting8;
+
+  /// No description provided for @aiDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-generated responses may contain inaccuracies. Always verify important information.'**
+  String get aiDisclaimer;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
 }
 
 class _AppLocalizationsDelegate

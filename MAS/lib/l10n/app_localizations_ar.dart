@@ -12,10 +12,46 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appName => 'ماسح مستحضرات التجميل بالذكاء الاصطناعي';
 
   @override
-  String get skinAnalysis => 'تحليل البشرة';
+  String get appTitle => 'MAS - Math AI Solver';
 
   @override
-  String get checkYourCosmetics => 'فحص مستحضرات التجميل الخاصة بك';
+  String get chooseMode => 'Choose Mode';
+
+  @override
+  String get mathAiAssistant => 'AI assistant for solving math problems';
+
+  @override
+  String get solve => 'Solve';
+
+  @override
+  String get solveWithAI => 'Solve problem with AI';
+
+  @override
+  String get check => 'Check';
+
+  @override
+  String get checkSolution => 'Check your solution';
+
+  @override
+  String get train => 'Train';
+
+  @override
+  String get trainOnProblems => 'Practice on similar problems';
+
+  @override
+  String get unitConverter => 'Unit Converter';
+
+  @override
+  String get unitConverterDesc => 'g→kg, cm→m, °C→°F';
+
+  @override
+  String get mathChat => 'Math Chat';
+
+  @override
+  String get askQuestions => 'Ask questions to Math AI';
+
+  @override
+  String get history => 'History';
 
   @override
   String get startScanning => 'بدء المسح';

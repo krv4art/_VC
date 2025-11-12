@@ -9,13 +9,49 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'AI Cosmetic Scanner';
+  String get appName => 'Math AI Solver';
 
   @override
-  String get skinAnalysis => 'Skin Analysis';
+  String get appTitle => 'MAS - Math AI Solver';
 
   @override
-  String get checkYourCosmetics => 'Check your cosmetics';
+  String get chooseMode => 'Choose Mode';
+
+  @override
+  String get mathAiAssistant => 'AI assistant for solving math problems';
+
+  @override
+  String get solve => 'Solve';
+
+  @override
+  String get solveWithAI => 'Solve problem with AI';
+
+  @override
+  String get check => 'Check';
+
+  @override
+  String get checkSolution => 'Check your solution';
+
+  @override
+  String get train => 'Train';
+
+  @override
+  String get trainOnProblems => 'Practice on similar problems';
+
+  @override
+  String get unitConverter => 'Unit Converter';
+
+  @override
+  String get unitConverterDesc => 'g→kg, cm→m, °C→°F';
+
+  @override
+  String get mathChat => 'Math Chat';
+
+  @override
+  String get askQuestions => 'Ask questions to Math AI';
+
+  @override
+  String get history => 'History';
 
   @override
   String get startScanning => 'Start Scanning';
@@ -27,7 +63,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanHistory => 'Scan History';
 
   @override
-  String get aiChat => 'AI Cosmetic Scanner';
+  String get aiChat => 'AI Chat';
 
   @override
   String get profile => 'Profile';

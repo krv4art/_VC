@@ -248,4 +248,95 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get identifiedAt => 'Identified at';
+
+  @override
+  String get doYouEnjoyOurApp => 'Do you enjoy our app?';
+
+  @override
+  String get notReally => 'Not really';
+
+  @override
+  String get yesItsGreat => 'Yes, it\'s great!';
+
+  @override
+  String get rateOurApp => 'Rate our app';
+
+  @override
+  String get bestRatingWeCanGet => 'Best rating we can get';
+
+  @override
+  String get rateOnGooglePlay => 'Rate on Google Play';
+
+  @override
+  String get rate => 'Rate';
+
+  @override
+  String get whatCanBeImproved => 'What can be improved?';
+
+  @override
+  String get wereSorryYouDidntHaveAGreatExperience =>
+      'We\'re sorry you didn\'t have a great experience. Please tell us what went wrong.';
+
+  @override
+  String get yourFeedback => 'Your feedback...';
+
+  @override
+  String get sendFeedback => 'Send Feedback';
+
+  @override
+  String get thankYouForYourFeedback => 'Thank you for your feedback!';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get copiedToClipboard => 'Copied to clipboard';
+
+  @override
+  String get typeAMessage => 'Type a message...';
+
+  @override
+  String get sendMessage => 'Send';
+
+  @override
+  String get writeAMessage => 'Write a message...';
+
+  @override
+  String get chatGreeting1 =>
+      '👋 Hello! I\'m your plant expert assistant. Got questions about plants or need care tips? Let\'s chat!';
+
+  @override
+  String get chatGreeting2 =>
+      '🌿 Welcome! Ready to explore the fascinating world of plants together?';
+
+  @override
+  String get chatGreeting3 =>
+      '🌱 Hey there, plant lover! What can I help you discover today?';
+
+  @override
+  String get chatGreeting4 =>
+      '🪴 Greetings! I\'m here to help you learn about plants, their care, and much more.';
+
+  @override
+  String get chatGreeting5 =>
+      '🌸 Hello! Ask me anything about plants - from identification to care guides!';
+
+  @override
+  String get chatGreeting6 =>
+      '🍃 Hi! Whether it\'s about watering, sunlight, or plant health, I\'m here to help!';
+
+  @override
+  String get chatGreeting7 =>
+      '🌺 Welcome back! What plant questions do you have for me today?';
+
+  @override
+  String get chatGreeting8 =>
+      '🌻 Hey! Let\'s talk plants - I\'m all ears (or should I say, leaves?)!';
+
+  @override
+  String get aiDisclaimer =>
+      'AI-generated responses may contain inaccuracies. Always verify important information.';
+
+  @override
+  String get dismiss => 'Dismiss';
 }

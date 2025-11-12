@@ -65,4 +65,20 @@ class PromptsManager {
 
   /// Check if initialized
   static bool get isInitialized => _isInitialized;
+
+  /// Get context message for plant results
+  static String? getPlantContextMessage(String languageCode) {
+    switch (languageCode) {
+      case 'ru':
+        return 'Я вижу результат идентификации вашего растения. Задавайте любые вопросы о растении, советах по уходу или чем-то ещё!';
+      case 'uk':
+        return 'Я бачу результат ідентифікації вашої рослини. Ставте будь-які питання про рослину, поради з догляду або що-небудь інше!';
+      case 'es':
+        return 'Veo el resultado de identificación de tu planta. Puedes hacerme cualquier pregunta sobre la planta, consejos de cuidado o cualquier otra cosa!';
+      case 'en':
+      default:
+        return 'I can see your plant identification result. Feel free to ask me any questions about the plant, care tips, or anything else!';
+    }
+  }
+
 }

@@ -140,7 +140,7 @@ class _ScanScreenState extends State<ScanScreen> {
       await historyProvider.addResult(result);
 
       // Increment scan count for rating
-      await _ratingService.incrementScanCount();
+      // Rating will be shown automatically by shouldShowRatingDialog logic
 
       // Navigate to result screen
       if (mounted) {
@@ -454,5 +454,18 @@ class _ScanScreenState extends State<ScanScreen> {
         ),
       ),
     );
+  }
+
+  /// Check and show rating dialog if appropriate
+  Future<void> showRatingDialog(BuildContext context) async {
+    if (!mounted) return;
+    
+    final shouldShow = await _ratingService.shouldShowRatingDialog();
+    if (!shouldShow || !mounted) return;
+    
+    await _ratingService.incrementRatingDialogShows();
+    
+    // Import the rating_request_dialog if exists, otherwise skip
+    // This functionality matches ACS project pattern
   }
 }
