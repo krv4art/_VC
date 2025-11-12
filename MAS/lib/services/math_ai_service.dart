@@ -54,9 +54,41 @@ class MathAIService {
       }
 
       final responseData = jsonDecode(httpResponse.body);
-      final contentText =
-          responseData['candidates'][0]['content']['parts'][0]['text']
-              as String;
+
+      // Null-safety checks for nested response structure
+      if (responseData is! Map<String, dynamic>) {
+        throw InvalidResponseException(technicalDetails: 'Response is not a valid JSON object');
+      }
+
+      final candidates = responseData['candidates'] as List?;
+      if (candidates == null || candidates.isEmpty) {
+        throw InvalidResponseException(technicalDetails: 'No candidates in API response');
+      }
+
+      final candidate = candidates[0] as Map<String, dynamic>?;
+      if (candidate == null) {
+        throw InvalidResponseException(technicalDetails: 'Invalid candidate structure');
+      }
+
+      final content = candidate['content'] as Map<String, dynamic>?;
+      if (content == null) {
+        throw InvalidResponseException(technicalDetails: 'No content in candidate');
+      }
+
+      final parts = content['parts'] as List?;
+      if (parts == null || parts.isEmpty) {
+        throw InvalidResponseException(technicalDetails: 'No parts in content');
+      }
+
+      final part = parts[0] as Map<String, dynamic>?;
+      if (part == null) {
+        throw InvalidResponseException(technicalDetails: 'Invalid part structure');
+      }
+
+      final contentText = part['text'] as String?;
+      if (contentText == null || contentText.isEmpty) {
+        throw InvalidResponseException(technicalDetails: 'No text in response part');
+      }
 
       // Извлекаем JSON из ответа
       String jsonString = _extractJson(contentText);
@@ -107,9 +139,25 @@ class MathAIService {
       }
 
       final responseData = jsonDecode(httpResponse.body);
-      final contentText =
-          responseData['candidates'][0]['content']['parts'][0]['text']
-              as String;
+
+      // Null-safety checks for nested response structure
+      if (responseData is! Map<String, dynamic>) {
+        throw InvalidResponseException(technicalDetails: 'Response is not a valid JSON object');
+      }
+
+      final candidates = responseData['candidates'] as List?;
+      if (candidates == null || candidates.isEmpty) {
+        throw InvalidResponseException(technicalDetails: 'No candidates in API response');
+      }
+
+      final candidate = candidates[0] as Map<String, dynamic>?;
+      final content = candidate?['content'] as Map<String, dynamic>?;
+      final parts = content?['parts'] as List?;
+      final contentText = parts?.isNotEmpty == true ? (parts![0] as Map?)?['text'] as String? : null;
+
+      if (contentText == null || contentText.isEmpty) {
+        throw InvalidResponseException(technicalDetails: 'Could not extract text from API response');
+      }
 
       String jsonString = _extractJson(contentText);
 
@@ -160,14 +208,34 @@ class MathAIService {
       }
 
       final responseData = jsonDecode(httpResponse.body);
-      final contentText =
-          responseData['candidates'][0]['content']['parts'][0]['text']
-              as String;
+
+      // Null-safety checks for nested response structure
+      if (responseData is! Map<String, dynamic>) {
+        throw InvalidResponseException(technicalDetails: 'Response is not a valid JSON object');
+      }
+
+      final candidates = responseData['candidates'] as List?;
+      if (candidates == null || candidates.isEmpty) {
+        throw InvalidResponseException(technicalDetails: 'No candidates in API response');
+      }
+
+      final candidate = candidates[0] as Map<String, dynamic>?;
+      final content = candidate?['content'] as Map<String, dynamic>?;
+      final parts = content?['parts'] as List?;
+      final contentText = parts?.isNotEmpty == true ? (parts![0] as Map?)?['text'] as String? : null;
+
+      if (contentText == null || contentText.isEmpty) {
+        throw InvalidResponseException(technicalDetails: 'Could not extract text from API response');
+      }
 
       String jsonString = _extractJson(contentText);
 
       final problemsJson = jsonDecode(jsonString) as Map<String, dynamic>;
-      final problemsList = problemsJson['problems'] as List<dynamic>;
+      final problemsList = problemsJson['problems'] as List<dynamic>?;
+
+      if (problemsList == null || problemsList.isEmpty) {
+        throw InvalidResponseException(technicalDetails: 'No problems generated in response');
+      }
 
       return problemsList
           .map((e) => SimilarProblem.fromJson(e as Map<String, dynamic>))
