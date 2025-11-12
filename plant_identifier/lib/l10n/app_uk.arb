@@ -88,5 +88,18 @@
   "commonDiseases": "Поширені Хвороби",
 
   "confidence": "Впевненість",
-  "identifiedAt": "Визначено"
+  "identifiedAt": "Визначено",
+
+  "doYouEnjoyOurApp": "Подобається наш додаток?",
+  "notReally": "Не дуже",
+  "yesItsGreat": "Так, чудово!",
+  "rateOurApp": "Оцініть наш додаток",
+  "bestRatingWeCanGet": "Найкраща оцінка",
+  "rateOnGooglePlay": "Оцінити в Google Play",
+  "rate": "Оцінити",
+  "whatCanBeImproved": "Що можна покращити?",
+  "wereSorryYouDidntHaveAGreatExperience": "Нам шкода, що ви не отримали чудовий досвід. Розкажіть, що пішло не так.",
+  "yourFeedback": "Ваш відгук...",
+  "sendFeedback": "Надіслати відгук",
+  "thankYouForYourFeedback": "Дякуємо за ваш відгук!"
 }

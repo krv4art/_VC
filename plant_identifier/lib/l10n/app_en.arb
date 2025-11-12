@@ -92,5 +92,18 @@
   "commonDiseases": "Common Diseases",
 
   "confidence": "Confidence",
-  "identifiedAt": "Identified at"
+  "identifiedAt": "Identified at",
+
+  "doYouEnjoyOurApp": "Do you enjoy our app?",
+  "notReally": "Not really",
+  "yesItsGreat": "Yes, it's great!",
+  "rateOurApp": "Rate our app",
+  "bestRatingWeCanGet": "Best rating we can get",
+  "rateOnGooglePlay": "Rate on Google Play",
+  "rate": "Rate",
+  "whatCanBeImproved": "What can be improved?",
+  "wereSorryYouDidntHaveAGreatExperience": "We're sorry you didn't have a great experience. Please tell us what went wrong.",
+  "yourFeedback": "Your feedback...",
+  "sendFeedback": "Send Feedback",
+  "thankYouForYourFeedback": "Thank you for your feedback!"
 }

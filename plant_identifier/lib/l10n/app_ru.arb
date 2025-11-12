@@ -88,5 +88,18 @@
   "commonDiseases": "Распространенные Болезни",
 
   "confidence": "Уверенность",
-  "identifiedAt": "Определено"
+  "identifiedAt": "Определено",
+
+  "doYouEnjoyOurApp": "Нравится наше приложение?",
+  "notReally": "Не очень",
+  "yesItsGreat": "Да, классно!",
+  "rateOurApp": "Оцените наше приложение",
+  "bestRatingWeCanGet": "Лучшая оценка",
+  "rateOnGooglePlay": "Оценить в Google Play",
+  "rate": "Оценить",
+  "whatCanBeImproved": "Что можно улучшить?",
+  "wereSorryYouDidntHaveAGreatExperience": "Нам жаль, что вы не получили отличный опыт. Расскажите, что пошло не так.",
+  "yourFeedback": "Ваш отзыв...",
+  "sendFeedback": "Отправить отзыв",
+  "thankYouForYourFeedback": "Спасибо за ваш отзыв!"
 }
