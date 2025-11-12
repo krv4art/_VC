@@ -11,6 +11,8 @@ import 'config/app_config.dart';
 import 'services/rating_service.dart';
 import 'services/usage_tracking_service.dart';
 import 'providers/locale_provider.dart';
+import 'providers/user_state.dart';
+import 'providers/subscription_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +60,22 @@ class MASApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // User State
+        ChangeNotifierProvider<UserState>(
+          create: (_) => UserState(),
+        ),
+
+        // Subscription Provider
+        ChangeNotifierProvider<SubscriptionProvider>(
+          create: (context) {
+            final provider = SubscriptionProvider();
+            final userState = context.read<UserState>();
+            provider.setUserState(userState);
+            provider.initialize();
+            return provider;
+          },
+        ),
+
         // Locale Provider (for runtime language switching)
         ChangeNotifierProvider<LocaleProvider>(
           create: (_) => LocaleProvider(),
@@ -69,7 +87,6 @@ class MASApp extends StatelessWidget {
             supabaseClient: Supabase.instance.client,
           ),
         ),
-        // Add more providers here as needed
       ],
       child: Consumer<LocaleProvider>(
         builder: (context, localeProvider, child) {
