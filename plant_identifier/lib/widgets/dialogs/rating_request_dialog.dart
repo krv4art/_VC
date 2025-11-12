@@ -6,6 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../services/rating_service.dart';
 import '../../theme/app_theme.dart';
 import '../../constants/app_dimensions.dart';
+import '../../constants/app_constants.dart';
 import '../animated_rating_stars.dart';
 
 enum DialogStep { initial, enjoying, feedback }
@@ -225,10 +226,8 @@ class _RatingRequestDialogState extends State<RatingRequestDialog> {
                   // User gave 5 stars - mark rating as completed
                   await RatingService().markRatingCompleted();
 
-                  // TODO: Replace with your actual Google Play package ID
-                  final Uri url = Uri.parse(
-                    'https://play.google.com/store/apps/details?id=com.plantidentifier.app',
-                  );
+                  // Open Google Play Store for rating
+                  final Uri url = Uri.parse(AppConstants.googlePlayUrl);
                   if (await canLaunchUrl(url)) {
                     await launchUrl(
                       url,
