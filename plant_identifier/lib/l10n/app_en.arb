@@ -92,5 +92,35 @@
   "commonDiseases": "Common Diseases",
 
   "confidence": "Confidence",
-  "identifiedAt": "Identified at"
+  "identifiedAt": "Identified at",
+
+  "doYouEnjoyOurApp": "Do you enjoy our app?",
+  "notReally": "Not really",
+  "yesItsGreat": "Yes, it's great!",
+  "rateOurApp": "Rate our app",
+  "bestRatingWeCanGet": "Best rating we can get",
+  "rateOnGooglePlay": "Rate on Google Play",
+  "rate": "Rate",
+  "whatCanBeImproved": "What can be improved?",
+  "wereSorryYouDidntHaveAGreatExperience": "We're sorry you didn't have a great experience. Please tell us what went wrong.",
+  "yourFeedback": "Your feedback...",
+  "sendFeedback": "Send Feedback",
+  "thankYouForYourFeedback": "Thank you for your feedback!",
+
+  "online": "Online",
+  "copiedToClipboard": "Copied to clipboard",
+  "typeAMessage": "Type a message...",
+  "sendMessage": "Send",
+
+  "chatGreeting1": "👋 Hello! I'm your plant expert assistant. Got questions about plants or need care tips? Let's chat!",
+  "chatGreeting2": "🌿 Welcome! Ready to explore the fascinating world of plants together?",
+  "chatGreeting3": "🌱 Hey there, plant lover! What can I help you discover today?",
+  "chatGreeting4": "🪴 Greetings! I'm here to help you learn about plants, their care, and much more.",
+  "chatGreeting5": "🌸 Hello! Ask me anything about plants - from identification to care guides!",
+  "chatGreeting6": "🍃 Hi! Whether it's about watering, sunlight, or plant health, I'm here to help!",
+  "chatGreeting7": "🌺 Welcome back! What plant questions do you have for me today?",
+  "chatGreeting8": "🌻 Hey! Let's talk plants - I'm all ears (or should I say, leaves?)!",
+
+  "aiDisclaimer": "AI-generated responses may contain inaccuracies. Always verify important information.",
+  "dismiss": "Dismiss"
 }

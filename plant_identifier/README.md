@@ -102,39 +102,110 @@ plant_identifier/
 
 ### Installation
 
-1. Clone the repository
-2. Navigate to the plant_identifier directory:
+1. **Clone the repository**
    ```bash
+   git clone <repository-url>
    cd plant_identifier
    ```
-3. Install dependencies:
+
+2. **Install dependencies**
    ```bash
    flutter pub get
    ```
-4. Run the app:
+
+3. **Configure environment variables** (REQUIRED)
+
+   Copy the example environment file:
+   ```bash
+   cp assets/config/.env.example assets/config/.env
+   ```
+
+   Edit `assets/config/.env` with your credentials:
+   ```env
+   # Environment
+   ENVIRONMENT=development
+
+   # Supabase Configuration (REQUIRED)
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_ANON_KEY=your_supabase_anon_key_here
+
+   # App Configuration
+   APP_VERSION=1.0.0
+   ENABLE_DEBUG_MODE=true
+
+   # Rating System
+   MAX_RATING_DIALOG_SHOWS=3
+
+   # Feature Flags
+   ENABLE_NOTIFICATIONS=true
+   ENABLE_OFFLINE_MODE=true
+   ```
+
+4. **Configure Google Play ID** (for production)
+
+   Edit `lib/constants/app_constants.dart`:
+   ```dart
+   static const String androidPackageId = 'com.yourcompany.plantidentifier';
+   ```
+
+5. **Add app icon** (optional but recommended)
+
+   Place your app icon (1024x1024px PNG) at:
+   ```
+   assets/icon/logo.png
+   ```
+
+   Then generate platform icons:
+   ```bash
+   flutter pub run flutter_launcher_icons
+   ```
+
+   See `assets/icon/README.md` for detailed icon guide.
+
+6. **Run the app**
    ```bash
    flutter run
    ```
 
-### Configuration
+### Platform-Specific Setup
 
-Create a `.env` file in the root directory with your Supabase credentials:
+#### Android
+- Update `applicationId` in `android/app/build.gradle` to match your package ID
+- Configure signing keys for release builds
 
-```env
-SUPABASE_URL=your_supabase_url
-SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+#### iOS
+- Update bundle identifier in Xcode
+- Configure provisioning profiles
+- Request camera and photo library permissions
+
+#### Web
+- Configure CORS settings for Supabase
+- Update web/index.html metadata
+
+### Environment Modes
+
+- **Development**: Uses `.env` configuration, debug mode enabled
+- **Production**: Set `ENVIRONMENT=production` in `.env`, disable debug mode
+
+## Recently Implemented ✅
+
+- [x] **Environment-based configuration** with .env support
+- [x] **Notification system** with scheduling and reminders
+- [x] **Rating system** with 3-step animated dialog (based on ACS)
+- [x] **Animated rating stars** with smooth entrance animations
+- [x] **Multilingual support** for rating dialog (EN, RU, UK)
+- [x] **Security improvements** - removed hardcoded API keys
 
 ## Features in Development
 
 - [ ] Camera capture and image processing
-- [ ] Advanced plant care scheduling
-- [ ] Plant care reminders and notifications
+- [ ] Advanced plant care scheduling with calendar
 - [ ] Social features (share identifications)
 - [ ] Plant collection management
 - [ ] Offline AI model support
 - [ ] Plant disease detection
 - [ ] AR plant visualization
+- [ ] Emotion images for rating dialog (0-5 stars)
 
 ## Acknowledgments
 

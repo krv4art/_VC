@@ -12,6 +12,7 @@ import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/user_preferences_provider.dart';
 import 'providers/plant_history_provider.dart';
+import 'providers/chat_provider.dart';
 
 // Services
 import 'services/plant_identification_service.dart';
@@ -47,6 +48,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => UserPreferencesProvider()),
         ChangeNotifierProvider(create: (_) => PlantHistoryProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
         Provider<PlantIdentificationService>(
           create: (_) => PlantIdentificationService(
             supabaseClient: Supabase.instance.client,

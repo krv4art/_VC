@@ -76,6 +76,15 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: AppTheme.space16),
               _buildFeatureCard(
                 context,
+                icon: Icons.chat_bubble_outline,
+                title: 'Plant Expert Chat',
+                description: 'Ask questions about plant care, identification, and more',
+                onTap: () => context.push('/chat'),
+                colors: colors,
+              ),
+              const SizedBox(height: AppTheme.space16),
+              _buildFeatureCard(
+                context,
                 icon: Icons.info_outline,
                 title: l10n.aboutApp,
                 description: l10n.aboutAppDesc,
