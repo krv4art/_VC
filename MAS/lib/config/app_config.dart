@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
 
-/// Класс для управления конфигурацией приложения Math AI Scanner
+/// Класс для управления конфигурацией приложения Math AI Solver
 /// Использует синглтон паттерн для единого доступа к настройкам
 class AppConfig {
   factory AppConfig() => _instance;

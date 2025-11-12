@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import '../config/app_config.dart';
 
-/// Сервис для управления показами диалога оценки Math AI Scanner
+/// Сервис для управления показами диалога оценки Math AI Solver
 class RatingService {
   static final RatingService _instance = RatingService._internal();
   factory RatingService() => _instance;

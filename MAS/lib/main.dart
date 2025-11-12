@@ -9,6 +9,7 @@ import 'theme/app_theme.dart';
 import 'services/math_ai_service.dart';
 import 'config/app_config.dart';
 import 'services/rating_service.dart';
+import 'services/usage_tracking_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,9 @@ void main() async {
 
   // Initialize rating service
   await RatingService().initialize();
+
+  // Initialize usage tracking service
+  await UsageTrackingService().initialize();
 
   // Load environment variables
   try {
