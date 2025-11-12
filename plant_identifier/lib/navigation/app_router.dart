@@ -9,6 +9,7 @@ import '../screens/profile_screen.dart';
 import '../screens/language_screen.dart';
 import '../screens/theme_selection_screen.dart';
 import '../screens/plant_result_screen.dart';
+import '../screens/chat_ai_screen.dart';
 import '../models/plant_result.dart';
 
 /// App routing configuration
@@ -70,6 +71,19 @@ final appRouter = GoRouter(
           return const HomeScreen();
         }
         return PlantResultScreen(plantResult: plantResult);
+      },
+    ),
+    GoRoute(
+      path: '/chat',
+      name: 'chat',
+      builder: (context, state) {
+        final extras = state.extra as Map<String, dynamic>?;
+        return ChatAIScreen(
+          dialogueId: extras?['dialogueId'] as int?,
+          plantContext: extras?['plantContext'] as String?,
+          plantImagePath: extras?['plantImagePath'] as String?,
+          plantResultId: extras?['plantResultId'] as int?,
+        );
       },
     ),
   ],
