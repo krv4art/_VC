@@ -18,8 +18,9 @@ class PlantIdentificationService {
     required String languageCode,
     UserPreferences? userPreferences,
   }) async {
-    final functionUrl =
-        'https://yerbryysrnaraqmbhqdm.supabase.co/functions/v1/gemini-vision-proxy';
+    // Use Supabase URL from configuration
+    final supabaseUrl = _supabaseClient.supabaseUrl.toString();
+    final functionUrl = '$supabaseUrl/functions/v1/gemini-vision-proxy';
 
     final prompt = _buildIdentificationPrompt(languageCode, userPreferences);
 
