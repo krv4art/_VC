@@ -5,11 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:image/image.dart' as img;
 
 import '../../models/math_solution.dart';
 import '../../models/validation_result.dart';
 import '../../models/training_session.dart';
 import '../math_ai_service.dart';
+import '../database/local_database_service.dart';
 
 /// Result of math image processing with status
 class MathProcessingResult {
@@ -62,8 +64,10 @@ enum MathProcessingMode {
 /// Service for processing mathematical images
 class MathImageProcessingService {
   final MathAIService _mathAIService;
+  final LocalDatabaseService _dbService;
 
-  MathImageProcessingService(this._mathAIService);
+  MathImageProcessingService(this._mathAIService)
+      : _dbService = LocalDatabaseService.instance;
 
   /// Process image in SOLVE mode - analyze and solve the problem
   Future<MathProcessingResult> solveProblem(
@@ -81,15 +85,32 @@ class MathImageProcessingService {
       // Save image locally
       final String savedImagePath = await _saveImage(imageFile);
 
+      // Read and compress image
+      final Uint8List originalBytes = await imageFile.readAsBytes();
+      final Uint8List compressedBytes = await _compressImage(originalBytes);
+
+      // Check cache first
+      final MathSolution? cachedSolution = await _dbService.getCachedSolution(compressedBytes);
+      if (cachedSolution != null) {
+        slowNetworkTimer?.cancel();
+        debugPrint('💰 Using cached solution - API call saved!');
+        return MathProcessingResult.success(
+          solution: cachedSolution,
+          imagePath: savedImagePath,
+        );
+      }
+
       // Convert to base64
-      final Uint8List imageBytes = await imageFile.readAsBytes();
-      final String base64Image = base64Encode(imageBytes);
+      final String base64Image = base64Encode(compressedBytes);
 
       // Call AI service to solve
       final MathSolution solution = await _mathAIService.solveProblem(
         base64Image,
         languageCode: languageCode,
       );
+
+      // Cache the result
+      await _dbService.cacheSolution(compressedBytes, solution);
 
       slowNetworkTimer?.cancel();
 
@@ -118,14 +139,33 @@ class MathImageProcessingService {
 
     try {
       final String savedImagePath = await _saveImage(imageFile);
-      final Uint8List imageBytes = await imageFile.readAsBytes();
-      final String base64Image = base64Encode(imageBytes);
+
+      // Read and compress image
+      final Uint8List originalBytes = await imageFile.readAsBytes();
+      final Uint8List compressedBytes = await _compressImage(originalBytes);
+
+      // Check cache first
+      final ValidationResult? cachedValidation = await _dbService.getCachedValidation(compressedBytes);
+      if (cachedValidation != null) {
+        slowNetworkTimer?.cancel();
+        debugPrint('💰 Using cached validation - API call saved!');
+        return MathProcessingResult.success(
+          validation: cachedValidation,
+          imagePath: savedImagePath,
+        );
+      }
+
+      // Convert to base64
+      final String base64Image = base64Encode(compressedBytes);
 
       final ValidationResult validation =
           await _mathAIService.checkUserSolution(
         base64Image,
         languageCode: languageCode,
       );
+
+      // Cache the result
+      await _dbService.cacheValidation(compressedBytes, validation);
 
       slowNetworkTimer?.cancel();
 
@@ -155,8 +195,13 @@ class MathImageProcessingService {
 
     try {
       final String savedImagePath = await _saveImage(imageFile);
-      final Uint8List imageBytes = await imageFile.readAsBytes();
-      final String base64Image = base64Encode(imageBytes);
+
+      // Read and compress image
+      final Uint8List originalBytes = await imageFile.readAsBytes();
+      final Uint8List compressedBytes = await _compressImage(originalBytes);
+
+      // Convert to base64
+      final String base64Image = base64Encode(compressedBytes);
 
       final List<SimilarProblem> similarProblems =
           await _mathAIService.generateSimilarProblems(
@@ -209,6 +254,55 @@ class MathImageProcessingService {
           languageCode: languageCode,
           onSlowNetwork: onSlowNetwork,
         );
+    }
+  }
+
+  /// Compress image before sending to API
+  ///
+  /// Reduces image size by:
+  /// - Resizing to max 1920px on longest side
+  /// - Converting to JPEG format
+  /// - Applying 85% quality compression
+  ///
+  /// Expected savings: 60-80% file size reduction
+  Future<Uint8List> _compressImage(Uint8List originalBytes) async {
+    try {
+      // Decode the image
+      img.Image? image = img.decodeImage(originalBytes);
+
+      if (image == null) {
+        debugPrint('⚠️ Failed to decode image, using original');
+        return originalBytes;
+      }
+
+      final originalSize = originalBytes.length / (1024 * 1024); // MB
+      debugPrint('📸 Original image size: ${originalSize.toStringAsFixed(2)} MB');
+      debugPrint('📐 Original dimensions: ${image.width}x${image.height}');
+
+      // Resize if image is too large (keep aspect ratio)
+      const int maxDimension = 1920;
+      if (image.width > maxDimension || image.height > maxDimension) {
+        if (image.width > image.height) {
+          image = img.copyResize(image, width: maxDimension);
+        } else {
+          image = img.copyResize(image, height: maxDimension);
+        }
+        debugPrint('📏 Resized to: ${image.width}x${image.height}');
+      }
+
+      // Convert to JPEG with 85% quality
+      final compressedBytes = img.encodeJpg(image, quality: 85);
+
+      final compressedSize = compressedBytes.length / (1024 * 1024); // MB
+      final savingsPercent = ((originalSize - compressedSize) / originalSize * 100).round();
+
+      debugPrint('✅ Compressed size: ${compressedSize.toStringAsFixed(2)} MB');
+      debugPrint('💰 Savings: $savingsPercent% (-${(originalSize - compressedSize).toStringAsFixed(2)} MB)');
+
+      return Uint8List.fromList(compressedBytes);
+    } catch (e) {
+      debugPrint('❌ Compression error: $e. Using original image.');
+      return originalBytes;
     }
   }
 

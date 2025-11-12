@@ -10,6 +10,10 @@ import 'services/math_ai_service.dart';
 import 'config/app_config.dart';
 import 'services/rating_service.dart';
 import 'services/usage_tracking_service.dart';
+import 'providers/locale_provider.dart';
+import 'providers/user_state.dart';
+import 'providers/subscription_provider.dart';
+import 'providers/chat_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,21 +61,60 @@ class MASApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // User State
+        ChangeNotifierProvider<UserState>(
+          create: (_) => UserState(),
+        ),
+
+        // Subscription Provider
+        ChangeNotifierProvider<SubscriptionProvider>(
+          create: (context) {
+            final provider = SubscriptionProvider();
+            final userState = context.read<UserState>();
+            provider.setUserState(userState);
+            provider.initialize();
+            return provider;
+          },
+        ),
+
+        // Locale Provider (for runtime language switching)
+        ChangeNotifierProvider<LocaleProvider>(
+          create: (_) => LocaleProvider(),
+        ),
+
+        // Chat Provider
+        ChangeNotifierProvider<ChatProvider>(
+          create: (_) => ChatProvider(),
+        ),
+
         // AI Service
         Provider<MathAIService>(
           create: (_) => MathAIService(
             supabaseClient: Supabase.instance.client,
           ),
         ),
-        // Add more providers here as needed
       ],
-      child: MaterialApp.router(
-        title: 'MAS - Math AI Solver',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        routerConfig: appRouter,
+      child: Consumer<LocaleProvider>(
+        builder: (context, localeProvider, child) {
+          return MaterialApp.router(
+            title: 'MAS - Math AI Solver',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: ThemeMode.system,
+            locale: localeProvider.locale,
+            supportedLocales: const [
+              Locale('en'), Locale('ru'), Locale('uk'), Locale('es'),
+              Locale('de'), Locale('fr'), Locale('it'), Locale('ar'),
+              Locale('ko'), Locale('cs'), Locale('da'), Locale('el'),
+              Locale('fi'), Locale('hi'), Locale('hu'), Locale('id'),
+              Locale('ja'), Locale('nl'), Locale('no'), Locale('pl'),
+              Locale('pt'), Locale('ro'), Locale('sv'), Locale('th'),
+              Locale('tr'), Locale('vi'), Locale('zh'),
+            ],
+            routerConfig: appRouter,
+          );
+        },
       ),
     );
   }
