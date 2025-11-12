@@ -6,6 +6,8 @@ import 'dart:convert';
 
 import '../../models/math_solution.dart';
 import '../../models/validation_result.dart';
+import '../../models/chat_message.dart';
+import '../../models/dialogue.dart';
 
 /// Local SQLite database service for storing solutions and history
 class LocalDatabaseService {
@@ -26,7 +28,7 @@ class LocalDatabaseService {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -92,6 +94,32 @@ class LocalDatabaseService {
     await db.execute('''
       CREATE INDEX idx_image_hash ON solution_cache(image_hash)
     ''');
+
+    // Chat tables for AI assistant conversations
+    await db.execute('''
+      CREATE TABLE dialogues (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        last_message_at TEXT NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        dialogue_id INTEGER NOT NULL,
+        text TEXT NOT NULL,
+        is_user INTEGER NOT NULL,
+        timestamp TEXT NOT NULL,
+        FOREIGN KEY (dialogue_id) REFERENCES dialogues (id) ON DELETE CASCADE
+      )
+    ''');
+
+    // Create index on dialogue_id for fast message lookups
+    await db.execute('''
+      CREATE INDEX idx_dialogue_id ON messages(dialogue_id)
+    ''');
   }
 
   /// Handle database upgrades
@@ -117,6 +145,35 @@ class LocalDatabaseService {
       ''');
 
       debugPrint('✅ Database upgraded to version 2: added solution_cache table');
+    }
+
+    if (oldVersion < 3) {
+      // Add chat tables for v3
+      await db.execute('''
+        CREATE TABLE dialogues (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          last_message_at TEXT NOT NULL
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE messages (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          dialogue_id INTEGER NOT NULL,
+          text TEXT NOT NULL,
+          is_user INTEGER NOT NULL,
+          timestamp TEXT NOT NULL,
+          FOREIGN KEY (dialogue_id) REFERENCES dialogues (id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute('''
+        CREATE INDEX idx_dialogue_id ON messages(dialogue_id)
+      ''');
+
+      debugPrint('✅ Database upgraded to version 3: added chat tables (dialogues, messages)');
     }
   }
 
@@ -399,6 +456,129 @@ class LocalDatabaseService {
       debugPrint('❌ Error getting cache statistics: $e');
       return {'total': 0, 'solutions': 0, 'validations': 0, 'total_hits': 0};
     }
+  }
+
+  // ========== CHAT METHODS ==========
+
+  /// Create a new dialogue and return its ID
+  Future<int> createDialogue(String title) async {
+    final db = await database;
+    final now = DateTime.now().toIso8601String();
+
+    final id = await db.insert('dialogues', {
+      'title': title,
+      'created_at': now,
+      'last_message_at': now,
+    });
+
+    debugPrint('💬 Created new dialogue: $id with title "$title"');
+    return id;
+  }
+
+  /// Get all dialogues ordered by last message
+  Future<List<Dialogue>> getAllDialogues() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'dialogues',
+      orderBy: 'last_message_at DESC',
+    );
+
+    return List.generate(maps.length, (i) => Dialogue.fromMap(maps[i]));
+  }
+
+  /// Get dialogue by ID
+  Future<Dialogue?> getDialogue(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'dialogues',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (maps.isEmpty) return null;
+    return Dialogue.fromMap(maps.first);
+  }
+
+  /// Update dialogue last message time
+  Future<void> updateDialogueTime(int dialogueId) async {
+    final db = await database;
+    await db.update(
+      'dialogues',
+      {'last_message_at': DateTime.now().toIso8601String()},
+      where: 'id = ?',
+      whereArgs: [dialogueId],
+    );
+  }
+
+  /// Delete dialogue (messages will be deleted automatically via CASCADE)
+  Future<int> deleteDialogue(int id) async {
+    final db = await database;
+    final deletedCount = await db.delete('dialogues', where: 'id = ?', whereArgs: [id]);
+    debugPrint('🗑️ Deleted dialogue: $id');
+    return deletedCount;
+  }
+
+  /// Insert a message into a dialogue
+  Future<int> insertMessage(ChatMessage message) async {
+    final db = await database;
+    final id = await db.insert('messages', message.toMap());
+
+    // Update dialogue's last_message_at
+    await updateDialogueTime(message.dialogueId);
+
+    debugPrint('💬 Inserted message: $id (${message.isUser ? "user" : "bot"}) in dialogue ${message.dialogueId}');
+    return id;
+  }
+
+  /// Get all messages for a dialogue
+  Future<List<ChatMessage>> getMessages(int dialogueId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'messages',
+      where: 'dialogue_id = ?',
+      whereArgs: [dialogueId],
+      orderBy: 'timestamp ASC',
+    );
+
+    return List.generate(maps.length, (i) => ChatMessage.fromMap(maps[i]));
+  }
+
+  /// Get last N messages for a dialogue
+  Future<List<ChatMessage>> getLastMessages(int dialogueId, int limit) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'messages',
+      where: 'dialogue_id = ?',
+      whereArgs: [dialogueId],
+      orderBy: 'timestamp DESC',
+      limit: limit,
+    );
+
+    // Reverse to get chronological order
+    return List.generate(maps.length, (i) => ChatMessage.fromMap(maps[i])).reversed.toList();
+  }
+
+  /// Get message count for a dialogue
+  Future<int> getMessageCount(int dialogueId) async {
+    final db = await database;
+    return Sqflite.firstIntValue(
+      await db.rawQuery(
+        'SELECT COUNT(*) FROM messages WHERE dialogue_id = ?',
+        [dialogueId],
+      ),
+    ) ?? 0;
+  }
+
+  /// Clear all messages in a dialogue
+  Future<int> clearDialogueMessages(int dialogueId) async {
+    final db = await database;
+    final deletedCount = await db.delete(
+      'messages',
+      where: 'dialogue_id = ?',
+      whereArgs: [dialogueId],
+    );
+    debugPrint('🗑️ Cleared $deletedCount messages from dialogue $dialogueId');
+    return deletedCount;
   }
 
   /// Close database
