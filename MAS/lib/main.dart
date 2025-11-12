@@ -13,6 +13,7 @@ import 'services/usage_tracking_service.dart';
 import 'providers/locale_provider.dart';
 import 'providers/user_state.dart';
 import 'providers/subscription_provider.dart';
+import 'providers/chat_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,6 +80,11 @@ class MASApp extends StatelessWidget {
         // Locale Provider (for runtime language switching)
         ChangeNotifierProvider<LocaleProvider>(
           create: (_) => LocaleProvider(),
+        ),
+
+        // Chat Provider
+        ChangeNotifierProvider<ChatProvider>(
+          create: (_) => ChatProvider(),
         ),
 
         // AI Service
