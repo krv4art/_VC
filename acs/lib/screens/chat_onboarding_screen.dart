@@ -19,11 +19,16 @@ class ChatOnboardingScreen extends StatefulWidget {
 }
 
 class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   int _currentStep = 0;
   String? _selectedSkinType;
   String? _selectedAgeRange;
   final List<String> _selectedAllergies = [];
+
+  // For custom allergies input
+  final TextEditingController _customAllergyController = TextEditingController();
+  final FocusNode _customAllergyFocusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
 
   // Для анимации печатания текста
   late AnimationController _typingAnimationController;
@@ -35,6 +40,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _typingAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 30),
@@ -52,9 +58,30 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   }
 
   @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    // Scroll down when keyboard appears, if the input field is focused
+    if (_customAllergyFocusNode.hasFocus) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _typingAnimationController.dispose();
     _pageController.dispose();
+    _customAllergyController.dispose();
+    _customAllergyFocusNode.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -290,6 +317,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
                       children: [
                         Expanded(
                           child: SingleChildScrollView(
+                            controller: _scrollController,
                             child: _buildOptionsForStep(l10n),
                           ),
                         ),
@@ -520,30 +548,186 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   }
 
   Widget _buildAllergiesStep(AppLocalizations l10n) {
+    // Get custom allergies (not in common list)
+    final customAllergies = _selectedAllergies
+        .where((allergy) =>
+            !_commonAllergies.any((common) => common['name'] == allergy))
+        .toList();
+
     return Column(
-      children: _commonAllergies.map((allergy) {
-        final isSelected = _selectedAllergies.contains(allergy['name']);
-        return Padding(
-          padding: EdgeInsets.only(bottom: AppDimensions.space12),
-          child: SizedBox(
-            width: double.infinity,
-            child: ChatOptionButton(
-              icon: allergy['icon'],
-              label: _getLocalizedAllergyName(allergy['name'], l10n),
-              isSelected: isSelected,
-              onTap: () {
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Common allergies
+        ..._commonAllergies.map((allergy) {
+          final isSelected = _selectedAllergies.contains(allergy['name']);
+          return Padding(
+            padding: EdgeInsets.only(bottom: AppDimensions.space12),
+            child: SizedBox(
+              width: double.infinity,
+              child: ChatOptionButton(
+                icon: allergy['icon'],
+                label: _getLocalizedAllergyName(allergy['name'], l10n),
+                isSelected: isSelected,
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      _selectedAllergies.remove(allergy['name']);
+                    } else {
+                      _selectedAllergies.add(allergy['name']);
+                    }
+                  });
+                },
+              ),
+            ),
+          );
+        }).toList(),
+
+        // Custom allergy input field
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: AppDimensions.space12,
+            top: AppDimensions.space8,
+          ),
+          child: TextField(
+            controller: _customAllergyController,
+            focusNode: _customAllergyFocusNode,
+            style: TextStyle(
+              color: context.colors.onBackground,
+              fontSize: 14,
+            ),
+            decoration: InputDecoration(
+              hintText: l10n.typeIngredientName,
+              hintStyle: TextStyle(
+                color: context.colors.onSecondary,
+              ),
+              prefixIcon: Icon(
+                Icons.add_circle_outline,
+                color: context.colors.onBackground,
+                size: 20,
+              ),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Cancel button
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _customAllergyController.clear();
+                        _customAllergyFocusNode.unfocus();
+                      });
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      size: 20,
+                      color: context.colors.onSecondary,
+                    ),
+                  ),
+                  // Accept button
+                  IconButton(
+                    onPressed: () {
+                      final value = _customAllergyController.text.trim();
+                      if (value.isNotEmpty &&
+                          !_selectedAllergies.contains(value)) {
+                        setState(() {
+                          _selectedAllergies.add(value);
+                          _customAllergyController.clear();
+                          _customAllergyFocusNode.unfocus();
+                        });
+                      }
+                    },
+                    icon: Icon(
+                      Icons.check,
+                      size: 20,
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  AppDimensions.radius12,
+                ),
+              ),
+              filled: true,
+              fillColor: context.colors.surface,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: AppDimensions.space12,
+                vertical: AppDimensions.space12,
+              ),
+            ),
+            onSubmitted: (value) {
+              if (value.isNotEmpty && !_selectedAllergies.contains(value)) {
                 setState(() {
-                  if (isSelected) {
-                    _selectedAllergies.remove(allergy['name']);
-                  } else {
-                    _selectedAllergies.add(allergy['name']);
-                  }
+                  _selectedAllergies.add(value);
+                  _customAllergyController.clear();
                 });
-              },
+              }
+            },
+          ),
+        ),
+
+        // Custom allergies list
+        if (customAllergies.isNotEmpty)
+          Padding(
+            padding: EdgeInsets.only(bottom: AppDimensions.space12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppSpacer.v8(),
+                Text(
+                  l10n.selectedAllergens,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: context.colors.onBackground,
+                  ),
+                ),
+                AppSpacer.v8(),
+                Wrap(
+                  spacing: AppDimensions.space8,
+                  runSpacing: AppDimensions.space8,
+                  children: customAllergies.map((allergen) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppDimensions.space12,
+                        vertical: AppDimensions.space8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.colors.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(AppDimensions.radius8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            allergen,
+                            style: TextStyle(
+                              color: context.colors.primary,
+                              fontSize: 14,
+                            ),
+                          ),
+                          AppSpacer.h8(),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedAllergies.remove(allergen);
+                              });
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: 16,
+                              color: context.colors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
           ),
-        );
-      }).toList(),
+      ],
     );
   }
 }
