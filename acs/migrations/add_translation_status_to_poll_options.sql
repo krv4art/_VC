@@ -95,7 +95,7 @@ BEGIN
     );
   END IF;
 
-  IF p_translations IS NULL OR jsonb_object_length(p_translations) = 0 THEN
+  IF p_translations IS NULL OR p_translations::text = '{}' THEN
     RETURN jsonb_build_object(
       'success', false,
       'error', 'empty_translations'

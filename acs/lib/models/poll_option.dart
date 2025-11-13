@@ -32,9 +32,9 @@ class PollOption {
     return PollOption(
       id: json['id'] as String,
       text: json['text'] as String,
-      voteCount: json['voteCount'] as int? ?? 0,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      isUserCreated: json['isUserCreated'] as bool? ?? false,
+      voteCount: (json['voteCount'] ?? json['vote_count']) as int? ?? 0,
+      createdAt: DateTime.parse((json['createdAt'] ?? json['created_at']) as String),
+      isUserCreated: (json['isUserCreated'] ?? json['is_user_created']) as bool? ?? false,
     );
   }
 

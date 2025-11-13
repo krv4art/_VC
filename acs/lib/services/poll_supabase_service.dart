@@ -184,10 +184,82 @@ class PollSupabaseService {
 
       final optionId = result['option_id'] as String;
       debugPrint('=== POLL SUPABASE: Custom option added successfully with ID: $optionId ===');
+
+      // Асинхронно запускаем перевод на остальные языки через Edge Function
+      _translateOptionAsync(optionId, text.trim(), languageCode);
+
       return optionId;
     } catch (e) {
       debugPrint('=== POLL SUPABASE: Error adding custom option: $e ===');
       return null;
+    }
+  }
+
+  /// Асинхронно переводит вариант опроса на все поддерживаемые языки
+  Future<void> _translateOptionAsync(String optionId, String text, String sourceLanguage) async {
+    try {
+      debugPrint('=== POLL SUPABASE: Starting async translation for option: $optionId ===');
+
+      // Список всех поддерживаемых языков кроме исходного
+      final allLanguages = ['en', 'ru', 'uk', 'es', 'de', 'fr', 'it'];
+      final targetLanguages = allLanguages.where((lang) => lang != sourceLanguage).toList();
+
+      if (targetLanguages.isEmpty) {
+        debugPrint('=== POLL SUPABASE: No target languages for translation ===');
+        return;
+      }
+
+      debugPrint('=== POLL SUPABASE: Translating from $sourceLanguage to: ${targetLanguages.join(", ")} ===');
+
+      // Вызываем Edge Function для перевода
+      final translationResponse = await _client.functions.invoke(
+        'poll-translate-option',
+        body: {
+          'text': text,
+          'sourceLanguage': sourceLanguage,
+          'targetLanguages': targetLanguages,
+        },
+      );
+
+      if (translationResponse.status != 200) {
+        debugPrint('=== POLL SUPABASE: Translation Edge Function failed with status: ${translationResponse.status} ===');
+        return;
+      }
+
+      final translationData = translationResponse.data as Map<String, dynamic>;
+      final translationSuccess = translationData['success'] as bool;
+
+      if (!translationSuccess) {
+        final error = translationData['error'];
+        debugPrint('=== POLL SUPABASE: Translation failed: $error ===');
+        return;
+      }
+
+      final translations = translationData['translations'] as Map<String, dynamic>;
+      debugPrint('=== POLL SUPABASE: Received ${translations.length} translations ===');
+
+      // Сохраняем переводы в БД через RPC функцию
+      final saveResponse = await _client.rpc(
+        'add_option_translations',
+        params: {
+          'p_option_id': optionId,
+          'p_translations': translations,
+          'p_translation_status': 'completed',
+        },
+      );
+
+      final saveResult = saveResponse as Map<String, dynamic>;
+      final saveSuccess = saveResult['success'] as bool;
+
+      if (saveSuccess) {
+        final translationsAdded = saveResult['translations_added'] as int;
+        debugPrint('=== POLL SUPABASE: Successfully added $translationsAdded translations ===');
+      } else {
+        final error = saveResult['error'];
+        debugPrint('=== POLL SUPABASE: Failed to save translations: $error ===');
+      }
+    } catch (e) {
+      debugPrint('=== POLL SUPABASE: Error during async translation: $e ===');
     }
   }
 

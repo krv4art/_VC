@@ -13,14 +13,17 @@ interface TranslationResponse {
 }
 
 Deno.serve(async (req: Request) => {
+  // CORS headers для всех ответов
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey, x-client-info",
+  };
+
   // Обработка CORS preflight запросов
   if (req.method === "OPTIONS") {
     return new Response("ok", {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
+      headers: corsHeaders,
     });
   }
 
@@ -37,7 +40,7 @@ Deno.serve(async (req: Request) => {
         }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         }
       );
     }
@@ -55,7 +58,7 @@ Deno.serve(async (req: Request) => {
         }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         }
       );
     }
@@ -82,7 +85,7 @@ Deno.serve(async (req: Request) => {
       }),
       {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   } catch (error) {
@@ -98,7 +101,7 @@ Deno.serve(async (req: Request) => {
       }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   }

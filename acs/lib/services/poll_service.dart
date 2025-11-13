@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 import '../models/poll_option.dart';
 import '../models/poll_vote.dart';
 import 'poll_supabase_service.dart';

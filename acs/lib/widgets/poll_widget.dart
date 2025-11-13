@@ -189,10 +189,12 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   }
 
   Future<void> _loadPollData() async {
+    debugPrint('=== POLL WIDGET: Loading poll data ===');
     setState(() => _isLoading = true);
 
     try {
       _currentLanguage = Localizations.localeOf(context).languageCode;
+      debugPrint('=== POLL WIDGET: Current language: $_currentLanguage ===');
 
       // ОПТИМИЗАЦИЯ: Используем новый метод getPollData(), который делает 1 запрос вместо 3
       final pollData = await widget.pollService.getPollData(_currentLanguage);
@@ -217,19 +219,32 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   }
 
   void _applyFilter() {
+    debugPrint('=== POLL WIDGET: Applying filter: $_currentFilter ===');
+    debugPrint('=== POLL WIDGET: Total options before filter: ${_options.length} ===');
+    debugPrint('=== POLL WIDGET: Total user votes: ${_userVotes.length} ===');
+
     List<PollOption> filtered = List.from(_options);
 
     switch (_currentFilter) {
       case PollFilter.newest:
         filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        debugPrint('=== POLL WIDGET: Sorted by newest ===');
         break;
       case PollFilter.topVoted:
         filtered.sort((a, b) => b.voteCount.compareTo(a.voteCount));
+        debugPrint('=== POLL WIDGET: Sorted by top voted ===');
         break;
       case PollFilter.myOption:
-        filtered = filtered.where((option) => option.isUserCreated).toList();
+        // Фильтр "Мой выбор" - показывает варианты, за которые пользователь проголосовал
+        final beforeCount = filtered.length;
+        final votedOptionIds = _userVotes.map((vote) => vote.optionId).toSet();
+        filtered = filtered.where((option) => votedOptionIds.contains(option.id)).toList();
+        debugPrint('=== POLL WIDGET: Filtered voted options: ${filtered.length} of $beforeCount ===');
+        debugPrint('=== POLL WIDGET: Voted option IDs: $votedOptionIds ===');
         break;
     }
+
+    debugPrint('=== POLL WIDGET: Filtered options count: ${filtered.length} ===');
 
     setState(() {
       _filteredOptions = filtered;
@@ -257,25 +272,103 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   }
 
   void _toggleVote(String optionId) {
+    debugPrint('=== POLL WIDGET: Toggle vote for option: $optionId ===');
+
+    // Check if already voted for this option
+    final alreadyVoted = _userVotes.any((vote) => vote.optionId == optionId);
+    if (alreadyVoted) {
+      debugPrint('=== POLL WIDGET: Unvoting for option: $optionId ===');
+      _unvoteForOption(optionId);
+      return;
+    }
+
+    // Add to pending and immediately submit
     setState(() {
-      if (_pendingVotes.contains(optionId)) {
-        _pendingVotes.remove(optionId);
-      } else {
-        _pendingVotes.add(optionId);
-      }
+      _pendingVotes.add(optionId);
+      debugPrint('=== POLL WIDGET: Added to pending votes. Total: ${_pendingVotes.length} ===');
     });
+
+    // Automatically submit the vote
+    _submitSingleVote(optionId);
+  }
+
+  Future<void> _unvoteForOption(String optionId) async {
+    setState(() => _isSubmitting = true);
+
+    try {
+      final success = await widget.pollService.unvote(optionId);
+      if (success) {
+        await _loadPollData();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Vote removed'),
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        }
+      } else {
+        _showErrorSnackBar('Failed to remove vote');
+      }
+    } catch (e) {
+      debugPrint('Error removing vote: $e');
+      _showErrorSnackBar('Failed to remove vote');
+    } finally {
+      setState(() => _isSubmitting = false);
+    }
+  }
+
+  Future<void> _submitSingleVote(String optionId) async {
+    debugPrint('=== POLL WIDGET: Submitting single vote for: $optionId ===');
+
+    try {
+      final success = await widget.pollService.vote(optionId);
+      debugPrint('=== POLL WIDGET: Vote result: $success ===');
+
+      setState(() {
+        _pendingVotes.remove(optionId);
+      });
+
+      if (success) {
+        await _loadPollData();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Vote submitted!'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        }
+      } else {
+        _showErrorSnackBar('Failed to submit vote');
+      }
+    } catch (e) {
+      debugPrint('=== POLL WIDGET: Error submitting vote: $e ===');
+      setState(() {
+        _pendingVotes.remove(optionId);
+      });
+      _showErrorSnackBar('Failed to submit vote');
+    }
   }
 
   Future<void> _submitVotes() async {
-    if (_pendingVotes.isEmpty) return;
+    debugPrint('=== POLL WIDGET: Submit votes called. Pending: ${_pendingVotes.length} ===');
+    if (_pendingVotes.isEmpty) {
+      debugPrint('=== POLL WIDGET: No pending votes to submit ===');
+      return;
+    }
 
     setState(() => _isSubmitting = true);
 
     try {
       // Submit all votes in batch
       bool allSuccessful = true;
+      debugPrint('=== POLL WIDGET: Starting to submit ${_pendingVotes.length} votes ===');
       for (final optionId in _pendingVotes) {
+        debugPrint('=== POLL WIDGET: Submitting vote for option: $optionId ===');
         final success = await widget.pollService.vote(optionId);
+        debugPrint('=== POLL WIDGET: Vote result for $optionId: $success ===');
         if (!success) {
           allSuccessful = false;
           break;
