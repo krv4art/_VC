@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import '../flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/gemini_service.dart';
+import '../services/image_compression_service.dart';
 import '../providers/identification_provider.dart';
 import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
@@ -54,9 +55,9 @@ class _CameraScreenState extends State<CameraScreen> {
     final identificationProvider = context.read<IdentificationProvider>();
 
     try {
-      // Read image and convert to base64
-      final imageBytes = await File(imagePath).readAsBytes();
-      final base64Image = base64Encode(imageBytes);
+      // Compress image before sending to AI (reduces bandwidth and costs)
+      final compressedBytes = await ImageCompressionService.compressImageFile(imagePath);
+      final base64Image = base64Encode(compressedBytes);
 
       // Initialize Gemini service
       final geminiService = GeminiService(
