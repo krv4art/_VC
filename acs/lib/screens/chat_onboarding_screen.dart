@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_theme.dart';
 import '../theme/theme_extensions_v2.dart';
 import '../providers/user_state.dart';
@@ -29,6 +30,10 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   final TextEditingController _customAllergyController = TextEditingController();
   final FocusNode _customAllergyFocusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
+
+  // For name input
+  final TextEditingController _nameController = TextEditingController();
+  final FocusNode _nameFocusNode = FocusNode();
 
   // Для анимации печатания текста
   late AnimationController _typingAnimationController;
@@ -82,6 +87,8 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
     _customAllergyController.dispose();
     _customAllergyFocusNode.dispose();
     _scrollController.dispose();
+    _nameController.dispose();
+    _nameFocusNode.dispose();
     super.dispose();
   }
 
@@ -143,6 +150,8 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         return l10n.selectYourAgeDescription;
       case 3:
         return l10n.selectIngredientsAllergicSensitive;
+      case 4:
+        return l10n.enterYourName;
       default:
         return '';
     }
@@ -158,13 +167,15 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         return true; // Шаг возраста - кнопка всегда активна, можно пропустить
       case 3:
         return true; // Шаг аллергенов - кнопка всегда активна, можно пропустить
+      case 4:
+        return true; // Шаг имени - кнопка всегда активна, можно пропустить
       default:
         return false;
     }
   }
 
   Future<void> _handleNextStep() async {
-    if (_currentStep < 3) {
+    if (_currentStep < 4) {
       await _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -183,6 +194,12 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
       // If skipped, allergies card will remain visible on home screen
       if (_selectedAllergies.isNotEmpty) {
         await userState.setAllergies(_selectedAllergies);
+      }
+      // Save name if entered
+      final name = _nameController.text.trim();
+      if (name.isNotEmpty) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('name', name);
       }
       await userState.completeOnboarding();
 
@@ -217,7 +234,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
           controller: _pageController,
           onPageChanged: _handlePageChanged,
           physics: const BouncingScrollPhysics(),
-          itemCount: 4,
+          itemCount: 5,
           itemBuilder: (context, index) {
             return Column(
               children: [
@@ -338,7 +355,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
-                          4,
+                          5,
                           (index) => Container(
                             margin: EdgeInsets.symmetric(
                               horizontal: AppDimensions.space4,
@@ -404,7 +421,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              _currentStep == 3 ? l10n.finish : l10n.next,
+                              _currentStep == 4 ? l10n.finish : l10n.next,
                               maxLines: 1,
                               overflow: TextOverflow.visible,
                             ),
@@ -433,6 +450,8 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         return _buildAgeStep(l10n);
       case 3:
         return _buildAllergiesStep(l10n);
+      case 4:
+        return _buildNameStep(l10n);
       default:
         return const SizedBox.shrink();
     }
@@ -727,6 +746,50 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
               ],
             ),
           ),
+      ],
+    );
+  }
+
+  Widget _buildNameStep(AppLocalizations l10n) {
+    return Column(
+      children: [
+        AppSpacer.v24(),
+        TextField(
+          controller: _nameController,
+          focusNode: _nameFocusNode,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: context.colors.onBackground,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+          decoration: InputDecoration(
+            hintText: l10n.yourName,
+            hintStyle: TextStyle(
+              color: context.colors.onSecondary,
+              fontSize: 18,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppDimensions.radius12),
+              borderSide: BorderSide(
+                color: context.colors.onSecondary.withValues(alpha: 0.3),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppDimensions.radius12),
+              borderSide: BorderSide(
+                color: context.colors.primary,
+                width: 2,
+              ),
+            ),
+            filled: true,
+            fillColor: context.colors.surface,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.space16,
+              vertical: AppDimensions.space16,
+            ),
+          ),
+        ),
       ],
     );
   }
