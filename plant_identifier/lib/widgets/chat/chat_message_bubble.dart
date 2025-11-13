@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
@@ -155,12 +156,17 @@ class ChatMessageBubble extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            SelectionArea(
-              child: MarkdownBody(
-                data: displayText,
-                styleSheet: _buildMarkdownStyleSheet(context),
+            // Display image if present
+            if (message.plantImagePath != null && message.plantImagePath!.isNotEmpty)
+              _buildMessageImage(context),
+            // Display text if present
+            if (displayText.isNotEmpty)
+              SelectionArea(
+                child: MarkdownBody(
+                  data: displayText,
+                  styleSheet: _buildMarkdownStyleSheet(context),
+                ),
               ),
-            ),
             if (!message.isUser && messageIndex > 0) ...[
               // Reserve space for action buttons to prevent layout shift
               if (displayText.isNotEmpty)
@@ -171,6 +177,79 @@ class ChatMessageBubble extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  /// Build message image with tap to view full size
+  Widget _buildMessageImage(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: displayText.isNotEmpty ? AppDimensions.space12 : 0,
+      ),
+      child: GestureDetector(
+        onTap: () => _showFullSizeImage(context),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppDimensions.radius12),
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: 250,
+              maxHeight: 250,
+            ),
+            child: Image.file(
+              File(message.plantImagePath!),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Show full size image in a dialog
+  void _showFullSizeImage(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Stack(
+            children: [
+              // Full size image
+              Center(
+                child: InteractiveViewer(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppDimensions.radius16),
+                    child: Image.file(
+                      File(message.plantImagePath!),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+              // Close button
+              Positioned(
+                top: 16,
+                right: 16,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    padding: EdgeInsets.all(AppDimensions.space8),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: AppDimensions.iconMedium,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

@@ -28,9 +28,10 @@ class GeminiService {
     String? userProfileContext,
     String? customPrompt,
     bool isCustomPromptEnabled = false,
+    String? imageBase64,
   }) async {
     debugPrint(
-      'Sending message to Gemini: $message (language: $languageCode, useProxy: $useProxy)',
+      'Sending message to Gemini: $message (language: $languageCode, useProxy: $useProxy, hasImage: ${imageBase64 != null})',
     );
     // Always use proxy method
     debugPrint('=== Using PROXY mode ===');
@@ -41,6 +42,7 @@ class GeminiService {
       userProfileContext: userProfileContext,
       customPrompt: customPrompt,
       isCustomPromptEnabled: isCustomPromptEnabled,
+      imageBase64: imageBase64,
     );
   }
 
@@ -62,6 +64,7 @@ class GeminiService {
     String? userProfileContext,
     String? customPrompt,
     bool isCustomPromptEnabled = false,
+    String? imageBase64,
   }) async {
     if (_supabaseClient == null) {
       return 'Error: Supabase client not initialized.';
@@ -130,6 +133,18 @@ class GeminiService {
         };
       }).toList();
 
+      // Prepare the request body
+      final requestBody = <String, dynamic>{
+        'prompt': message,
+        'history': apiHistory,
+      };
+
+      // Add image data if provided
+      if (imageBase64 != null && imageBase64.isNotEmpty) {
+        requestBody['image'] = imageBase64;
+        debugPrint('=== GEMINI DEBUG: Including image in request ===');
+      }
+
       final functionUrl =
           'https://yerbryysrnaraqmbhqdm.supabase.co/functions/v1/gemini-proxy';
 
@@ -139,7 +154,7 @@ class GeminiService {
       final httpResponse = await http.post(
         Uri.parse(functionUrl),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'prompt': message, 'history': apiHistory}),
+        body: jsonEncode(requestBody),
       );
 
       debugPrint(

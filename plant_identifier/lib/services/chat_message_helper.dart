@@ -6,11 +6,13 @@ class ChatMessageHelper {
   static ChatMessage createUserMessage({
     required int dialogueId,
     required String text,
+    String? plantImagePath,
   }) {
     return ChatMessage(
       dialogueId: dialogueId,
       text: text,
       isUser: true,
+      plantImagePath: plantImagePath,
     );
   }
 

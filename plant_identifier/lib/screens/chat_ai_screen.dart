@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ import '../services/typing_animation_service.dart';
 import '../services/greeting_service.dart';
 import '../services/chat_context_service.dart';
 import '../services/database_service.dart';
+import '../services/image_picker_service.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/theme_extensions.dart';
 import '../widgets/chat/chat_message_bubble.dart';
@@ -57,6 +59,8 @@ class _ChatAIScreenState extends State<ChatAIScreen>
     _initializeAnimationControllers();
     _loadInitialData();
   }
+
+  final ImagePickerService _imagePickerService = ImagePickerService();
 
   void _initializeServices() {
     _textController = TextEditingController();
@@ -162,8 +166,9 @@ class _ChatAIScreenState extends State<ChatAIScreen>
     }
   }
 
-  Future<void> _handleMessageSubmitted(String text) async {
-    if (text.trim().isEmpty) return;
+  Future<void> _handleMessageSubmitted(String text, File? image) async {
+    // Validate that we have at least text or image
+    if (text.trim().isEmpty && image == null) return;
 
     final chatProvider = context.read<ChatProvider>();
     final l10n = AppLocalizations.of(context)!;
@@ -178,12 +183,33 @@ class _ChatAIScreenState extends State<ChatAIScreen>
     // Create dialogue on first message
     if (chatProvider.currentDialogueId == null) {
       await chatProvider.ensureDialogueExists(
-        text,
+        text.isEmpty ? 'Image message' : text,
         plantResultId: widget.plantResultId,
       );
     }
 
-    chatProvider.addUserMessage(text);
+    // Convert image to base64 if present
+    String? imageBase64;
+    String? imagePath;
+    if (image != null) {
+      try {
+        imageBase64 = await _imagePickerService.imageToBase64(image);
+        imagePath = image.path;
+        debugPrint('📷 Image converted to base64 for API');
+      } catch (e) {
+        debugPrint('❌ Error converting image to base64: $e');
+        if (mounted) {
+          chatProvider.setError('Failed to process image');
+        }
+        return;
+      }
+    }
+
+    // Add user message with image path (store path, not base64)
+    chatProvider.addUserMessage(
+      text.isEmpty ? '' : text,
+      plantImagePath: imagePath,
+    );
     chatProvider.setSendingMessage(true);
     chatProvider.setLoading(true);
     chatProvider.setAvatarState(AvatarAnimationState.thinking);
@@ -196,8 +222,9 @@ class _ChatAIScreenState extends State<ChatAIScreen>
 
     try {
       final response = await _geminiService.sendMessageWithHistory(
-        text,
+        text.isEmpty ? 'What can you tell me about this plant?' : text,
         languageCode: l10n.localeName,
+        imageBase64: imageBase64,
       );
 
       if (mounted) {
