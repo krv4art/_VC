@@ -82,6 +82,7 @@ dependencies:
 
   # In-app purchases (RevenueCat)
   purchases_flutter: ^8.2.3
+  uuid: ^4.5.2
 
 dev_dependencies:
   flutter_test:

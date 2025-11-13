@@ -608,24 +608,26 @@ Widget _buildQuickAction(
           width: 1,
         ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: AppDimensions.iconLarge,
-            color: context.colors.onBackground,
-          ),
-          AppSpacer.v8(),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: AppTheme.bodySmall.copyWith(
-              fontWeight: FontWeight.w600,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(
+              icon,
+              size: AppDimensions.iconLarge,
               color: context.colors.onBackground,
             ),
-          ),
-        ],
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: AppTheme.bodySmall.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.colors.onBackground,
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );

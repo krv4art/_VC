@@ -176,7 +176,10 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   void initState() {
     super.initState();
     _currentFilter = widget.initialFilter ?? PollFilter.newest;
-    _loadPollData();
+    // Загружаем данные после построения виджета, когда контекст доступен
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadPollData();
+    });
   }
 
   @override
@@ -311,8 +314,11 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
 
     setState(() => _isSubmitting = true);
 
+    // Обновляем текущий язык перед добавлением опции
+    final currentLanguage = Localizations.localeOf(context).languageCode;
+
     // Добавляем вариант опроса
-    final optionId = await widget.pollService.addCustomOption(text, _currentLanguage);
+    final optionId = await widget.pollService.addCustomOption(text, currentLanguage);
     if (optionId == null) {
       setState(() => _isSubmitting = false);
       _showErrorSnackBar('Failed to add custom option. Please try again.');
@@ -326,18 +332,18 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
     });
 
     // Запускаем асинхронный перевод на остальные языки (не блокируем UI)
-    _triggerTranslation(optionId, text);
+    _triggerTranslation(optionId, text, currentLanguage);
 
     await _loadPollData();
   }
 
   /// Запускает перевод варианта опроса на остальные языки
   /// Это асинхронная операция, которая не блокирует UI
-  void _triggerTranslation(String optionId, String text) {
+  void _triggerTranslation(String optionId, String text, String sourceLanguage) {
     final translationService = PollTranslationService();
 
     // Запускаем перевод в фоне
-    translationService.translateAndSave(optionId, text, _currentLanguage).then(
+    translationService.translateAndSave(optionId, text, sourceLanguage).then(
       (success) {
         if (success) {
           debugPrint('=== POLL WIDGET: Translation completed for option $optionId ===');
@@ -677,79 +683,68 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   }
 
   Widget _buildAddOptionForm(AppLocalizations l10n) {
-    return Container(
-      height: 48,
-      decoration: BoxDecoration(
-        color: context.colors.surface,
-        borderRadius: BorderRadius.circular(AppDimensions.radius12),
-      ),
-      child: Row(
-        children: [
-          // Cancel button
-          SizedBox(
-            width: 40,
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              onPressed: _isSubmitting
-                  ? null
-                  : () {
-                      setState(() {
-                        _showAddOption = false;
-                        _customOptionController.clear();
-                      });
-                    },
-              icon: Icon(
-                Icons.close,
-                size: 20,
-                color: _isSubmitting
-                    ? context.colors.onSecondary.withValues(alpha: 0.3)
-                    : context.colors.onSecondary,
-              ),
-            ),
+    return TextField(
+      controller: _customOptionController,
+      enabled: !_isSubmitting,
+      decoration: InputDecoration(
+        hintText: l10n.enterYourOption,
+        filled: true,
+        fillColor: context.colors.surface,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radius12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radius12),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radius12),
+          borderSide: BorderSide(color: context.colors.primary, width: 2),
+        ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: AppDimensions.space16,
+          vertical: AppDimensions.space12,
+        ),
+        // Cancel button (prefix icon)
+        prefixIcon: IconButton(
+          onPressed: _isSubmitting
+              ? null
+              : () {
+                  setState(() {
+                    _showAddOption = false;
+                    _customOptionController.clear();
+                  });
+                },
+          icon: Icon(
+            Icons.close,
+            size: 20,
+            color: _isSubmitting
+                ? context.colors.onSecondary.withValues(alpha: 0.3)
+                : context.colors.onSecondary,
           ),
-          // TextField
-          Expanded(
-            child: TextField(
-              controller: _customOptionController,
-              enabled: !_isSubmitting,
-              decoration: InputDecoration(
-                hintText: l10n.enterYourOption,
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: AppDimensions.space8,
-                  vertical: AppDimensions.space12,
+        ),
+        // Accept button (suffix icon)
+        suffixIcon: IconButton(
+          onPressed: _isSubmitting ? null : _addCustomOption,
+          icon: _isSubmitting
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: context.colors.primary,
+                  ),
+                )
+              : Icon(
+                  Icons.check,
+                  size: 20,
+                  color: context.colors.primary,
                 ),
-              ),
-              maxLength: 100,
-              buildCounter: (context, {required currentLength, required isFocused, maxLength}) => null,
-            ),
-          ),
-          // Accept button
-          SizedBox(
-            width: 40,
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              onPressed: _isSubmitting ? null : _addCustomOption,
-              icon: _isSubmitting
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: context.colors.primary,
-                      ),
-                    )
-                  : Icon(
-                      Icons.check,
-                      size: 20,
-                      color: context.colors.primary,
-                    ),
-            ),
-          ),
-        ],
+        ),
       ),
+      maxLength: 100,
+      buildCounter: (context, {required currentLength, required isFocused, maxLength}) => null,
     );
   }
 
