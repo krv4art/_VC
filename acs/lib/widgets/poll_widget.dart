@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/app_localizations.dart';
 import '../services/poll_service.dart';
 import '../services/poll_translation_service.dart';
@@ -24,8 +26,104 @@ class PollWidget extends StatefulWidget {
   State<PollWidget> createState() => _PollWidgetState();
 }
 
-class _PollWidgetState extends State<PollWidget> {
+class _PollWidgetState extends State<PollWidget>
+    with SingleTickerProviderStateMixin {
   final PollService _pollService = PollService();
+  late AnimationController _animationController;
+  late Animation<double> _shakeAnimation;
+  late Animation<double> _rotationAnimation;
+  Timer? _animationTimer;
+  bool _shouldAnimate = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAnimations();
+    _checkPollStatus();
+  }
+
+  void _initializeAnimations() {
+    // Animation controller for shake + rotation
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+
+    // Shake animation (subtle horizontal movement)
+    _shakeAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -2.0), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: -2.0, end: 2.0), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 2.0, end: -2.0), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: -2.0, end: 0.0), weight: 25),
+    ]).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
+    // Rotation animation (subtle tilt)
+    _rotationAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.1), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: -0.1, end: 0.1), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: 0.1, end: -0.1), weight: 25),
+      TweenSequenceItem(tween: Tween(begin: -0.1, end: 0.0), weight: 25),
+    ]).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
+    // Start periodic animation (once every 3 seconds)
+    _startPeriodicAnimation();
+  }
+
+  void _startPeriodicAnimation() {
+    if (!_shouldAnimate) return;
+
+    _animationTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (mounted && _shouldAnimate) {
+        _animationController.forward(from: 0.0);
+      }
+    });
+  }
+
+  Future<void> _checkPollStatus() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final hasVoted = prefs.getBool('poll_has_voted') ?? false;
+
+      if (mounted) {
+        setState(() {
+          _shouldAnimate = !hasVoted;
+          if (!_shouldAnimate) {
+            _animationTimer?.cancel();
+            _animationController.stop();
+          }
+        });
+      }
+    } catch (e) {
+      debugPrint('Error checking poll status: $e');
+    }
+  }
+
+  Future<void> _markPollCompleted() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('poll_has_voted', true);
+      if (mounted) {
+        setState(() {
+          _shouldAnimate = false;
+          _animationTimer?.cancel();
+          _animationController.stop();
+        });
+      }
+    } catch (e) {
+      debugPrint('Error marking poll as completed: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationTimer?.cancel();
+    _animationController.dispose();
+    super.dispose();
+  }
 
   void _openPollSheet(PollFilter? selectedFilter) {
     showModalBottomSheet(
@@ -35,6 +133,7 @@ class _PollWidgetState extends State<PollWidget> {
       builder: (context) => PollBottomSheet(
         pollService: _pollService,
         initialFilter: selectedFilter,
+        onPollCompleted: _markPollCompleted,
       ),
     );
   }
@@ -61,18 +160,29 @@ class _PollWidgetState extends State<PollWidget> {
             // Icon and title row
             Row(
               children: [
-                // Poll icon
-                Container(
-                  padding: EdgeInsets.all(AppDimensions.space12),
-                  decoration: BoxDecoration(
-                    color: context.colors.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppDimensions.radius12),
-                  ),
-                  child: Icon(
-                    Icons.campaign,
-                    size: AppDimensions.iconLarge,
-                    color: context.colors.primary,
-                  ),
+                // Poll icon with animation
+                AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(_shakeAnimation.value, 0),
+                      child: Transform.rotate(
+                        angle: _rotationAnimation.value,
+                        child: Container(
+                          padding: EdgeInsets.all(AppDimensions.space12),
+                          decoration: BoxDecoration(
+                            color: context.colors.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(AppDimensions.radius12),
+                          ),
+                          child: Icon(
+                            Icons.campaign,
+                            size: AppDimensions.iconLarge,
+                            color: context.colors.primary,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 AppSpacer.h12(),
                 // Title only
@@ -145,11 +255,13 @@ class _PollWidgetState extends State<PollWidget> {
 class PollBottomSheet extends StatefulWidget {
   final PollService pollService;
   final PollFilter? initialFilter;
+  final VoidCallback? onPollCompleted;
 
   const PollBottomSheet({
     super.key,
     required this.pollService,
     this.initialFilter,
+    this.onPollCompleted,
   });
 
   @override
@@ -381,6 +493,10 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
           _isSubmitting = false;
         });
         await _loadPollData();
+
+        // Mark poll as completed (stop animation)
+        widget.onPollCompleted?.call();
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -423,6 +539,9 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
       _showAddOption = false;
       _isSubmitting = false;
     });
+
+    // Mark poll as completed (stop animation)
+    widget.onPollCompleted?.call();
 
     // Запускаем асинхронный перевод на остальные языки (не блокируем UI)
     _triggerTranslation(optionId, text, currentLanguage);
@@ -572,22 +691,65 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          l10n.pollHelpTitle,
-          style: AppTheme.h3.copyWith(
-            color: context.colors.onBackground,
-          ),
+        backgroundColor: context.colors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radius16),
         ),
-        content: Text(
-          l10n.pollHelpDescription,
-          style: AppTheme.body.copyWith(
-            color: context.colors.onBackground,
-          ),
+        contentPadding: EdgeInsets.all(AppDimensions.space24),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Developer avatar and name (like in chat)
+            Row(
+              children: [
+                // Avatar placeholder (circular container with icon)
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: context.colors.primary.withValues(alpha: 0.2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.person,
+                    color: context.colors.primary,
+                    size: 24,
+                  ),
+                ),
+                AppSpacer.h12(),
+                Text(
+                  l10n.developer,
+                  style: AppTheme.bodyLarge.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.colors.onBackground,
+                  ),
+                ),
+              ],
+            ),
+            AppSpacer.v16(),
+            // Message text
+            Container(
+              padding: EdgeInsets.all(AppDimensions.space16),
+              decoration: BoxDecoration(
+                color: context.colors.cardBackground,
+                borderRadius: BorderRadius.circular(AppDimensions.radius12),
+              ),
+              child: Text(
+                l10n.pollHelpDescription,
+                style: AppTheme.body.copyWith(
+                  color: context.colors.onBackground,
+                ),
+              ),
+            ),
+          ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: Text(
+              'OK',
+              style: TextStyle(color: context.colors.primary),
+            ),
           ),
         ],
       ),

@@ -118,7 +118,7 @@
   "viewSampleData": "View Sample Data",
   "failedToFetchSampleDataFor": "Failed to fetch sample data for",
   "sampleData": "Sample Data:",
-  "aiChats": "AI Cosmetic Scanners",
+  "aiChats": "AI Chats",
   "noDialoguesYet": "No dialogues yet.",
   "startANewChat": "Start a new chat!",
   "created": "Created:",
@@ -463,5 +463,6 @@
   "requestFeatureDevelopment": "Request Custom Feature Development",
   "requestFeatureDescription": "Need a specific feature? Contact us to discuss custom development for your business needs.",
   "pollHelpTitle": "How to vote",
-  "pollHelpDescription": "• Tap an option to select it\n• Tap again to deselect\n• Select as many options as you like\n• Click 'Vote' button to submit your votes\n• Add your own option if you don't see what you need"
+  "pollHelpDescription": "Dear users, I want to make the app better. Please suggest how to make it better?\n\n• Tap an option to select it\n• Tap again to deselect\n• Select as many options as you like\n• Add your own option if you don't see what you need",
+  "developer": "Developer"
 }
