@@ -26,6 +26,7 @@ class _HomepageScreenState extends State<HomepageScreen>
   late AnimationController _mainButtonController;
   late AnimationController _quickActionsController;
   late AnimationController _settingsController;
+  late AnimationController _pollController;
 
   // Animations for main scan button
   late Animation<double> _mainButtonScaleAnimation;
@@ -39,6 +40,9 @@ class _HomepageScreenState extends State<HomepageScreen>
   // Animations for settings section
   late Animation<double> _settingsTitleAnimation;
   late List<Animation<double>> _settingsItemAnimations;
+
+  // Animations for poll widget
+  late Animation<double> _pollAnimation;
 
   bool _isInitialized = false;
   bool _animationsStarted = false;
@@ -68,14 +72,16 @@ class _HomepageScreenState extends State<HomepageScreen>
     _mainButtonController.dispose();
     _quickActionsController.dispose();
     _settingsController.dispose();
+    _pollController.dispose();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && _isInitialized) {
-      // Перезапускаем анимации, когда приложение возвращается на передний план
-      _restartAnimations();
+      // Не перезапускаем анимации при возврате, только при первом открытии экрана
+      // Это предотвращает артефакты когда боттомшит открыт поверх главной страницы
+      // _restartAnimations(); // Закомментировано чтобы избежать артефактов
     }
   }
 
@@ -95,6 +101,12 @@ class _HomepageScreenState extends State<HomepageScreen>
     // Settings animation controller (duration: 1200ms)
     _settingsController = AnimationController(
       duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+
+    // Poll animation controller (duration: 800ms)
+    _pollController = AnimationController(
+      duration: const Duration(milliseconds: 800),
       vsync: this,
     );
 
@@ -158,6 +170,14 @@ class _HomepageScreenState extends State<HomepageScreen>
         ),
       );
     });
+
+    // Poll widget animation
+    _pollAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _pollController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
   }
 
   void _startAnimations() {
@@ -176,6 +196,10 @@ class _HomepageScreenState extends State<HomepageScreen>
     Future.delayed(const Duration(milliseconds: 700), () {
       if (mounted) _settingsController.forward();
     });
+
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      if (mounted) _pollController.forward();
+    });
   }
 
   void _restartAnimations() {
@@ -185,6 +209,7 @@ class _HomepageScreenState extends State<HomepageScreen>
     _mainButtonController.reset();
     _quickActionsController.reset();
     _settingsController.reset();
+    _pollController.reset();
     _animationsStarted = false;
 
     // Запускаем анимации заново
@@ -202,6 +227,7 @@ class _HomepageScreenState extends State<HomepageScreen>
     _mainButtonController.reset();
     _quickActionsController.reset();
     _settingsController.reset();
+    _pollController.reset();
 
     // Запускаем заново с небольшой задержкой
     Future.delayed(const Duration(milliseconds: 50), () {
@@ -417,11 +443,10 @@ class _HomepageScreenState extends State<HomepageScreen>
                   ),
                   AppSpacer.v32(),
 
-                  // Settings section with animations - показываем только если есть элементы
+                  // Settings section with animations - показываем только если есть незаполненные настройки
                   if ((!userState.ageConfigured) ||
                       (!userState.skinTypeConfigured) ||
-                      (!userState.allergiesConfigured) ||
-                      (!userState.isPremium)) ...[
+                      (!userState.allergiesConfigured)) ...[
                     AnimatedBuilder(
                       animation: _settingsTitleAnimation,
                       builder: (context, child) {
@@ -539,46 +564,72 @@ class _HomepageScreenState extends State<HomepageScreen>
                           itemIndex++;
                         }
 
-                        // Подписка отображается только если не оформлена
-                        if (!userState.isPremium) {
-                          settingsItems.add(
-                            FadeTransition(
-                              opacity: _settingsItemAnimations[itemIndex],
-                              child: SlideTransition(
-                                position:
-                                    Tween<Offset>(
-                                      begin: const Offset(-0.2, 0),
-                                      end: Offset.zero,
-                                    ).animate(
-                                      CurvedAnimation(
-                                        parent: _settingsController,
-                                        curve: Interval(
-                                          0.1 + (itemIndex * 0.06),
-                                          0.4 + (itemIndex * 0.06),
-                                          curve: Curves.easeOutCubic,
-                                        ),
-                                      ),
-                                    ),
-                                child: _buildSettingItem(
-                                  context,
-                                  l10n.subscription,
-                                  Icons.card_membership_outlined,
-                                  () => context.push('/modern-paywall'),
-                                ),
-                              ),
-                            ),
-                          );
-                          itemIndex++;
-                        }
-
                         return Column(children: settingsItems);
                       },
                     ),
                     AppSpacer.v32(),
                   ],
 
-                  // Poll Widget - добавлен под секцией настроек
-                  const PollWidget(),
+                  // Subscription card - показываем отдельно, без заголовка, только если не оформлена
+                  if (!userState.isPremium) ...[
+                    AnimatedBuilder(
+                      animation: _settingsController,
+                      builder: (context, child) {
+                        return FadeTransition(
+                          opacity: _settingsController,
+                          child: SlideTransition(
+                            position:
+                                Tween<Offset>(
+                                  begin: const Offset(-0.2, 0),
+                                  end: Offset.zero,
+                                ).animate(
+                                  CurvedAnimation(
+                                    parent: _settingsController,
+                                    curve: const Interval(
+                                      0.1,
+                                      0.4,
+                                      curve: Curves.easeOutCubic,
+                                    ),
+                                  ),
+                                ),
+                            child: _buildSettingItem(
+                              context,
+                              l10n.subscription,
+                              Icons.card_membership_outlined,
+                              () => context.push('/modern-paywall'),
+                              withBottomMargin: false,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+
+                  // Отступ перед Poll Widget
+                  AppSpacer.v32(),
+
+                  // Poll Widget - добавлен под секцией настроек с анимацией
+                  AnimatedBuilder(
+                    animation: _pollAnimation,
+                    builder: (context, child) {
+                      return FadeTransition(
+                        opacity: _pollAnimation,
+                        child: SlideTransition(
+                          position:
+                              Tween<Offset>(
+                                begin: const Offset(-0.2, 0),
+                                end: Offset.zero,
+                              ).animate(
+                                CurvedAnimation(
+                                  parent: _pollController,
+                                  curve: Curves.easeOutCubic,
+                                ),
+                              ),
+                          child: const PollWidget(),
+                        ),
+                      );
+                    },
+                  ),
                   AppSpacer.v32(),
                 ],
               ),
@@ -637,12 +688,13 @@ Widget _buildSettingItem(
   BuildContext context,
   String title,
   IconData icon,
-  VoidCallback onTap,
-) {
+  VoidCallback onTap, {
+  bool withBottomMargin = true,
+}) {
   return GestureDetector(
     onTap: onTap,
     child: Container(
-      margin: EdgeInsets.only(bottom: AppDimensions.space12),
+      margin: withBottomMargin ? EdgeInsets.only(bottom: AppDimensions.space12) : EdgeInsets.zero,
       padding: EdgeInsets.all(AppDimensions.space16),
       decoration: BoxDecoration(
         color: context.colors.cardBackground,

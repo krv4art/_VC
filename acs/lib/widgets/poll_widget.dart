@@ -130,6 +130,7 @@ class _PollWidgetState extends State<PollWidget>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withOpacity(0.7),
       builder: (context) => PollBottomSheet(
         pollService: _pollService,
         initialFilter: selectedFilter,
@@ -287,7 +288,7 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   @override
   void initState() {
     super.initState();
-    _currentFilter = widget.initialFilter ?? PollFilter.newest;
+    _currentFilter = widget.initialFilter ?? PollFilter.topVoted;
     // Загружаем данные после построения виджета, когда контекст доступен
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadPollData();
@@ -596,16 +597,17 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
-      decoration: BoxDecoration(
-        color: context.colors.background,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(AppDimensions.radius24),
-          topRight: Radius.circular(AppDimensions.radius24),
-        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(AppDimensions.radius24),
+        topRight: Radius.circular(AppDimensions.radius24),
       ),
-      child: Column(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.8,
+        decoration: BoxDecoration(
+          color: context.colors.background,
+        ),
+        child: Column(
         children: [
           // Handle bar
           Container(
@@ -687,6 +689,7 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
                   ),
           ),
         ],
+        ),
       ),
     );
   }
@@ -814,69 +817,63 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
   Widget _buildOptionItem(PollOption option, AppLocalizations l10n) {
     final isVoted = _isVotedFor(option.id);
 
-    return Container(
-      margin: EdgeInsets.only(bottom: AppDimensions.space12),
-      decoration: BoxDecoration(
-        color: isVoted
-            ? context.colors.primary.withValues(alpha: 0.1)
-            : context.colors.surface,
-        borderRadius: BorderRadius.circular(AppDimensions.radius12),
-        border: Border.all(
+    return GestureDetector(
+      onTap: () => _toggleVote(option.id),
+      child: Container(
+        margin: EdgeInsets.only(bottom: AppDimensions.space12),
+        padding: EdgeInsets.all(AppDimensions.space12),
+        decoration: BoxDecoration(
           color: isVoted
-              ? context.colors.primary
-              : context.colors.onSecondary.withValues(alpha: 0.2),
-          width: isVoted ? 2 : 1,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => _toggleVote(option.id),
+              ? context.colors.primary.withValues(alpha: 0.1)
+              : context.colors.surface,
           borderRadius: BorderRadius.circular(AppDimensions.radius12),
-          child: Padding(
-            padding: EdgeInsets.all(AppDimensions.space12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    option.text,
-                    style: AppTheme.bodySmall.copyWith(
-                      color: context.colors.onBackground,
-                      fontWeight: isVoted ? FontWeight.w600 : FontWeight.normal,
+          border: Border.all(
+            color: isVoted
+                ? context.colors.primary
+                : context.colors.onSecondary.withValues(alpha: 0.2),
+            width: isVoted ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                option.text,
+                style: AppTheme.bodySmall.copyWith(
+                  color: context.colors.onBackground,
+                  fontWeight: isVoted ? FontWeight.w600 : FontWeight.normal,
+                ),
+              ),
+            ),
+            AppSpacer.h12(),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppDimensions.space8,
+                vertical: AppDimensions.space4,
+              ),
+              decoration: BoxDecoration(
+                color: context.colors.onSecondary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppDimensions.radius8),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.favorite,
+                    size: 12,
+                    color: context.colors.onSecondary,
+                  ),
+                  AppSpacer.h4(),
+                  Text(
+                    '${option.voteCount}',
+                    style: AppTheme.caption.copyWith(
+                      color: context.colors.onSecondary,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
-                AppSpacer.h12(),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppDimensions.space8,
-                    vertical: AppDimensions.space4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.colors.onSecondary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppDimensions.radius8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.favorite,
-                        size: 12,
-                        color: context.colors.onSecondary,
-                      ),
-                      AppSpacer.h4(),
-                      Text(
-                        '${option.voteCount}',
-                        style: AppTheme.caption.copyWith(
-                          color: context.colors.onSecondary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

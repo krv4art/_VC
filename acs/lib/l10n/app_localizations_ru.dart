@@ -680,6 +680,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get userName => 'Ваше имя';
 
   @override
+  String get yourName => 'Ваше имя';
+
+  @override
   String get tryFreeAndSubscribe => 'Попробовать бесплатно и подписаться';
 
   @override
@@ -1174,10 +1177,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pollTitle => 'Чего не хватает?';
 
   @override
-  String get pollCardTitle => 'Чего не хватает в приложении?';
-
-  @override
-  String get pollCardSubtitle => 'Какие 3 функции нужно добавить в приложение?';
+  String get pollCardTitle => 'Какую функцию нужно добавить в приложение';
 
   @override
   String get pollDescription => 'Голосуйте за варианты, которые хотите видеть';
@@ -1233,5 +1233,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pollHelpTitle => 'Как голосовать';
 
   @override
-  String get pollHelpDescription => '• Нажмите на вариант, чтобы выбрать его\n• Нажмите снова, чтобы снять выбор\n• Выбирайте столько вариантов, сколько хотите\n• Нажмите кнопку \'Голосовать\' для отправки голосов\n• Добавьте свой вариант, если не нашли нужный';
+  String get pollHelpDescription => 'Дорогие пользователи, я хочу сделать приложение лучше. Пожалуйста, посоветуйте, как это сделать лучше?\n\n• Нажмите на вариант, чтобы выбрать его\n• Нажмите снова, чтобы снять выбор\n• Выбирайте столько вариантов, сколько хотите\n• Добавьте свой вариант, если не нашли нужный';
+
+  @override
+  String get developer => 'Разработчик';
 }

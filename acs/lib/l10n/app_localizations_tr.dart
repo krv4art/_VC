@@ -680,6 +680,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get userName => 'Adınız';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => 'Ücretsiz Dene & Abone Ol';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get pollCardTitle => 'Uygulamada ne eksik?';
 
   @override
-  String get pollCardSubtitle => 'Hangi 3 özellik eklenmeli?';
-
-  @override
   String get pollDescription => 'Görmek istediğiniz seçeneklere oy verin';
 
   @override
@@ -1234,4 +1234,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• Seçmek için bir seçeneğe dokunun\n• Seçimi kaldırmak için tekrar dokunun\n• İstediğiniz kadar seçenek seçin\n• Oylarınızı göndermek için \'Oy Ver\' düğmesine tıklayın\n• İhtiyacınız olanı görmüyorsanız kendi seçeneğinizi ekleyin';
+
+  @override
+  String get developer => 'Developer';
 }

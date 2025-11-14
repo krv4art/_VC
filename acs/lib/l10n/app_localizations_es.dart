@@ -680,6 +680,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get userName => 'Tu Nombre';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => 'Prueba Gratis y Suscríbete';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get pollCardTitle => '¿Qué falta en la aplicación?';
 
   @override
-  String get pollCardSubtitle => '¿Qué 3 funciones deberían agregarse?';
-
-  @override
   String get pollDescription => 'Vota por las opciones que quieres ver';
 
   @override
@@ -1234,6 +1234,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• Toca una opción para seleccionarla\n• Toca nuevamente para deseleccionar\n• Selecciona tantas opciones como quieras\n• Haz clic en \'Votar\' para enviar tus votos\n• Añade tu propia opción si no encuentras lo que necesitas';
+
+  @override
+  String get developer => 'Developer';
 }
 
 /// The translations for Spanish Castilian, as used in Latin America and the Caribbean (`es_419`).
@@ -2407,9 +2410,6 @@ class AppLocalizationsEs419 extends AppLocalizationsEs {
 
   @override
   String get pollCardTitle => '¿Qué falta en la app?';
-
-  @override
-  String get pollCardSubtitle => '¿Qué 3 funciones se deberían agregar?';
 
   @override
   String get pollDescription => 'Vota por las opciones que te gustaría ver';
@@ -3639,9 +3639,6 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
 
   @override
   String get pollCardTitle => '¿Qué falta en la aplicación?';
-
-  @override
-  String get pollCardSubtitle => '¿Qué 3 funciones se deberían añadir?';
 
   @override
   String get pollDescription => 'Votad por las opciones que os gustaría ver';

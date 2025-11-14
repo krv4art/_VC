@@ -680,6 +680,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get userName => 'Nama Anda';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => 'Coba Gratis & Berlangganan';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get pollCardTitle => 'Apa yang kurang dalam aplikasi?';
 
   @override
-  String get pollCardSubtitle => '3 fitur apa yang harus ditambahkan?';
-
-  @override
   String get pollDescription => 'Pilih opsi yang ingin Anda lihat';
 
   @override
@@ -1234,4 +1234,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• Ketuk opsi untuk memilihnya\n• Ketuk lagi untuk membatalkan pilihan\n• Pilih sebanyak yang Anda suka\n• Klik tombol \'Pilih\' untuk mengirim pilihan Anda\n• Tambahkan opsi Anda sendiri jika tidak melihat yang Anda butuhkan';
+
+  @override
+  String get developer => 'Developer';
 }

@@ -680,6 +680,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get userName => 'Tên Của Bạn';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => 'Dùng Thử Miễn Phí & Đăng Ký';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pollCardTitle => 'Ứng dụng thiếu gì?';
 
   @override
-  String get pollCardSubtitle => '3 tính năng nào nên được thêm vào?';
-
-  @override
   String get pollDescription => 'Bình chọn các tùy chọn bạn muốn thấy';
 
   @override
@@ -1234,4 +1234,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• Nhấn vào tùy chọn để chọn\n• Nhấn lại để bỏ chọn\n• Chọn bao nhiêu tùy chọn tùy thích\n• Nhấn nút \'Bình Chọn\' để gửi\n• Thêm tùy chọn của bạn nếu không thấy những gì bạn cần';
+
+  @override
+  String get developer => 'Developer';
 }

@@ -680,6 +680,9 @@ class AppLocalizationsSv extends AppLocalizations {
   String get userName => 'Ditt Namn';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => 'Prova Gratis & Prenumerera';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsSv extends AppLocalizations {
   String get pollCardTitle => 'Vad saknas i appen?';
 
   @override
-  String get pollCardSubtitle => 'Vilka 3 funktioner borde läggas till?';
-
-  @override
   String get pollDescription => 'Rösta på alternativen du vill se';
 
   @override
@@ -1234,4 +1234,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• Tryck på ett alternativ för att välja det\n• Tryck igen för att avmarkera\n• Välj så många alternativ du vill\n• Klicka på \'Rösta\'-knappen för att skicka dina röster\n• Lägg till ditt eget alternativ om du inte ser vad du behöver';
+
+  @override
+  String get developer => 'Developer';
 }

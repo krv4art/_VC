@@ -680,6 +680,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get userName => '你的名字';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => '免费试用并订阅';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pollCardTitle => '应用缺少什么?';
 
   @override
-  String get pollCardSubtitle => '应该添加哪3个功能?';
-
-  @override
   String get pollDescription => '为你想看到的选项投票';
 
   @override
@@ -1234,6 +1234,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• 点击选项进行选择\n• 再次点击取消选择\n• 可以选择任意多个选项\n• 点击\'投票\'按钮提交\n• 如果没有看到需要的选项,可以添加自己的选项';
+
+  @override
+  String get developer => 'Developer';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -2407,9 +2410,6 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get pollCardTitle => '应用缺少什么?';
-
-  @override
-  String get pollCardSubtitle => '应该添加哪3个功能?';
 
   @override
   String get pollDescription => '为你想看到的选项投票';
@@ -3639,9 +3639,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get pollCardTitle => '應用程式缺少什麼?';
-
-  @override
-  String get pollCardSubtitle => '應該新增哪3個功能?';
 
   @override
   String get pollDescription => '為你想看到的選項投票';

@@ -328,7 +328,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sampleData => 'Sample Data:';
 
   @override
-  String get aiChats => 'AI Cosmetic Scanners';
+  String get aiChats => 'AI Chats';
 
   @override
   String get noDialoguesYet => 'No dialogues yet.';
@@ -678,6 +678,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get userName => 'Your Name';
+
+  @override
+  String get yourName => 'Your Name';
 
   @override
   String get tryFreeAndSubscribe => 'Try Free & Subscribe';
@@ -1174,10 +1177,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pollTitle => 'What\'s missing?';
 
   @override
-  String get pollCardTitle => 'What\'s missing in the app?';
-
-  @override
-  String get pollCardSubtitle => 'Which 3 features should be added?';
+  String get pollCardTitle => 'Which feature should be added to the app';
 
   @override
   String get pollDescription => 'Vote for the options you want to see';
@@ -1233,5 +1233,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pollHelpTitle => 'How to vote';
 
   @override
-  String get pollHelpDescription => '• Tap an option to select it\n• Tap again to deselect\n• Select as many options as you like\n• Click \'Vote\' button to submit your votes\n• Add your own option if you don\'t see what you need';
+  String get pollHelpDescription => 'Dear users, I want to make the app better. Please suggest how to make it better?\n\n• Tap an option to select it\n• Tap again to deselect\n• Select as many options as you like\n• Add your own option if you don\'t see what you need';
+
+  @override
+  String get developer => 'Developer';
 }

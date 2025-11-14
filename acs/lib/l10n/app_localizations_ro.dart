@@ -680,6 +680,9 @@ class AppLocalizationsRo extends AppLocalizations {
   String get userName => 'Numele Tău';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => 'Încearcă Gratuit & Abonează-te';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsRo extends AppLocalizations {
   String get pollCardTitle => 'Ce lipsește în aplicație?';
 
   @override
-  String get pollCardSubtitle => 'Care 3 funcții ar trebui adăugate?';
-
-  @override
   String get pollDescription => 'Votează pentru opțiunile pe care vrei să le vezi';
 
   @override
@@ -1234,4 +1234,7 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• Atinge o opțiune pentru a o selecta\n• Atinge din nou pentru a deselecta\n• Selectează câte opțiuni dorești\n• Apasă butonul \'Votează\' pentru a trimite voturile\n• Adaugă propria opțiune dacă nu găsești ce cauți';
+
+  @override
+  String get developer => 'Developer';
 }

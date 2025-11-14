@@ -784,7 +784,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiChats.
   ///
   /// In en, this message translates to:
-  /// **'AI Cosmetic Scanners'**
+  /// **'AI Chats'**
   String get aiChats;
 
   /// No description provided for @noDialoguesYet.
@@ -1476,6 +1476,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your Name'**
   String get userName;
+
+  /// No description provided for @yourName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Name'**
+  String get yourName;
 
   /// No description provided for @tryFreeAndSubscribe.
   ///
@@ -2452,14 +2458,8 @@ abstract class AppLocalizations {
   /// No description provided for @pollCardTitle.
   ///
   /// In en, this message translates to:
-  /// **'What\'s missing in the app?'**
+  /// **'Which feature should be added to the app'**
   String get pollCardTitle;
-
-  /// No description provided for @pollCardSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Which 3 features should be added?'**
-  String get pollCardSubtitle;
 
   /// No description provided for @pollDescription.
   ///
@@ -2566,8 +2566,14 @@ abstract class AppLocalizations {
   /// No description provided for @pollHelpDescription.
   ///
   /// In en, this message translates to:
-  /// **'• Tap an option to select it\n• Tap again to deselect\n• Select as many options as you like\n• Click \'Vote\' button to submit your votes\n• Add your own option if you don\'t see what you need'**
+  /// **'Dear users, I want to make the app better. Please suggest how to make it better?\n\n• Tap an option to select it\n• Tap again to deselect\n• Select as many options as you like\n• Add your own option if you don\'t see what you need'**
   String get pollHelpDescription;
+
+  /// No description provided for @developer.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get developer;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

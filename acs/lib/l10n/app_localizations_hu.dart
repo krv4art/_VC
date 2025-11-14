@@ -680,6 +680,9 @@ class AppLocalizationsHu extends AppLocalizations {
   String get userName => 'Az Ön neve';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => 'Próbálja ki ingyen és fizessen elő';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsHu extends AppLocalizations {
   String get pollCardTitle => 'Mi hiányzik az alkalmazásból?';
 
   @override
-  String get pollCardSubtitle => 'Melyik 3 funkciót kellene hozzáadni?';
-
-  @override
   String get pollDescription => 'Szavazzon a kívánt lehetőségekre';
 
   @override
@@ -1234,4 +1234,7 @@ class AppLocalizationsHu extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• Érintsen meg egy lehetőséget a kiválasztáshoz\n• Érintse meg újra a kijelölés törléshez\n• Válasszon annyi lehetőséget, amennyit szeretne\n• Kattintson a \'Szavazat\' gombra a szavazatok beküldéséhez\n• Adja hozzá saját lehetőségét, ha nem látja, amit keres';
+
+  @override
+  String get developer => 'Developer';
 }

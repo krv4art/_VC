@@ -680,6 +680,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get userName => 'Vaše jméno';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => 'Vyzkoušet zdarma a předplatit';
 
   @override
@@ -1174,10 +1177,7 @@ class AppLocalizationsCs extends AppLocalizations {
   String get pollTitle => 'Co chybí?';
 
   @override
-  String get pollCardTitle => 'What\'s missing in the app?';
-
-  @override
-  String get pollCardSubtitle => 'Which 3 features should be added?';
+  String get pollCardTitle => 'Which feature should be added to the app';
 
   @override
   String get pollDescription => 'Můžete hlasovat až pro 3 možnosti';
@@ -1234,4 +1234,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• Můžete hlasovat až pro 3 možnosti\n• Klepnutím vyberte možnost\n• Dalším klepnutím zrušíte výběr\n• Přidejte vlastní možnost, pokud nevidíte to, co potřebujete\n• Vaše hlasy jsou automaticky uloženy';
+
+  @override
+  String get developer => 'Developer';
 }

@@ -680,6 +680,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get userName => '이름';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => '무료 체험 및 구독';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get pollCardTitle => '앱에 무엇이 빠졌나요?';
 
   @override
-  String get pollCardSubtitle => '어떤 3가지 기능을 추가해야 하나요?';
-
-  @override
   String get pollDescription => '원하는 옵션에 투표하세요';
 
   @override
@@ -1234,4 +1234,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• 옵션을 탭하여 선택\n• 다시 탭하여 선택 취소\n• 원하는 만큼 선택\n• \'투표\' 버튼을 클릭하여 투표 제출\n• 필요한 것이 없으면 직접 옵션을 추가';
+
+  @override
+  String get developer => 'Developer';
 }

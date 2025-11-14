@@ -680,6 +680,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get userName => 'O Seu Nome';
 
   @override
+  String get yourName => 'Your Name';
+
+  @override
   String get tryFreeAndSubscribe => 'Experimente Grátis e Subscreva';
 
   @override
@@ -1177,9 +1180,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get pollCardTitle => 'O que está a faltar na aplicação?';
 
   @override
-  String get pollCardSubtitle => 'Quais 3 funcionalidades devem ser adicionadas?';
-
-  @override
   String get pollDescription => 'Vote nas opções que deseja ver';
 
   @override
@@ -1234,6 +1234,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get pollHelpDescription => '• Toque numa opção para a selecionar\n• Toque novamente para desselecionar\n• Selecione quantas opções quiser\n• Clique no botão \'Votar\' para enviar os seus votos\n• Adicione a sua própria opção se não vir o que precisa';
+
+  @override
+  String get developer => 'Developer';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -2407,9 +2410,6 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get pollCardTitle => 'O que está faltando no app?';
-
-  @override
-  String get pollCardSubtitle => 'Quais 3 recursos devem ser adicionados?';
 
   @override
   String get pollDescription => 'Vote nas opções que você quer ver';
@@ -3639,9 +3639,6 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get pollCardTitle => 'O que está a faltar na aplicação?';
-
-  @override
-  String get pollCardSubtitle => 'Quais 3 funcionalidades devem ser adicionadas?';
 
   @override
   String get pollDescription => 'Vote nas opções que deseja ver';
