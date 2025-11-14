@@ -21,6 +21,7 @@ import '../../widgets/rating_request_dialog.dart';
 import '../../exceptions/api_exceptions.dart';
 import '../scanning/scan_usage_validator.dart';
 import '../scanning/prompt_builder_service.dart';
+import '../scanning/image_compression_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/theme_extensions_v2.dart';
 
@@ -90,8 +91,9 @@ class ImageAnalysisService {
       final String savedImagePath = p.join(appDir.path, fileName);
       await imageFile.saveTo(savedImagePath);
 
-      final Uint8List imageBytes = await imageFile.readAsBytes();
-      final String base64Image = base64Encode(imageBytes);
+      // Compress image before sending to AI (reduces bandwidth and API costs)
+      final Uint8List compressedBytes = await ImageCompressionService.compressImageFile(savedImagePath);
+      final String base64Image = base64Encode(compressedBytes);
 
       if (!context.mounted) {
         return ImageAnalysisResult(
