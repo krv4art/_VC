@@ -24,7 +24,7 @@ class ThemeColors {
 
   /// Get current colors from ThemeProviderV2
   AppColors get currentColors {
-    final themeProvider = Provider.of<ThemeProviderV2>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProviderV2>(context, listen: true);
     return themeProvider.currentColors;
   }
 

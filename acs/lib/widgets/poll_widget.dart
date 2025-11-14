@@ -147,7 +147,7 @@ class _PollWidgetState extends State<PollWidget>
       onTap: () => _openPollSheet(null),
       child: Container(
         decoration: BoxDecoration(
-          color: context.colors.surface,
+          color: context.colors.cardBackground,
           borderRadius: BorderRadius.circular(AppDimensions.radius16),
           border: Border.all(
             color: context.colors.onSecondary.withValues(alpha: 0.3),
@@ -233,7 +233,7 @@ class _PollWidgetState extends State<PollWidget>
             vertical: AppDimensions.space8,
           ),
           decoration: BoxDecoration(
-            color: context.colors.surface,
+            color: context.colors.cardBackground,
             borderRadius: BorderRadius.circular(AppDimensions.radius8),
             border: Border.all(
               color: context.colors.onSecondary.withValues(alpha: 0.3),
