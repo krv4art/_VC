@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_theme.dart';
 import '../theme/theme_extensions_v2.dart';
 import '../providers/user_state.dart';
@@ -198,8 +197,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
       // Save name if entered
       final name = _nameController.text.trim();
       if (name.isNotEmpty) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('name', name);
+        await userState.updateUserInfo(name, null);
       }
       await userState.completeOnboarding();
 
