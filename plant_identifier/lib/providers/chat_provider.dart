@@ -109,10 +109,11 @@ class ChatProvider extends ChangeNotifier {
   }
 
   /// Add user message
-  void addUserMessage(String text) {
+  void addUserMessage(String text, {String? plantImagePath}) {
     final message = ChatMessageHelper.createUserMessage(
       dialogueId: currentDialogueId ?? 0,
       text: text,
+      plantImagePath: plantImagePath,
     );
     messagesNotifier.addMessage(message);
   }

@@ -77,20 +77,9 @@ class HomeScreen extends StatelessWidget {
               _buildFeatureCard(
                 context,
                 icon: Icons.chat_bubble_outline,
-                title: 'Plant Expert Chat',
+                title: l10n.chatHistory,
                 description: 'Ask questions about plant care, identification, and more',
-                onTap: () => context.push('/chat'),
-                colors: colors,
-              ),
-              const SizedBox(height: AppTheme.space16),
-              _buildFeatureCard(
-                context,
-                icon: Icons.info_outline,
-                title: l10n.aboutApp,
-                description: l10n.aboutAppDesc,
-                onTap: () {
-                  // TODO: Navigate to about screen
-                },
+                onTap: () => context.push('/chat-list'),
                 colors: colors,
               ),
             ],
@@ -108,7 +97,7 @@ class HomeScreen extends StatelessWidget {
               context.push('/scan');
               break;
             case 2:
-              context.push('/history');
+              context.push('/chat');
               break;
             case 3:
               context.push('/settings');
@@ -125,12 +114,12 @@ class HomeScreen extends StatelessWidget {
             label: l10n.scan,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.history),
-            label: l10n.history,
+            icon: const Icon(Icons.chat_bubble_outline),
+            label: l10n.chat,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.settings),
-            label: l10n.settings,
+            icon: const Icon(Icons.person_outline),
+            label: l10n.profile,
           ),
         ],
       ),

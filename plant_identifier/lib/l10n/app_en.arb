@@ -10,6 +10,9 @@
   "scan": "Scan",
   "history": "History",
   "settings": "Settings",
+  "chat": "Chat",
+  "chatHistory": "Chat History",
+  "profile": "Profile",
 
   "homeTitle": "Identify Plants & Mushrooms",
   "homeSubtitle": "Take a photo or upload an image to identify any plant, flower, tree, or mushroom instantly.",
@@ -111,6 +114,8 @@
   "copiedToClipboard": "Copied to clipboard",
   "typeAMessage": "Type a message...",
   "sendMessage": "Send",
+  "camera": "Camera",
+  "gallery": "Gallery",
   "writeAMessage": "Write a message...",
 
   "chatGreeting1": "👋 Hello! I'm your plant expert assistant. Got questions about plants or need care tips? Let's chat!",

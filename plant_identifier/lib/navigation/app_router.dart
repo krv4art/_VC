@@ -10,6 +10,7 @@ import '../screens/language_screen.dart';
 import '../screens/theme_selection_screen.dart';
 import '../screens/plant_result_screen.dart';
 import '../screens/chat_ai_screen.dart';
+import '../screens/dialogues_screen.dart';
 import '../models/plant_result.dart';
 
 /// App routing configuration
@@ -85,6 +86,11 @@ final appRouter = GoRouter(
           plantResultId: (extras?['plantResultId'] as int?)?.toString(),
         );
       },
+    ),
+    GoRoute(
+      path: '/chat-list',
+      name: 'chat-list',
+      builder: (context, state) => const DialoguesScreen(),
     ),
   ],
 );

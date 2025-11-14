@@ -12,6 +12,7 @@ import '../providers/user_preferences_provider.dart';
 import '../providers/plant_history_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/dialogs/rating_request_dialog.dart';
+import '../widgets/camera/camera_focus_frame.dart';
 import 'plant_result_screen.dart';
 
 /// Scan screen - Live camera preview for plant identification
@@ -217,6 +218,10 @@ class _ScanScreenState extends State<ScanScreen> {
               _buildError(l10n, colors)
             else
               _buildLoading(colors),
+
+            // Camera focus frame
+            if (_cameraManager.cameraState == CameraState.ready)
+              const CameraFocusFrame(),
 
             // Error message overlay
             if (_errorMessage != null && !_isProcessing)
