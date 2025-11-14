@@ -19,14 +19,18 @@ class AllergiesScreen extends StatefulWidget {
 }
 
 class _AllergiesScreenState extends State<AllergiesScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   List<String> _selectedAllergies = [];
   late AnimationController _animationController;
   late List<Animation<double>> _animations;
+  final ScrollController _scrollController = ScrollController();
+  final FocusNode _customAllergyFocusNode = FocusNode();
+  final TextEditingController _customAllergyController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initializeAnimations();
 
     // Load current allergies from state
@@ -36,6 +40,23 @@ class _AllergiesScreenState extends State<AllergiesScreen>
         _selectedAllergies = List.from(userState.allergies);
       });
     });
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    // Scroll down when keyboard appears, if the input field is focused
+    if (_customAllergyFocusNode.hasFocus) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
   }
 
   void _initializeAnimations() {
@@ -69,7 +90,11 @@ class _AllergiesScreenState extends State<AllergiesScreen>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _animationController.dispose();
+    _scrollController.dispose();
+    _customAllergyFocusNode.dispose();
+    _customAllergyController.dispose();
     super.dispose();
   }
 
@@ -157,6 +182,7 @@ class _AllergiesScreenState extends State<AllergiesScreen>
               animation: _animationController,
               builder: (context, child) {
                 return SingleChildScrollView(
+                  controller: _scrollController,
                   padding: const EdgeInsets.only(
                     bottom: 100, // Место для плавающей кнопки
                     left: AppDimensions.space16,
@@ -357,6 +383,8 @@ class _AllergiesScreenState extends State<AllergiesScreen>
                               AnimatedCard(
                                 elevation: 0,
                                 child: TextField(
+                                  controller: _customAllergyController,
+                                  focusNode: _customAllergyFocusNode,
                                   style: TextStyle(
                                     color: context.colors.onBackground,
                                     fontSize: 14,
@@ -370,6 +398,44 @@ class _AllergiesScreenState extends State<AllergiesScreen>
                                       Icons.add_circle_outline,
                                       color: context.colors.onBackground,
                                       size: 20,
+                                    ),
+                                    // Cancel button (suffix icon left)
+                                    suffixIcon: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _customAllergyController.clear();
+                                              _customAllergyFocusNode.unfocus();
+                                            });
+                                          },
+                                          icon: Icon(
+                                            Icons.close,
+                                            size: 20,
+                                            color: context.colors.onSecondary,
+                                          ),
+                                        ),
+                                        // Accept button (suffix icon right)
+                                        IconButton(
+                                          onPressed: () {
+                                            final value = _customAllergyController.text.trim();
+                                            if (value.isNotEmpty &&
+                                                !_selectedAllergies.contains(value)) {
+                                              setState(() {
+                                                _selectedAllergies.add(value);
+                                                _customAllergyController.clear();
+                                                _customAllergyFocusNode.unfocus();
+                                              });
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.check,
+                                            size: 20,
+                                            color: context.colors.primary,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(
@@ -388,6 +454,7 @@ class _AllergiesScreenState extends State<AllergiesScreen>
                                         !_selectedAllergies.contains(value)) {
                                       setState(() {
                                         _selectedAllergies.add(value);
+                                        _customAllergyController.clear();
                                       });
                                     }
                                   },

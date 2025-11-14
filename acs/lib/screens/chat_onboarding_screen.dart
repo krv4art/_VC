@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_theme.dart';
 import '../theme/theme_extensions_v2.dart';
 import '../providers/user_state.dart';
@@ -19,11 +20,20 @@ class ChatOnboardingScreen extends StatefulWidget {
 }
 
 class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   int _currentStep = 0;
   String? _selectedSkinType;
   String? _selectedAgeRange;
   final List<String> _selectedAllergies = [];
+
+  // For custom allergies input
+  final TextEditingController _customAllergyController = TextEditingController();
+  final FocusNode _customAllergyFocusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
+
+  // For name input
+  final TextEditingController _nameController = TextEditingController();
+  final FocusNode _nameFocusNode = FocusNode();
 
   // Для анимации печатания текста
   late AnimationController _typingAnimationController;
@@ -35,6 +45,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _typingAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 30),
@@ -52,9 +63,32 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   }
 
   @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    // Scroll down when keyboard appears, if the input field is focused
+    if (_customAllergyFocusNode.hasFocus) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _typingAnimationController.dispose();
     _pageController.dispose();
+    _customAllergyController.dispose();
+    _customAllergyFocusNode.dispose();
+    _scrollController.dispose();
+    _nameController.dispose();
+    _nameFocusNode.dispose();
     super.dispose();
   }
 
@@ -116,6 +150,8 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         return l10n.selectYourAgeDescription;
       case 3:
         return l10n.selectIngredientsAllergicSensitive;
+      case 4:
+        return l10n.enterYourName;
       default:
         return '';
     }
@@ -131,13 +167,15 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         return true; // Шаг возраста - кнопка всегда активна, можно пропустить
       case 3:
         return true; // Шаг аллергенов - кнопка всегда активна, можно пропустить
+      case 4:
+        return true; // Шаг имени - кнопка всегда активна, можно пропустить
       default:
         return false;
     }
   }
 
   Future<void> _handleNextStep() async {
-    if (_currentStep < 3) {
+    if (_currentStep < 4) {
       await _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -156,6 +194,12 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
       // If skipped, allergies card will remain visible on home screen
       if (_selectedAllergies.isNotEmpty) {
         await userState.setAllergies(_selectedAllergies);
+      }
+      // Save name if entered
+      final name = _nameController.text.trim();
+      if (name.isNotEmpty) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('name', name);
       }
       await userState.completeOnboarding();
 
@@ -190,7 +234,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
           controller: _pageController,
           onPageChanged: _handlePageChanged,
           physics: const BouncingScrollPhysics(),
-          itemCount: 4,
+          itemCount: 5,
           itemBuilder: (context, index) {
             return Column(
               children: [
@@ -290,6 +334,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
                       children: [
                         Expanded(
                           child: SingleChildScrollView(
+                            controller: _scrollController,
                             child: _buildOptionsForStep(l10n),
                           ),
                         ),
@@ -310,7 +355,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
-                          4,
+                          5,
                           (index) => Container(
                             margin: EdgeInsets.symmetric(
                               horizontal: AppDimensions.space4,
@@ -376,7 +421,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              _currentStep == 3 ? l10n.finish : l10n.next,
+                              _currentStep == 4 ? l10n.finish : l10n.next,
                               maxLines: 1,
                               overflow: TextOverflow.visible,
                             ),
@@ -405,6 +450,8 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         return _buildAgeStep(l10n);
       case 3:
         return _buildAllergiesStep(l10n);
+      case 4:
+        return _buildNameStep(l10n);
       default:
         return const SizedBox.shrink();
     }
@@ -520,30 +567,230 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   }
 
   Widget _buildAllergiesStep(AppLocalizations l10n) {
+    // Get custom allergies (not in common list)
+    final customAllergies = _selectedAllergies
+        .where((allergy) =>
+            !_commonAllergies.any((common) => common['name'] == allergy))
+        .toList();
+
     return Column(
-      children: _commonAllergies.map((allergy) {
-        final isSelected = _selectedAllergies.contains(allergy['name']);
-        return Padding(
-          padding: EdgeInsets.only(bottom: AppDimensions.space12),
-          child: SizedBox(
-            width: double.infinity,
-            child: ChatOptionButton(
-              icon: allergy['icon'],
-              label: _getLocalizedAllergyName(allergy['name'], l10n),
-              isSelected: isSelected,
-              onTap: () {
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Common allergies
+        ..._commonAllergies.map((allergy) {
+          final isSelected = _selectedAllergies.contains(allergy['name']);
+          return Padding(
+            padding: EdgeInsets.only(bottom: AppDimensions.space12),
+            child: SizedBox(
+              width: double.infinity,
+              child: ChatOptionButton(
+                icon: allergy['icon'],
+                label: _getLocalizedAllergyName(allergy['name'], l10n),
+                isSelected: isSelected,
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      _selectedAllergies.remove(allergy['name']);
+                    } else {
+                      _selectedAllergies.add(allergy['name']);
+                    }
+                  });
+                },
+              ),
+            ),
+          );
+        }).toList(),
+
+        // Custom allergy input field
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: AppDimensions.space12,
+            top: AppDimensions.space8,
+          ),
+          child: TextField(
+            controller: _customAllergyController,
+            focusNode: _customAllergyFocusNode,
+            style: TextStyle(
+              color: context.colors.onBackground,
+              fontSize: 14,
+            ),
+            decoration: InputDecoration(
+              hintText: l10n.typeIngredientName,
+              hintStyle: TextStyle(
+                color: context.colors.onSecondary,
+              ),
+              prefixIcon: Icon(
+                Icons.add_circle_outline,
+                color: context.colors.onBackground,
+                size: 20,
+              ),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Cancel button
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _customAllergyController.clear();
+                        _customAllergyFocusNode.unfocus();
+                      });
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      size: 20,
+                      color: context.colors.onSecondary,
+                    ),
+                  ),
+                  // Accept button
+                  IconButton(
+                    onPressed: () {
+                      final value = _customAllergyController.text.trim();
+                      if (value.isNotEmpty &&
+                          !_selectedAllergies.contains(value)) {
+                        setState(() {
+                          _selectedAllergies.add(value);
+                          _customAllergyController.clear();
+                          _customAllergyFocusNode.unfocus();
+                        });
+                      }
+                    },
+                    icon: Icon(
+                      Icons.check,
+                      size: 20,
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  AppDimensions.radius12,
+                ),
+              ),
+              filled: true,
+              fillColor: context.colors.surface,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: AppDimensions.space12,
+                vertical: AppDimensions.space12,
+              ),
+            ),
+            onSubmitted: (value) {
+              if (value.isNotEmpty && !_selectedAllergies.contains(value)) {
                 setState(() {
-                  if (isSelected) {
-                    _selectedAllergies.remove(allergy['name']);
-                  } else {
-                    _selectedAllergies.add(allergy['name']);
-                  }
+                  _selectedAllergies.add(value);
+                  _customAllergyController.clear();
                 });
-              },
+              }
+            },
+          ),
+        ),
+
+        // Custom allergies list
+        if (customAllergies.isNotEmpty)
+          Padding(
+            padding: EdgeInsets.only(bottom: AppDimensions.space12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppSpacer.v8(),
+                Text(
+                  l10n.selectedAllergens,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: context.colors.onBackground,
+                  ),
+                ),
+                AppSpacer.v8(),
+                Wrap(
+                  spacing: AppDimensions.space8,
+                  runSpacing: AppDimensions.space8,
+                  children: customAllergies.map((allergen) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppDimensions.space12,
+                        vertical: AppDimensions.space8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.colors.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(AppDimensions.radius8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            allergen,
+                            style: TextStyle(
+                              color: context.colors.primary,
+                              fontSize: 14,
+                            ),
+                          ),
+                          AppSpacer.h8(),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedAllergies.remove(allergen);
+                              });
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: 16,
+                              color: context.colors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
           ),
-        );
-      }).toList(),
+      ],
+    );
+  }
+
+  Widget _buildNameStep(AppLocalizations l10n) {
+    return Column(
+      children: [
+        AppSpacer.v24(),
+        TextField(
+          controller: _nameController,
+          focusNode: _nameFocusNode,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: context.colors.onBackground,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+          decoration: InputDecoration(
+            hintText: l10n.yourName,
+            hintStyle: TextStyle(
+              color: context.colors.onSecondary,
+              fontSize: 18,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppDimensions.radius12),
+              borderSide: BorderSide(
+                color: context.colors.onSecondary.withValues(alpha: 0.3),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppDimensions.radius12),
+              borderSide: BorderSide(
+                color: context.colors.primary,
+                width: 2,
+              ),
+            ),
+            filled: true,
+            fillColor: context.colors.surface,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.space16,
+              vertical: AppDimensions.space16,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
