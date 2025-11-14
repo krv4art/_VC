@@ -69,14 +69,14 @@ class _PollWidgetState extends State<PollWidget>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    // Start periodic animation (once every 3 seconds)
+    // Start periodic animation (once every 7 seconds)
     _startPeriodicAnimation();
   }
 
   void _startPeriodicAnimation() {
     if (!_shouldAnimate) return;
 
-    _animationTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    _animationTimer = Timer.periodic(const Duration(seconds: 7), (timer) {
       if (mounted && _shouldAnimate) {
         _animationController.forward(from: 0.0);
       }
@@ -443,6 +443,10 @@ class _PollBottomSheetState extends State<PollBottomSheet> {
 
       if (success) {
         await _loadPollData();
+
+        // Mark poll as completed (stop animation)
+        widget.onPollCompleted?.call();
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

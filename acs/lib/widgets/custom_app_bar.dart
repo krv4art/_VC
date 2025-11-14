@@ -69,14 +69,14 @@ class _CustomAppBarState extends State<CustomAppBar>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    // Start periodic animation (once every 3 seconds)
+    // Start periodic animation (once every 7 seconds)
     _startPeriodicAnimation();
   }
 
   void _startPeriodicAnimation() {
     if (!_shouldAnimate) return;
 
-    _animationTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    _animationTimer = Timer.periodic(const Duration(seconds: 7), (timer) {
       if (mounted && _shouldAnimate) {
         _animationController.forward(from: 0.0);
       }
@@ -186,10 +186,14 @@ class _CustomAppBarState extends State<CustomAppBar>
                     await _checkRatingStatus();
 
                     if (mounted) {
-                      showDialog(
+                      await showDialog(
                         context: context,
                         builder: (context) => const RatingRequestDialog(),
                       );
+
+                      // Check rating status again after dialog closes
+                      // This ensures animation stops if user completed rating
+                      await _checkRatingStatus();
                     }
                   },
                 ),
