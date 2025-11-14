@@ -155,7 +155,7 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
                             child: _buildScoreCard(l10n),
                           ),
                         ),
-                        AppSpacer.v16(),
+                        AppSpacer.v8(),
 
                         // Product Context - Animation 1 (NEW)
                         FadeTransition(
@@ -178,7 +178,7 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
                             child: _buildProductContext(l10n),
                           ),
                         ),
-                        AppSpacer.v16(),
+                        AppSpacer.v8(),
 
                         // AI Verdict - Animation 2 (NEW)
                         FadeTransition(
@@ -201,7 +201,7 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
                             child: _buildAIVerdict(l10n),
                           ),
                         ),
-                        AppSpacer.v16(),
+                        AppSpacer.v8(),
 
                         // Quick Summary - Animation 3 (NEW)
                         FadeTransition(
@@ -226,7 +226,7 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
                         ),
                         AppSpacer.v16(),
 
-                        // Action Buttons - Animation 4 (NEW)
+                        // Ingredients Analysis - Animation 4
                         FadeTransition(
                           opacity: _animations[4],
                           child: SlideTransition(
@@ -244,7 +244,32 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
                                     ),
                                   ),
                                 ),
-                            child: _buildActionButtons(l10n),
+                            child: _buildSection(
+                              title: l10n.ingredientsAnalysis(
+                                widget.result.ingredients.length,
+                              ),
+                              children: [
+                                _buildIngredientList(
+                                  l10n.highRisk,
+                                  widget.result.highRiskIngredients,
+                                  Colors.red,
+                                  context,
+                                ),
+                                _buildIngredientList(
+                                  l10n.moderateRisk,
+                                  widget.result.moderateRiskIngredients,
+                                  Colors.orange,
+                                  context,
+                                ),
+                                _buildIngredientList(
+                                  l10n.lowRisk,
+                                  widget.result.lowRiskIngredients,
+                                  Colors.green,
+                                  context,
+                                ),
+                              ],
+                              context: context,
+                            ),
                           ),
                         ),
                         AppSpacer.v32(),
@@ -281,7 +306,7 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
                             ),
                           ),
 
-                        // Premium Insights - Animation 6 (NEW)
+                        // Benefits Analysis - Animation 6
                         FadeTransition(
                           opacity: _animations[6],
                           child: SlideTransition(
@@ -295,76 +320,6 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
                                     curve: const Interval(
                                       0.36,
                                       0.86,
-                                      curve: Curves.easeOutCubic,
-                                    ),
-                                  ),
-                                ),
-                            child: _buildPremiumInsights(l10n),
-                          ),
-                        ),
-                        AppSpacer.v32(),
-
-                        // Ingredients Analysis - Animation 7
-                        FadeTransition(
-                          opacity: _animations[7],
-                          child: SlideTransition(
-                            position:
-                                Tween<Offset>(
-                                  begin: const Offset(0, 0.3),
-                                  end: Offset.zero,
-                                ).animate(
-                                  CurvedAnimation(
-                                    parent: _animationController,
-                                    curve: const Interval(
-                                      0.42,
-                                      0.92,
-                                      curve: Curves.easeOutCubic,
-                                    ),
-                                  ),
-                                ),
-                            child: _buildSection(
-                              title: l10n.ingredientsAnalysis(
-                                widget.result.ingredients.length,
-                              ),
-                              children: [
-                                _buildIngredientList(
-                                  l10n.highRisk,
-                                  widget.result.highRiskIngredients,
-                                  Colors.red,
-                                  context,
-                                ),
-                                _buildIngredientList(
-                                  l10n.moderateRisk,
-                                  widget.result.moderateRiskIngredients,
-                                  Colors.orange,
-                                  context,
-                                ),
-                                _buildIngredientList(
-                                  l10n.lowRisk,
-                                  widget.result.lowRiskIngredients,
-                                  Colors.green,
-                                  context,
-                                ),
-                              ],
-                              context: context,
-                            ),
-                          ),
-                        ),
-
-                        // Benefits Analysis - Animation 8
-                        FadeTransition(
-                          opacity: _animations[8],
-                          child: SlideTransition(
-                            position:
-                                Tween<Offset>(
-                                  begin: const Offset(0, 0.3),
-                                  end: Offset.zero,
-                                ).animate(
-                                  CurvedAnimation(
-                                    parent: _animationController,
-                                    curve: const Interval(
-                                      0.48,
-                                      0.98,
                                       curve: Curves.easeOutCubic,
                                     ),
                                   ),
@@ -384,10 +339,10 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
                           ),
                         ),
 
-                        // Recommended Alternatives - Animation 9
+                        // Recommended Alternatives - Animation 7
                         if (widget.result.recommendedAlternatives.isNotEmpty)
                           FadeTransition(
-                            opacity: _animations[9],
+                            opacity: _animations[7],
                             child: SlideTransition(
                               position:
                                   Tween<Offset>(
@@ -397,8 +352,8 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
                                     CurvedAnimation(
                                       parent: _animationController,
                                       curve: const Interval(
-                                        0.54,
-                                        1.0,
+                                        0.42,
+                                        0.92,
                                         curve: Curves.easeOutCubic,
                                       ),
                                     ),
@@ -1233,295 +1188,4 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
     );
   }
 
-  /// Action Buttons Panel - Quick actions for the analysis
-  Widget _buildActionButtons(AppLocalizations l10n) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          _buildActionButton(
-            icon: Icons.favorite_border,
-            label: l10n.saveToFavorites,
-            onTap: () {
-              // TODO: Implement save to favorites
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${l10n.saveToFavorites} - Coming soon')),
-              );
-            },
-          ),
-          AppSpacer.h8(),
-          _buildActionButton(
-            icon: Icons.share,
-            label: l10n.shareResults,
-            onTap: () {
-              // TODO: Implement share
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${l10n.shareResults} - Coming soon')),
-              );
-            },
-          ),
-          AppSpacer.h8(),
-          _buildActionButton(
-            icon: Icons.compare_arrows,
-            label: l10n.compareProducts,
-            onTap: () {
-              // TODO: Implement compare
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${l10n.compareProducts} - Coming soon')),
-              );
-            },
-          ),
-          AppSpacer.h8(),
-          Consumer<SubscriptionProvider>(
-            builder: (context, subscriptionProvider, _) {
-              final isPremium = subscriptionProvider.isPremium;
-              return _buildActionButton(
-                icon: isPremium ? Icons.picture_as_pdf : Icons.lock,
-                label: l10n.exportPDF,
-                onTap: isPremium
-                    ? () {
-                        // TODO: Implement PDF export
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${l10n.exportPDF} - Coming soon'),
-                          ),
-                        );
-                      }
-                    : () => context.push('/modern-paywall'),
-                isPremium: !isPremium,
-              );
-            },
-          ),
-          AppSpacer.h8(),
-          _buildActionButton(
-            icon: Icons.camera_alt,
-            label: l10n.scanSimilar,
-            onTap: () {
-              context.go('/scanning');
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    bool isPremium = false,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppDimensions.radius12),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppDimensions.space12,
-          vertical: AppDimensions.space12,
-        ),
-        decoration: BoxDecoration(
-          color: isPremium
-              ? context.colors.warning.withValues(alpha: 0.1)
-              : context.colors.surface,
-          borderRadius: BorderRadius.circular(AppDimensions.radius12),
-          border: isPremium
-              ? Border.all(color: context.colors.warning.withValues(alpha: 0.3))
-              : null,
-          boxShadow: [AppTheme.shadow],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: AppDimensions.iconMedium,
-              color: isPremium ? context.colors.warning : context.colors.primary,
-            ),
-            AppSpacer.v4(),
-            Text(
-              label,
-              style: AppTheme.caption.copyWith(
-                color: context.colors.onSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Premium Insights Widget - Shows premium data (research, ranking, trends)
-  Widget _buildPremiumInsights(AppLocalizations l10n) {
-    return Consumer<SubscriptionProvider>(
-      builder: (context, subscriptionProvider, _) {
-        final isPremium = subscriptionProvider.isPremium;
-
-        // If not premium, show upgrade prompt
-        if (!isPremium) {
-          return Container(
-            padding: EdgeInsets.all(AppDimensions.space16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  context.colors.warning.withValues(alpha: 0.2),
-                  context.colors.warning.withValues(alpha: 0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(AppDimensions.radius16),
-              border: Border.all(
-                color: context.colors.warning.withValues(alpha: 0.5),
-                width: 1,
-              ),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.workspace_premium,
-                      color: context.colors.warning,
-                      size: AppDimensions.iconLarge,
-                    ),
-                    AppSpacer.h12(),
-                    Expanded(
-                      child: Text(
-                        l10n.premiumInsights,
-                        style: AppTheme.h3.copyWith(
-                          color: context.colors.onBackground,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                AppSpacer.v12(),
-                Text(
-                  'Unlock detailed scientific research, category rankings, and safety trends',
-                  style: AppTheme.body.copyWith(
-                    color: context.colors.onSecondary,
-                  ),
-                ),
-                AppSpacer.v16(),
-                ElevatedButton(
-                  onPressed: () => context.push('/modern-paywall'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: context.colors.warning,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppDimensions.space24,
-                      vertical: AppDimensions.space12,
-                    ),
-                  ),
-                  child: Text(l10n.upgradeToPremium),
-                ),
-              ],
-            ),
-          );
-        }
-
-        // If premium but no data, don't show anything
-        if (widget.result.premiumInsights == null) {
-          return const SizedBox.shrink();
-        }
-
-        final insights = widget.result.premiumInsights!;
-
-        return Container(
-          padding: EdgeInsets.all(AppDimensions.space16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                context.colors.primary.withValues(alpha: 0.2),
-                context.colors.primary.withValues(alpha: 0.1),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(AppDimensions.radius16),
-            border: Border.all(
-              color: context.colors.primary.withValues(alpha: 0.3),
-              width: 1,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.workspace_premium,
-                    color: context.colors.primary,
-                    size: AppDimensions.iconLarge,
-                  ),
-                  AppSpacer.h12(),
-                  Text(
-                    l10n.premiumInsights,
-                    style: AppTheme.h3.copyWith(
-                      color: context.colors.onBackground,
-                    ),
-                  ),
-                ],
-              ),
-              AppSpacer.v16(),
-              if (insights.researchArticlesCount != null)
-                _buildInsightRow(
-                  Icons.science_outlined,
-                  l10n.researchArticles,
-                  '${insights.researchArticlesCount} articles',
-                ),
-              if (insights.researchArticlesCount != null) AppSpacer.v12(),
-              if (insights.categoryRank != null)
-                _buildInsightRow(
-                  Icons.emoji_events_outlined,
-                  l10n.categoryRanking,
-                  insights.categoryRank!,
-                ),
-              if (insights.categoryRank != null) AppSpacer.v12(),
-              if (insights.safetyTrend != null)
-                _buildInsightRow(
-                  Icons.trending_up,
-                  l10n.safetyTrend,
-                  insights.safetyTrend!,
-                ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildInsightRow(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: AppDimensions.iconMedium,
-          color: context.colors.primary,
-        ),
-        AppSpacer.h12(),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: AppTheme.caption.copyWith(
-                  color: context.colors.onSecondary,
-                ),
-              ),
-              AppSpacer.v4(),
-              Text(
-                value,
-                style: AppTheme.bodyLarge.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: context.colors.onBackground,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 }
