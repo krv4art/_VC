@@ -1,13 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-
 import '../../models/chat_message.dart';
-import '../../theme/theme_extensions.dart';
 import '../../constants/app_dimensions.dart';
-import '../../widgets/common/app_spacer.dart';
-import '../../widgets/animated/animated_card.dart';
-import '../../widgets/animated/animated_ai_avatar.dart';
+import '../animated/animated_card.dart';
+import '../animated/animated_plant_avatar.dart';
 
 /// Callback for copy action
 typedef OnCopyCallback = Future<void> Function(String text);
@@ -16,7 +12,7 @@ typedef OnCopyCallback = Future<void> Function(String text);
 typedef OnShareCallback = Future<void> Function(String text);
 
 /// A reusable widget that displays a chat message bubble with animations
-class ChatMessageBubble extends StatelessWidget {
+class ChatMessageBubble extends StatefulWidget {
   final ChatMessage message;
   final String displayText;
   final int messageIndex;
@@ -28,7 +24,7 @@ class ChatMessageBubble extends StatelessWidget {
   final String? fullText;
 
   const ChatMessageBubble({
-    Key? key,
+    super.key,
     required this.message,
     required this.displayText,
     required this.messageIndex,
@@ -38,53 +34,58 @@ class ChatMessageBubble extends StatelessWidget {
     this.onCopy,
     this.onShare,
     this.fullText,
-  }) : super(key: key);
+  });
 
+  @override
+  State<ChatMessageBubble> createState() => _ChatMessageBubbleState();
+}
+
+class _ChatMessageBubbleState extends State<ChatMessageBubble> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animation,
+      animation: widget.animation,
       builder: (context, child) {
         return FadeTransition(
-          opacity: animation,
+          opacity: widget.animation,
           child: SlideTransition(
-            position:
-                Tween<Offset>(
-                  begin: message.isUser
-                      ? const Offset(0.1, 0.2)
-                      : const Offset(-0.1, 0.2),
-                  end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOutCubic,
-                  ),
-                ),
+            position: Tween<Offset>(
+              begin: widget.message.isUser
+                  ? const Offset(0.1, 0.2)
+                  : const Offset(-0.1, 0.2),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: widget.animation,
+                curve: Curves.easeOutCubic,
+              ),
+            ),
             child: Padding(
               padding: EdgeInsets.only(
-                left: message.isUser ? 0 : AppDimensions.space8,
-                right: message.isUser ? AppDimensions.space8 : 0,
+                left: widget.message.isUser ? 0 : AppDimensions.space8,
+                right: widget.message.isUser ? AppDimensions.space8 : 0,
                 bottom: AppDimensions.space8,
               ),
               child: Column(
-                crossAxisAlignment: message.isUser
+                crossAxisAlignment: widget.message.isUser
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: message.isUser
+                    mainAxisAlignment: widget.message.isUser
                         ? MainAxisAlignment.end
                         : MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (!message.isUser)
+                      if (!widget.message.isUser)
                         _buildBotAvatar(context)
                       else
                         const SizedBox.shrink(),
-                      if (!message.isUser) AppSpacer.h12(),
+                      if (!widget.message.isUser)
+                        const SizedBox(width: AppDimensions.space12),
                       Flexible(child: _buildMessageBubble(context)),
-                      if (message.isUser) ...[
-                        AppSpacer.h8(),
+                      if (widget.message.isUser) ...[
+                        const SizedBox(width: AppDimensions.space8),
                         _buildUserAvatar(context),
                       ],
                     ],
@@ -101,28 +102,32 @@ class ChatMessageBubble extends StatelessWidget {
   /// Build bot avatar with animation
   Widget _buildBotAvatar(BuildContext context) {
     // Use animation only for typing messages, otherwise use idle state
-    final effectiveState = isTyping ? avatarState : AvatarAnimationState.idle;
+    final effectiveState = widget.isTyping
+        ? widget.avatarState
+        : AvatarAnimationState.idle;
 
     return SizedBox(
-      width: AppDimensions.iconMedium * 2,
-      height: AppDimensions.iconMedium * 2,
-      child: AnimatedAiAvatar(
-        size: AppDimensions.iconMedium * 2,
+      width: 40,
+      height: 40,
+      child: AnimatedPlantAvatar(
+        size: 40,
         state: effectiveState,
-        colors: context.colors.currentColors,
+        primaryColor: Theme.of(context).primaryColor,
+        secondaryColor: Theme.of(context).colorScheme.secondary,
       ),
     );
   }
 
-  /// Build user avatar with photo
+  /// Build user avatar with icon
   Widget _buildUserAvatar(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: context.colors.onSecondary.withOpacity(0.3),
-      radius: AppDimensions.iconMedium,
+      backgroundColor:
+          Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+      radius: 20,
       child: Icon(
         Icons.person,
-        size: AppDimensions.iconMedium,
-        color: context.colors.onSecondary,
+        size: 20,
+        color: Theme.of(context).colorScheme.onSecondary,
       ),
     );
   }
@@ -131,21 +136,24 @@ class ChatMessageBubble extends StatelessWidget {
   Widget _buildMessageBubble(BuildContext context) {
     return AnimatedCard(
       elevation: 2,
-      borderRadius: message.isUser
-          ? BorderRadius.only(
-              topLeft: Radius.circular(AppDimensions.radius24),
-              topRight: Radius.circular(AppDimensions.radius24),
-              bottomLeft: Radius.circular(AppDimensions.radius24),
-              bottomRight: Radius.circular(AppDimensions.space4),
+      backgroundColor: widget.message.isUser
+          ? Theme.of(context).primaryColor
+          : Theme.of(context).cardColor,
+      borderRadius: widget.message.isUser
+          ? const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+              bottomLeft: Radius.circular(24),
+              bottomRight: Radius.circular(4),
             )
-          : BorderRadius.only(
-              topLeft: Radius.circular(AppDimensions.radius24),
-              topRight: Radius.circular(AppDimensions.radius24),
-              bottomRight: Radius.circular(AppDimensions.radius24),
-              bottomLeft: Radius.circular(AppDimensions.space4),
+          : const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+              bottomRight: Radius.circular(24),
+              bottomLeft: Radius.circular(4),
             ),
       child: Container(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: AppDimensions.space16,
           vertical: AppDimensions.space12,
         ),
@@ -153,23 +161,18 @@ class ChatMessageBubble extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Display image if present
-            if (message.plantImagePath != null && message.plantImagePath!.isNotEmpty)
-              _buildMessageImage(context),
-            // Display text if present
-            if (displayText.isNotEmpty)
-              SelectionArea(
-                child: MarkdownBody(
-                  data: displayText,
-                  styleSheet: _buildMarkdownStyleSheet(context),
-                ),
+            SelectionArea(
+              child: MarkdownBody(
+                data: widget.displayText,
+                styleSheet: _buildMarkdownStyleSheet(context),
               ),
-            if (!message.isUser && messageIndex > 0) ...[
-              // Reserve space for action buttons to prevent layout shift
-              if (displayText.isNotEmpty)
+            ),
+            if (!widget.message.isUser && widget.messageIndex > 0) ...[
+              // Reserve space for action buttons
+              if (widget.displayText.isNotEmpty)
                 _buildActionButtons(context)
               else
-                SizedBox(height: 28), // Same height as action buttons
+                const SizedBox(height: 28),
             ],
           ],
         ),
@@ -177,122 +180,50 @@ class ChatMessageBubble extends StatelessWidget {
     );
   }
 
-  /// Build message image with tap to view full size
-  Widget _buildMessageImage(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: displayText.isNotEmpty ? AppDimensions.space12 : 0,
-      ),
-      child: GestureDetector(
-        onTap: () => _showFullSizeImage(context),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppDimensions.radius12),
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: 250,
-              maxHeight: 250,
-            ),
-            child: Image.file(
-              File(message.plantImagePath!),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Show full size image in a dialog
-  void _showFullSizeImage(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Stack(
-            children: [
-              // Full size image
-              Center(
-                child: InteractiveViewer(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppDimensions.radius16),
-                    child: Image.file(
-                      File(message.plantImagePath!),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-              // Close button
-              Positioned(
-                top: 16,
-                right: 16,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    padding: EdgeInsets.all(AppDimensions.space8),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.6),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: AppDimensions.iconMedium,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   /// Build markdown style sheet for message text
   MarkdownStyleSheet _buildMarkdownStyleSheet(BuildContext context) {
     return MarkdownStyleSheet(
       p: TextStyle(
-        color: message.isUser
+        color: widget.message.isUser
             ? Colors.white.withOpacity(0.95)
-            : context.colors.onSurface,
-        fontSize: AppDimensions.iconSmall,
+            : Theme.of(context).textTheme.bodyMedium?.color,
+        fontSize: 15,
       ),
       strong: TextStyle(
-        color: message.isUser ? Colors.white : context.colors.onSurface,
-        fontSize: AppDimensions.iconSmall,
+        color: widget.message.isUser
+            ? Colors.white
+            : Theme.of(context).textTheme.bodyMedium?.color,
+        fontSize: 15,
         fontWeight: FontWeight.bold,
       ),
       em: TextStyle(
-        color: message.isUser
+        color: widget.message.isUser
             ? Colors.white.withOpacity(0.95)
-            : context.colors.onSurface,
-        fontSize: AppDimensions.iconSmall,
+            : Theme.of(context).textTheme.bodyMedium?.color,
+        fontSize: 15,
         fontStyle: FontStyle.italic,
       ),
       code: TextStyle(
-        color: message.isUser
+        color: widget.message.isUser
             ? Colors.white.withOpacity(0.9)
-            : context.colors.onSurface,
-        fontSize:
-            AppDimensions.space8 + AppDimensions.space4 + AppDimensions.space4,
-        backgroundColor: message.isUser
+            : Theme.of(context).textTheme.bodyMedium?.color,
+        fontSize: 14,
+        backgroundColor: widget.message.isUser
             ? Colors.black.withOpacity(0.2)
             : Colors.black12,
       ),
       listBullet: TextStyle(
-        color: message.isUser
+        color: widget.message.isUser
             ? Colors.white.withOpacity(0.95)
-            : context.colors.onSurface,
-        fontSize: AppDimensions.iconSmall,
+            : Theme.of(context).textTheme.bodyMedium?.color,
+        fontSize: 15,
       ),
     );
   }
 
   /// Build action buttons for bot messages
   Widget _buildActionButtons(BuildContext context) {
-    final textToCopy = fullText ?? displayText;
+    final textToCopy = widget.fullText ?? widget.displayText;
     const double containerSize = 28.0;
 
     return Row(
@@ -300,29 +231,30 @@ class ChatMessageBubble extends StatelessWidget {
       children: [
         // Copy button
         GestureDetector(
-          onTap: onCopy != null ? () => onCopy!(textToCopy) : null,
+          onTap: widget.onCopy != null ? () => widget.onCopy!(textToCopy) : null,
           child: Container(
             width: containerSize,
             height: containerSize,
             alignment: Alignment.center,
             child: Icon(
               Icons.copy,
-              size: AppDimensions.iconSmall,
-              color: context.colors.onSecondary.withOpacity(0.6),
+              size: 16,
+              color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6),
             ),
           ),
         ),
+        const SizedBox(width: AppDimensions.space8),
         // Share button
         GestureDetector(
-          onTap: onShare != null ? () => onShare!(textToCopy) : null,
+          onTap: widget.onShare != null ? () => widget.onShare!(textToCopy) : null,
           child: Container(
             width: containerSize,
             height: containerSize,
             alignment: Alignment.center,
             child: Icon(
               Icons.share,
-              size: AppDimensions.iconSmall,
-              color: context.colors.onSecondary.withOpacity(0.6),
+              size: 16,
+              color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6),
             ),
           ),
         ),
