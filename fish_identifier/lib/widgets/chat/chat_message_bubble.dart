@@ -3,7 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../models/chat_message.dart';
 import '../../constants/app_dimensions.dart';
 import '../animated/animated_card.dart';
-import '../animated/animated_ai_avatar.dart';
+import '../animated/animated_fish_avatar.dart';
 
 /// Callback for copy action
 typedef OnCopyCallback = Future<void> Function(String text);
@@ -109,7 +109,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
     return SizedBox(
       width: 40,
       height: 40,
-      child: AnimatedAiAvatar(
+      child: AnimatedFishAvatar(
         size: 40,
         state: effectiveState,
         primaryColor: Theme.of(context).primaryColor,

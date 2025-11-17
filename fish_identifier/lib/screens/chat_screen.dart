@@ -13,7 +13,7 @@ import '../config/fish_prompts_manager.dart';
 import '../models/chat_message.dart';
 import '../widgets/chat/chat_message_bubble.dart';
 import '../widgets/chat/chat_input_field.dart';
-import '../widgets/animated/animated_ai_avatar.dart';
+import '../widgets/animated/animated_fish_avatar.dart';
 
 class ChatScreen extends StatefulWidget {
   final int? fishId;
@@ -338,7 +338,7 @@ Diet: ${fish.diet}
                   SizedBox(
                     width: 40,
                     height: 40,
-                    child: AnimatedAiAvatar(
+                    child: AnimatedFishAvatar(
                       size: 40,
                       state: AvatarAnimationState.thinking,
                       primaryColor: Theme.of(context).primaryColor,
