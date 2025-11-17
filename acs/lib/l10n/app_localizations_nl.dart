@@ -57,87 +57,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get save => 'Opslaan';
 
   @override
-  String get language_en => 'Engels';
-
-  @override
-  String get language_ru => 'Russisch';
-
-  @override
-  String get language_uk => 'Oekraïens';
-
-  @override
-  String get language_es => 'Spaans';
-
-  @override
-  String get language_de => 'Duits';
-
-  @override
-  String get language_fr => 'Frans';
-
-  @override
-  String get language_it => 'Italiaans';
-
-  @override
-  String get language_ar => 'Arabisch';
-
-  @override
-  String get language_ko => 'Koreaans';
-
-  @override
-  String get language_cs => 'Tsjechisch';
-
-  @override
-  String get language_da => 'Deens';
-
-  @override
-  String get language_el => 'Grieks';
-
-  @override
-  String get language_fi => 'Fins';
-
-  @override
-  String get language_hi => 'Hindi';
-
-  @override
-  String get language_hu => 'Hongaars';
-
-  @override
-  String get language_id => 'Indonesisch';
-
-  @override
-  String get language_ja => 'Japans';
-
-  @override
-  String get language_nl => 'Nederlands';
-
-  @override
-  String get language_no => 'Noors';
-
-  @override
-  String get language_pl => 'Pools';
-
-  @override
-  String get language_pt => 'Portugees';
-
-  @override
-  String get language_ro => 'Roemeens';
-
-  @override
-  String get language_sv => 'Zweeds';
-
-  @override
-  String get language_th => 'Thais';
-
-  @override
-  String get language_tr => 'Turks';
-
-  @override
-  String get language_vi => 'Vietnamees';
-
-  @override
-  String get language_zh => 'Chinees';
-
-  @override
   String get selectIngredientsAllergicSensitive => 'Selecteer ingrediënten waarvoor u gevoelig bent';
 
   @override
@@ -328,7 +247,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get sampleData => 'Voorbeeldgegevens:';
 
   @override
-  String get aiChats => 'AI Cosmetica Scanners';
+  String get aiChats => 'AI-gesprekken';
 
   @override
   String get noDialoguesYet => 'Nog geen gesprekken.';
@@ -581,10 +500,10 @@ class AppLocalizationsNl extends AppLocalizations {
   String get home => 'Home';
 
   @override
-  String get scan => 'Scannen';
+  String get scan => 'Scanner';
 
   @override
-  String get aiChatNav => 'AI Chat';
+  String get aiChatNav => 'Consultant';
 
   @override
   String get profileNav => 'Profiel';
@@ -1237,4 +1156,73 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get developer => 'Developer';
+
+  @override
+  String get marketing_screen1_title => 'Instant Cosmetics Analysis';
+
+  @override
+  String get marketing_screen1_subtitle => 'Scan any product and discover what\'s inside';
+
+  @override
+  String get marketing_screen1_feature1 => 'AI-powered ingredient detection';
+
+  @override
+  String get marketing_screen1_feature2 => 'Safety ratings in seconds';
+
+  @override
+  String get marketing_screen1_feature3 => 'Works with any cosmetic product';
+
+  @override
+  String get marketing_screen2_title => 'Know What You\'re Putting On Your Skin';
+
+  @override
+  String get marketing_screen2_subtitle => 'Detailed analysis of every ingredient';
+
+  @override
+  String get marketing_screen2_feature1 => 'Personalized safety warnings';
+
+  @override
+  String get marketing_screen2_feature2 => 'Allergen detection';
+
+  @override
+  String get marketing_screen2_feature3 => 'Research-backed insights';
+
+  @override
+  String get marketing_screen3_title => 'Your AI Skincare Expert';
+
+  @override
+  String get marketing_screen3_subtitle => 'Get instant answers about any cosmetic ingredient';
+
+  @override
+  String get marketing_screen3_feature1 => '24/7 AI consultant';
+
+  @override
+  String get marketing_screen3_feature2 => 'Unlimited questions';
+
+  @override
+  String get marketing_screen4_title => 'Track Your Cosmetics';
+
+  @override
+  String get marketing_screen4_subtitle => 'Build your personal product database';
+
+  @override
+  String get marketing_screen4_feature1 => 'Full scan history';
+
+  @override
+  String get marketing_screen4_feature2 => 'Compare products side-by-side';
+
+  @override
+  String get marketing_screen5_title => 'Go Premium';
+
+  @override
+  String get marketing_screen5_subtitle => 'Unlock unlimited scans and expert features';
+
+  @override
+  String get marketing_screen5_feature1 => 'Unlimited product scans';
+
+  @override
+  String get marketing_screen5_feature2 => 'Advanced AI analysis';
+
+  @override
+  String get marketing_screen5_feature3 => 'Ad-free experience';
 }

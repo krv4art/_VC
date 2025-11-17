@@ -727,6 +727,12 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
         shape: const Border(), // Убираем стандартные dividers
         collapsedShape:
             const Border(), // Убираем dividers в свернутом состоянии
+        tilePadding: EdgeInsets.zero, // Убираем отступы у заголовка
+        childrenPadding: EdgeInsets.zero, // Убираем отступы у содержимого
+        trailing: Padding(
+          padding: EdgeInsets.only(right: AppDimensions.space12),
+          child: const Icon(Icons.expand_more),
+        ),
         leading: Icon(
           Icons.circle,
           color: color,
@@ -759,6 +765,7 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
         final isPremium = subscriptionProvider.isPremium;
 
         return ListTile(
+          contentPadding: EdgeInsets.zero, // Убираем отступы содержимого
           title: Row(
             children: [
               Expanded(

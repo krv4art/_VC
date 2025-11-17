@@ -728,31 +728,31 @@ class _ProfileScreenState extends State<ProfileScreen>
                               onTap: () => context.push('/ai-bot-settings'),
                             ),
                             // Test screen button
-                            _buildMenuItem(
-                              icon: Icons.science,
-                              title: 'Subscription Test',
-                              trailing: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: context.colors.warning.withValues(
-                                    alpha: 0.2,
-                                  ),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  'TEST',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    color: context.colors.warning,
-                                  ),
-                                ),
-                              ),
-                              onTap: () => context.push('/usage-limits-test'),
-                            ),
+                            // _buildMenuItem(
+                            //   icon: Icons.science,
+                            //   title: 'Subscription Test',
+                            //   trailing: Container(
+                            //     padding: const EdgeInsets.symmetric(
+                            //       horizontal: 8,
+                            //       vertical: 2,
+                            //     ),
+                            //     decoration: BoxDecoration(
+                            //       color: context.colors.warning.withValues(
+                            //         alpha: 0.2,
+                            //       ),
+                            //       borderRadius: BorderRadius.circular(4),
+                            //     ),
+                            //     child: Text(
+                            //       'TEST',
+                            //       style: TextStyle(
+                            //         fontSize: 10,
+                            //         fontWeight: FontWeight.bold,
+                            //         color: context.colors.warning,
+                            //       ),
+                            //     ),
+                            //   ),
+                            //   onTap: () => context.push('/usage-limits-test'),
+                            // ),
                           ]),
                         ),
                       ),

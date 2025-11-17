@@ -136,7 +136,8 @@ class _MyAppState extends State<MyApp> {
         Locale('de', ''), // German
         Locale('el', ''), // Greek
         Locale('en', ''), // English
-        Locale('es', ''), // Spanish
+        Locale('es', 'ES'), // Spanish (Spain)
+        Locale('es', '419'), // Spanish (Latin America)
         Locale('fi', ''), // Finnish
         Locale('fr', ''), // French
         Locale('hi', ''), // Hindi
@@ -148,7 +149,8 @@ class _MyAppState extends State<MyApp> {
         Locale('nl', ''), // Dutch
         Locale('no', ''), // Norwegian
         Locale('pl', ''), // Polish
-        Locale('pt', ''), // Portuguese
+        Locale('pt', 'BR'), // Portuguese (Brazil)
+        Locale('pt', 'PT'), // Portuguese (Portugal)
         Locale('ro', ''), // Romanian
         Locale('ru', ''), // Russian
         Locale('sv', ''), // Swedish
@@ -156,7 +158,8 @@ class _MyAppState extends State<MyApp> {
         Locale('tr', ''), // Turkish
         Locale('uk', ''), // Ukrainian
         Locale('vi', ''), // Vietnamese
-        Locale('zh', ''), // Chinese
+        Locale('zh', 'CN'), // Chinese (Simplified)
+        Locale('zh', 'TW'), // Chinese (Traditional)
       ],
     );
   }

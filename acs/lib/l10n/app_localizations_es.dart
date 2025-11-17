@@ -57,87 +57,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get save => 'Guardar';
 
   @override
-  String get language_en => 'Inglés';
-
-  @override
-  String get language_ru => 'Ruso';
-
-  @override
-  String get language_uk => 'Ucraniano';
-
-  @override
-  String get language_es => 'Español';
-
-  @override
-  String get language_de => 'Alemán';
-
-  @override
-  String get language_fr => 'Francés';
-
-  @override
-  String get language_it => 'Italiano';
-
-  @override
-  String get language_ar => 'Árabe';
-
-  @override
-  String get language_ko => 'Coreano';
-
-  @override
-  String get language_cs => 'Checo';
-
-  @override
-  String get language_da => 'Danés';
-
-  @override
-  String get language_el => 'Griego';
-
-  @override
-  String get language_fi => 'Finlandés';
-
-  @override
-  String get language_hi => 'Hindi';
-
-  @override
-  String get language_hu => 'Húngaro';
-
-  @override
-  String get language_id => 'Indonesio';
-
-  @override
-  String get language_ja => 'Japonés';
-
-  @override
-  String get language_nl => 'Neerlandés';
-
-  @override
-  String get language_no => 'Noruego';
-
-  @override
-  String get language_pl => 'Polaco';
-
-  @override
-  String get language_pt => 'Portugués';
-
-  @override
-  String get language_ro => 'Rumano';
-
-  @override
-  String get language_sv => 'Sueco';
-
-  @override
-  String get language_th => 'Tailandés';
-
-  @override
-  String get language_tr => 'Turco';
-
-  @override
-  String get language_vi => 'Vietnamita';
-
-  @override
-  String get language_zh => 'Chino';
-
-  @override
   String get selectIngredientsAllergicSensitive => 'Selecciona los ingredientes a los que tienes mayor sensibilidad';
 
   @override
@@ -581,10 +500,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get home => 'Inicio';
 
   @override
-  String get scan => 'Scan';
+  String get scan => 'Escáner';
 
   @override
-  String get aiChatNav => 'Chat IA';
+  String get aiChatNav => 'Asesor de belleza';
 
   @override
   String get profileNav => 'Perfil';
@@ -1237,6 +1156,75 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get developer => 'Developer';
+
+  @override
+  String get marketing_screen1_title => 'Instant Cosmetics Analysis';
+
+  @override
+  String get marketing_screen1_subtitle => 'Scan any product and discover what\'s inside';
+
+  @override
+  String get marketing_screen1_feature1 => 'AI-powered ingredient detection';
+
+  @override
+  String get marketing_screen1_feature2 => 'Safety ratings in seconds';
+
+  @override
+  String get marketing_screen1_feature3 => 'Works with any cosmetic product';
+
+  @override
+  String get marketing_screen2_title => 'Know What You\'re Putting On Your Skin';
+
+  @override
+  String get marketing_screen2_subtitle => 'Detailed analysis of every ingredient';
+
+  @override
+  String get marketing_screen2_feature1 => 'Personalized safety warnings';
+
+  @override
+  String get marketing_screen2_feature2 => 'Allergen detection';
+
+  @override
+  String get marketing_screen2_feature3 => 'Research-backed insights';
+
+  @override
+  String get marketing_screen3_title => 'Your AI Skincare Expert';
+
+  @override
+  String get marketing_screen3_subtitle => 'Get instant answers about any cosmetic ingredient';
+
+  @override
+  String get marketing_screen3_feature1 => '24/7 AI consultant';
+
+  @override
+  String get marketing_screen3_feature2 => 'Unlimited questions';
+
+  @override
+  String get marketing_screen4_title => 'Track Your Cosmetics';
+
+  @override
+  String get marketing_screen4_subtitle => 'Build your personal product database';
+
+  @override
+  String get marketing_screen4_feature1 => 'Full scan history';
+
+  @override
+  String get marketing_screen4_feature2 => 'Compare products side-by-side';
+
+  @override
+  String get marketing_screen5_title => 'Go Premium';
+
+  @override
+  String get marketing_screen5_subtitle => 'Unlock unlimited scans and expert features';
+
+  @override
+  String get marketing_screen5_feature1 => 'Unlimited product scans';
+
+  @override
+  String get marketing_screen5_feature2 => 'Advanced AI analysis';
+
+  @override
+  String get marketing_screen5_feature3 => 'Ad-free experience';
 }
 
 /// The translations for Spanish Castilian, as used in Latin America and the Caribbean (`es_419`).
@@ -1290,87 +1278,6 @@ class AppLocalizationsEs419 extends AppLocalizationsEs {
 
   @override
   String get save => 'Guardar';
-
-  @override
-  String get language_en => 'English';
-
-  @override
-  String get language_ru => 'Russian';
-
-  @override
-  String get language_uk => 'Ukrainian';
-
-  @override
-  String get language_es => 'Spanish';
-
-  @override
-  String get language_de => 'German';
-
-  @override
-  String get language_fr => 'French';
-
-  @override
-  String get language_it => 'Italian';
-
-  @override
-  String get language_ar => 'العربية';
-
-  @override
-  String get language_ko => '한국어';
-
-  @override
-  String get language_cs => 'Čeština';
-
-  @override
-  String get language_da => 'Dansk';
-
-  @override
-  String get language_el => 'Ελληνικά';
-
-  @override
-  String get language_fi => 'Suomi';
-
-  @override
-  String get language_hi => 'हिन्दी';
-
-  @override
-  String get language_hu => 'Magyar';
-
-  @override
-  String get language_id => 'Bahasa Indonesia';
-
-  @override
-  String get language_ja => '日本語';
-
-  @override
-  String get language_nl => 'Nederlands';
-
-  @override
-  String get language_no => 'Norsk';
-
-  @override
-  String get language_pl => 'Polski';
-
-  @override
-  String get language_pt => 'Português';
-
-  @override
-  String get language_ro => 'Română';
-
-  @override
-  String get language_sv => 'Svenska';
-
-  @override
-  String get language_th => 'ไทย';
-
-  @override
-  String get language_tr => 'Türkçe';
-
-  @override
-  String get language_vi => 'Tiếng Việt';
-
-  @override
-  String get language_zh => '中文';
 
   @override
   String get selectIngredientsAllergicSensitive => 'Selecciona los ingredientes a los que tienes sensibilidad aumentada';
@@ -1563,7 +1470,7 @@ class AppLocalizationsEs419 extends AppLocalizationsEs {
   String get sampleData => 'Datos de Muestra:';
 
   @override
-  String get aiChats => 'AI Cosmetic Scanners';
+  String get aiChats => 'Chats de IA';
 
   @override
   String get noDialoguesYet => 'Aún no hay conversaciones.';
@@ -1816,10 +1723,10 @@ class AppLocalizationsEs419 extends AppLocalizationsEs {
   String get home => 'Inicio';
 
   @override
-  String get scan => 'Escanear';
+  String get scan => 'Escáner';
 
   @override
-  String get aiChatNav => 'Chat IA';
+  String get aiChatNav => 'Asesor de belleza';
 
   @override
   String get profileNav => 'Perfil';
@@ -2521,87 +2428,6 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
   String get save => 'Guardar';
 
   @override
-  String get language_en => 'English';
-
-  @override
-  String get language_ru => 'Russian';
-
-  @override
-  String get language_uk => 'Ukrainian';
-
-  @override
-  String get language_es => 'Spanish';
-
-  @override
-  String get language_de => 'German';
-
-  @override
-  String get language_fr => 'French';
-
-  @override
-  String get language_it => 'Italian';
-
-  @override
-  String get language_ar => 'العربية';
-
-  @override
-  String get language_ko => '한국어';
-
-  @override
-  String get language_cs => 'Čeština';
-
-  @override
-  String get language_da => 'Dansk';
-
-  @override
-  String get language_el => 'Ελληνικά';
-
-  @override
-  String get language_fi => 'Suomi';
-
-  @override
-  String get language_hi => 'हिन्दी';
-
-  @override
-  String get language_hu => 'Magyar';
-
-  @override
-  String get language_id => 'Bahasa Indonesia';
-
-  @override
-  String get language_ja => '日本語';
-
-  @override
-  String get language_nl => 'Nederlands';
-
-  @override
-  String get language_no => 'Norsk';
-
-  @override
-  String get language_pl => 'Polski';
-
-  @override
-  String get language_pt => 'Português';
-
-  @override
-  String get language_ro => 'Română';
-
-  @override
-  String get language_sv => 'Svenska';
-
-  @override
-  String get language_th => 'ไทย';
-
-  @override
-  String get language_tr => 'Türkçe';
-
-  @override
-  String get language_vi => 'Tiếng Việt';
-
-  @override
-  String get language_zh => '中文';
-
-  @override
   String get selectIngredientsAllergicSensitive => 'Seleccionad los ingredientes a los que tenéis sensibilidad aumentada';
 
   @override
@@ -2792,7 +2618,7 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
   String get sampleData => 'Datos de Muestra:';
 
   @override
-  String get aiChats => 'AI Cosmetic Scanners';
+  String get aiChats => 'Chats de IA';
 
   @override
   String get noDialoguesYet => 'Aún no hay conversaciones.';
@@ -3045,10 +2871,10 @@ class AppLocalizationsEsEs extends AppLocalizationsEs {
   String get home => 'Inicio';
 
   @override
-  String get scan => 'Escanear';
+  String get scan => 'Escáner';
 
   @override
-  String get aiChatNav => 'Chat IA';
+  String get aiChatNav => 'Asesor de belleza';
 
   @override
   String get profileNav => 'Perfil';

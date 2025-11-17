@@ -247,168 +247,6 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save;
 
-  /// No description provided for @language_en.
-  ///
-  /// In en, this message translates to:
-  /// **'English'**
-  String get language_en;
-
-  /// No description provided for @language_ru.
-  ///
-  /// In en, this message translates to:
-  /// **'Russian'**
-  String get language_ru;
-
-  /// No description provided for @language_uk.
-  ///
-  /// In en, this message translates to:
-  /// **'Ukrainian'**
-  String get language_uk;
-
-  /// No description provided for @language_es.
-  ///
-  /// In en, this message translates to:
-  /// **'Spanish'**
-  String get language_es;
-
-  /// No description provided for @language_de.
-  ///
-  /// In en, this message translates to:
-  /// **'German'**
-  String get language_de;
-
-  /// No description provided for @language_fr.
-  ///
-  /// In en, this message translates to:
-  /// **'French'**
-  String get language_fr;
-
-  /// No description provided for @language_it.
-  ///
-  /// In en, this message translates to:
-  /// **'Italian'**
-  String get language_it;
-
-  /// No description provided for @language_ar.
-  ///
-  /// In en, this message translates to:
-  /// **'Arabic'**
-  String get language_ar;
-
-  /// No description provided for @language_ko.
-  ///
-  /// In en, this message translates to:
-  /// **'Korean'**
-  String get language_ko;
-
-  /// No description provided for @language_cs.
-  ///
-  /// In en, this message translates to:
-  /// **'Czech'**
-  String get language_cs;
-
-  /// No description provided for @language_da.
-  ///
-  /// In en, this message translates to:
-  /// **'Danish'**
-  String get language_da;
-
-  /// No description provided for @language_el.
-  ///
-  /// In en, this message translates to:
-  /// **'Greek'**
-  String get language_el;
-
-  /// No description provided for @language_fi.
-  ///
-  /// In en, this message translates to:
-  /// **'Finnish'**
-  String get language_fi;
-
-  /// No description provided for @language_hi.
-  ///
-  /// In en, this message translates to:
-  /// **'Hindi'**
-  String get language_hi;
-
-  /// No description provided for @language_hu.
-  ///
-  /// In en, this message translates to:
-  /// **'Hungarian'**
-  String get language_hu;
-
-  /// No description provided for @language_id.
-  ///
-  /// In en, this message translates to:
-  /// **'Indonesian'**
-  String get language_id;
-
-  /// No description provided for @language_ja.
-  ///
-  /// In en, this message translates to:
-  /// **'Japanese'**
-  String get language_ja;
-
-  /// No description provided for @language_nl.
-  ///
-  /// In en, this message translates to:
-  /// **'Dutch'**
-  String get language_nl;
-
-  /// No description provided for @language_no.
-  ///
-  /// In en, this message translates to:
-  /// **'Norwegian'**
-  String get language_no;
-
-  /// No description provided for @language_pl.
-  ///
-  /// In en, this message translates to:
-  /// **'Polish'**
-  String get language_pl;
-
-  /// No description provided for @language_pt.
-  ///
-  /// In en, this message translates to:
-  /// **'Portuguese'**
-  String get language_pt;
-
-  /// No description provided for @language_ro.
-  ///
-  /// In en, this message translates to:
-  /// **'Romanian'**
-  String get language_ro;
-
-  /// No description provided for @language_sv.
-  ///
-  /// In en, this message translates to:
-  /// **'Swedish'**
-  String get language_sv;
-
-  /// No description provided for @language_th.
-  ///
-  /// In en, this message translates to:
-  /// **'Thai'**
-  String get language_th;
-
-  /// No description provided for @language_tr.
-  ///
-  /// In en, this message translates to:
-  /// **'Turkish'**
-  String get language_tr;
-
-  /// No description provided for @language_vi.
-  ///
-  /// In en, this message translates to:
-  /// **'Vietnamese'**
-  String get language_vi;
-
-  /// No description provided for @language_zh.
-  ///
-  /// In en, this message translates to:
-  /// **'Chinese'**
-  String get language_zh;
-
   /// No description provided for @selectIngredientsAllergicSensitive.
   ///
   /// In en, this message translates to:
@@ -1282,13 +1120,13 @@ abstract class AppLocalizations {
   /// No description provided for @scan.
   ///
   /// In en, this message translates to:
-  /// **'Scan'**
+  /// **'Scanner'**
   String get scan;
 
   /// No description provided for @aiChatNav.
   ///
   /// In en, this message translates to:
-  /// **'AI Chat'**
+  /// **'Consultant'**
   String get aiChatNav;
 
   /// No description provided for @profileNav.
@@ -2574,6 +2412,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Developer'**
   String get developer;
+
+  /// No description provided for @marketing_screen1_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Instant Cosmetics Analysis'**
+  String get marketing_screen1_title;
+
+  /// No description provided for @marketing_screen1_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan any product and discover what\'s inside'**
+  String get marketing_screen1_subtitle;
+
+  /// No description provided for @marketing_screen1_feature1.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered ingredient detection'**
+  String get marketing_screen1_feature1;
+
+  /// No description provided for @marketing_screen1_feature2.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety ratings in seconds'**
+  String get marketing_screen1_feature2;
+
+  /// No description provided for @marketing_screen1_feature3.
+  ///
+  /// In en, this message translates to:
+  /// **'Works with any cosmetic product'**
+  String get marketing_screen1_feature3;
+
+  /// No description provided for @marketing_screen2_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Know What You\'re Putting On Your Skin'**
+  String get marketing_screen2_title;
+
+  /// No description provided for @marketing_screen2_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed analysis of every ingredient'**
+  String get marketing_screen2_subtitle;
+
+  /// No description provided for @marketing_screen2_feature1.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized safety warnings'**
+  String get marketing_screen2_feature1;
+
+  /// No description provided for @marketing_screen2_feature2.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergen detection'**
+  String get marketing_screen2_feature2;
+
+  /// No description provided for @marketing_screen2_feature3.
+  ///
+  /// In en, this message translates to:
+  /// **'Research-backed insights'**
+  String get marketing_screen2_feature3;
+
+  /// No description provided for @marketing_screen3_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your AI Skincare Expert'**
+  String get marketing_screen3_title;
+
+  /// No description provided for @marketing_screen3_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get instant answers about any cosmetic ingredient'**
+  String get marketing_screen3_subtitle;
+
+  /// No description provided for @marketing_screen3_feature1.
+  ///
+  /// In en, this message translates to:
+  /// **'24/7 AI consultant'**
+  String get marketing_screen3_feature1;
+
+  /// No description provided for @marketing_screen3_feature2.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited questions'**
+  String get marketing_screen3_feature2;
+
+  /// No description provided for @marketing_screen4_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Track Your Cosmetics'**
+  String get marketing_screen4_title;
+
+  /// No description provided for @marketing_screen4_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Build your personal product database'**
+  String get marketing_screen4_subtitle;
+
+  /// No description provided for @marketing_screen4_feature1.
+  ///
+  /// In en, this message translates to:
+  /// **'Full scan history'**
+  String get marketing_screen4_feature1;
+
+  /// No description provided for @marketing_screen4_feature2.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare products side-by-side'**
+  String get marketing_screen4_feature2;
+
+  /// No description provided for @marketing_screen5_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Premium'**
+  String get marketing_screen5_title;
+
+  /// No description provided for @marketing_screen5_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock unlimited scans and expert features'**
+  String get marketing_screen5_subtitle;
+
+  /// No description provided for @marketing_screen5_feature1.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited product scans'**
+  String get marketing_screen5_feature1;
+
+  /// No description provided for @marketing_screen5_feature2.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced AI analysis'**
+  String get marketing_screen5_feature2;
+
+  /// No description provided for @marketing_screen5_feature3.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad-free experience'**
+  String get marketing_screen5_feature3;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

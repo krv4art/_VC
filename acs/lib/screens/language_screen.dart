@@ -50,48 +50,55 @@ class _LanguageScreenState extends State<LanguageScreen>
 
   List<Map<String, String>> _getSortedLanguages(Locale currentLocale) {
     final List<Map<String, String>> allLanguages = [
-      {'code': 'ar', 'flag': '🇸🇦'},
-      {'code': 'cs', 'flag': '🇨🇿'},
-      {'code': 'da', 'flag': '🇩🇰'},
-      {'code': 'de', 'flag': '🇩🇪'},
-      {'code': 'el', 'flag': '🇬🇷'},
-      {'code': 'en', 'flag': '🇺🇸'},
-      {'code': 'es', 'flag': '🇪🇸'},
-      {'code': 'fi', 'flag': '🇫🇮'},
-      {'code': 'fr', 'flag': '🇫🇷'},
-      {'code': 'hi', 'flag': '🇮🇳'},
-      {'code': 'hu', 'flag': '🇭🇺'},
-      {'code': 'id', 'flag': '🇮🇩'},
-      {'code': 'it', 'flag': '🇮🇹'},
-      {'code': 'ja', 'flag': '🇯🇵'},
-      {'code': 'ko', 'flag': '🇰🇷'},
-      {'code': 'nl', 'flag': '🇳🇱'},
-      {'code': 'no', 'flag': '🇳🇴'},
-      {'code': 'pl', 'flag': '🇵🇱'},
-      {'code': 'pt', 'flag': '🇵🇹'},
-      {'code': 'ro', 'flag': '🇷🇴'},
-      {'code': 'ru', 'flag': '🇷🇺'},
-      {'code': 'sv', 'flag': '🇸🇪'},
-      {'code': 'th', 'flag': '🇹🇭'},
-      {'code': 'tr', 'flag': '🇹🇷'},
-      {'code': 'uk', 'flag': '🇺🇦'},
-      {'code': 'vi', 'flag': '🇻🇳'},
-      {'code': 'zh', 'flag': '🇨🇳'},
+      {'code': 'ar', 'country': '', 'flag': '🇸🇦'},
+      {'code': 'cs', 'country': '', 'flag': '🇨🇿'},
+      {'code': 'da', 'country': '', 'flag': '🇩🇰'},
+      {'code': 'de', 'country': '', 'flag': '🇩🇪'},
+      {'code': 'el', 'country': '', 'flag': '🇬🇷'},
+      {'code': 'en', 'country': '', 'flag': '🇺🇸'},
+      {'code': 'es', 'country': 'ES', 'flag': '🇪🇸'},
+      {'code': 'es', 'country': '419', 'flag': '🇲🇽'},
+      {'code': 'fi', 'country': '', 'flag': '🇫🇮'},
+      {'code': 'fr', 'country': '', 'flag': '🇫🇷'},
+      {'code': 'hi', 'country': '', 'flag': '🇮🇳'},
+      {'code': 'hu', 'country': '', 'flag': '🇭🇺'},
+      {'code': 'id', 'country': '', 'flag': '🇮🇩'},
+      {'code': 'it', 'country': '', 'flag': '🇮🇹'},
+      {'code': 'ja', 'country': '', 'flag': '🇯🇵'},
+      {'code': 'ko', 'country': '', 'flag': '🇰🇷'},
+      {'code': 'nl', 'country': '', 'flag': '🇳🇱'},
+      {'code': 'no', 'country': '', 'flag': '🇳🇴'},
+      {'code': 'pl', 'country': '', 'flag': '🇵🇱'},
+      {'code': 'pt', 'country': 'BR', 'flag': '🇧🇷'},
+      {'code': 'pt', 'country': 'PT', 'flag': '🇵🇹'},
+      {'code': 'ro', 'country': '', 'flag': '🇷🇴'},
+      {'code': 'ru', 'country': '', 'flag': '🇷🇺'},
+      {'code': 'sv', 'country': '', 'flag': '🇸🇪'},
+      {'code': 'th', 'country': '', 'flag': '🇹🇭'},
+      {'code': 'tr', 'country': '', 'flag': '🇹🇷'},
+      {'code': 'uk', 'country': '', 'flag': '🇺🇦'},
+      {'code': 'vi', 'country': '', 'flag': '🇻🇳'},
+      {'code': 'zh', 'country': 'CN', 'flag': '🇨🇳'},
+      {'code': 'zh', 'country': 'TW', 'flag': '🇹🇼'},
     ];
 
     final List<Map<String, String>> sortedLanguages = [];
     final currentLanguageCode = currentLocale.languageCode;
+    final currentCountryCode = currentLocale.countryCode ?? '';
 
     // Add current language first
     final currentLanguage = allLanguages.firstWhere(
-      (lang) => lang['code'] == currentLanguageCode,
-      orElse: () => allLanguages.first,
+      (lang) => lang['code'] == currentLanguageCode && lang['country'] == currentCountryCode,
+      orElse: () => allLanguages.firstWhere(
+        (lang) => lang['code'] == currentLanguageCode,
+        orElse: () => allLanguages.first,
+      ),
     );
     sortedLanguages.add(currentLanguage);
 
     // Add the rest of the languages (excluding the current one)
     for (final lang in allLanguages) {
-      if (lang['code'] != currentLanguageCode) {
+      if (!(lang['code'] == currentLanguageCode && lang['country'] == currentCountryCode)) {
         sortedLanguages.add(lang);
       }
     }
@@ -106,8 +113,8 @@ class _LanguageScreenState extends State<LanguageScreen>
     );
 
     // Create staggered animations for language cards
-    // With 28 elements (27 languages + 1 button), each starting at 0.04 intervals
-    _animations = List.generate(28, (index) {
+    // With 31 elements (30 languages + 1 button), each starting at 0.04 intervals
+    _animations = List.generate(31, (index) {
       final startTime = index * 0.04; // 24ms delay between elements
       final endTime = (startTime + 0.35).clamp(
         0.0,
@@ -146,65 +153,114 @@ class _LanguageScreenState extends State<LanguageScreen>
         _selectedLocale ??
         (localeProvider.locale ?? Localizations.localeOf(context));
 
-    String getLanguageName(String code) {
+    String getLanguageName(String code, String country) {
+      // Native language names (hardcoded for consistency across all locales)
+      String baseName;
       switch (code) {
         case 'ar':
-          return l10n.language_ar;
+          baseName = 'العربية';
+          break;
         case 'cs':
-          return l10n.language_cs;
+          baseName = 'Čeština';
+          break;
         case 'da':
-          return l10n.language_da;
+          baseName = 'Dansk';
+          break;
         case 'de':
-          return l10n.language_de;
+          baseName = 'Deutsch';
+          break;
         case 'el':
-          return l10n.language_el;
+          baseName = 'Ελληνικά';
+          break;
         case 'en':
-          return l10n.language_en;
+          baseName = 'English';
+          break;
         case 'es':
-          return l10n.language_es;
+          baseName = 'Español';
+          break;
         case 'fi':
-          return l10n.language_fi;
+          baseName = 'Suomi';
+          break;
         case 'fr':
-          return l10n.language_fr;
+          baseName = 'Français';
+          break;
         case 'hi':
-          return l10n.language_hi;
+          baseName = 'हिन्दी';
+          break;
         case 'hu':
-          return l10n.language_hu;
+          baseName = 'Magyar';
+          break;
         case 'id':
-          return l10n.language_id;
+          baseName = 'Bahasa Indonesia';
+          break;
         case 'it':
-          return l10n.language_it;
+          baseName = 'Italiano';
+          break;
         case 'ja':
-          return l10n.language_ja;
+          baseName = '日本語';
+          break;
         case 'ko':
-          return l10n.language_ko;
+          baseName = '한국어';
+          break;
         case 'nl':
-          return l10n.language_nl;
+          baseName = 'Nederlands';
+          break;
         case 'no':
-          return l10n.language_no;
+          baseName = 'Norsk';
+          break;
         case 'pl':
-          return l10n.language_pl;
+          baseName = 'Polski';
+          break;
         case 'pt':
-          return l10n.language_pt;
+          baseName = 'Português';
+          break;
         case 'ro':
-          return l10n.language_ro;
+          baseName = 'Română';
+          break;
         case 'ru':
-          return l10n.language_ru;
+          baseName = 'Русский';
+          break;
         case 'sv':
-          return l10n.language_sv;
+          baseName = 'Svenska';
+          break;
         case 'th':
-          return l10n.language_th;
+          baseName = 'ไทย';
+          break;
         case 'tr':
-          return l10n.language_tr;
+          baseName = 'Türkçe';
+          break;
         case 'uk':
-          return l10n.language_uk;
+          baseName = 'Українська';
+          break;
         case 'vi':
-          return l10n.language_vi;
+          baseName = 'Tiếng Việt';
+          break;
         case 'zh':
-          return l10n.language_zh;
+          baseName = '中文';
+          break;
         default:
-          return code;
+          baseName = code.toUpperCase();
       }
+
+      // Add regional suffix if needed (hardcoded for consistency)
+      if (country.isNotEmpty) {
+        switch (country) {
+          case 'ES':
+            return '$baseName (España)';
+          case '419':
+            return '$baseName (Latinoamérica)';
+          case 'BR':
+            return '$baseName (Brasil)';
+          case 'PT':
+            return '$baseName (Portugal)';
+          case 'CN':
+            return '$baseName (简体)'; // Simplified
+          case 'TW':
+            return '$baseName (繁體)'; // Traditional
+        }
+      }
+
+      return baseName;
     }
 
     String getSaveButtonText() {
@@ -332,10 +388,10 @@ class _LanguageScreenState extends State<LanguageScreen>
                             // Анимации 1-7: Карточки языков
                             ...List.generate(_displayLanguages.length, (index) {
                               final lang = _displayLanguages[index];
-                              final locale = Locale(lang['code']!);
+                              final locale = Locale(lang['code']!, lang['country']!.isEmpty ? null : lang['country']!);
                               final isSelected =
-                                  currentLocale.languageCode ==
-                                  locale.languageCode;
+                                  currentLocale.languageCode == locale.languageCode &&
+                                  (currentLocale.countryCode ?? '') == (locale.countryCode ?? '');
 
                               return FadeTransition(
                                 opacity: _animations[index + 1],
@@ -426,6 +482,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                                                   Text(
                                                     getLanguageName(
                                                       lang['code']!,
+                                                      lang['country']!,
                                                     ),
                                                     style: AppTheme.h4.copyWith(
                                                       color: isSelected

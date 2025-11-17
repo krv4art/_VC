@@ -57,87 +57,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get save => 'Зберегти';
 
   @override
-  String get language_en => 'Англійська';
-
-  @override
-  String get language_ru => 'Російська';
-
-  @override
-  String get language_uk => 'Українська';
-
-  @override
-  String get language_es => 'Іспанська';
-
-  @override
-  String get language_de => 'Німецька';
-
-  @override
-  String get language_fr => 'Французька';
-
-  @override
-  String get language_it => 'Італійська';
-
-  @override
-  String get language_ar => 'Арабська';
-
-  @override
-  String get language_ko => 'Корейська';
-
-  @override
-  String get language_cs => 'Чеська';
-
-  @override
-  String get language_da => 'Данська';
-
-  @override
-  String get language_el => 'Грецька';
-
-  @override
-  String get language_fi => 'Фінська';
-
-  @override
-  String get language_hi => 'Хінді';
-
-  @override
-  String get language_hu => 'Угорська';
-
-  @override
-  String get language_id => 'Індонезійська';
-
-  @override
-  String get language_ja => 'Японська';
-
-  @override
-  String get language_nl => 'Нідерландська';
-
-  @override
-  String get language_no => 'Норвезька';
-
-  @override
-  String get language_pl => 'Польська';
-
-  @override
-  String get language_pt => 'Португальська';
-
-  @override
-  String get language_ro => 'Румунська';
-
-  @override
-  String get language_sv => 'Шведська';
-
-  @override
-  String get language_th => 'Тайська';
-
-  @override
-  String get language_tr => 'Турецька';
-
-  @override
-  String get language_vi => 'В\'єтнамська';
-
-  @override
-  String get language_zh => 'Китайська';
-
-  @override
   String get selectIngredientsAllergicSensitive => 'Оберіть інгредієнти, на які у вас підвищена чутливість';
 
   @override
@@ -581,10 +500,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get home => 'Головна';
 
   @override
-  String get scan => 'Скан';
+  String get scan => 'Сканер';
 
   @override
-  String get aiChatNav => 'Чат';
+  String get aiChatNav => 'Консультант';
 
   @override
   String get profileNav => 'Профіль';
@@ -993,10 +912,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get botGreeting1 => 'Добрий день! Чим я можу вам допомогти сьогодні?';
 
   @override
-  String get botGreeting2 => 'Вітаю! Що привело вас до мене?';
+  String get botGreeting2 => 'Доброго здоров\'я! Що привело вас до мене?';
 
   @override
-  String get botGreeting3 => 'Привітую вас! Готовий допомогти з аналізом косметики.';
+  String get botGreeting3 => 'Вітаю вас! Готовий допомогти з аналізом косметики.';
 
   @override
   String get botGreeting4 => 'Радий вас бачити! Чим можу бути корисним?';
@@ -1008,7 +927,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get botGreeting6 => 'Вітаю! Готовий відповісти на ваші запитання про косметику.';
 
   @override
-  String get botGreeting7 => 'Привіт! Я ваш персональний помічник з косметології.';
+  String get botGreeting7 => 'Моє шанування! Я ваш персональний помічник з косметології, чим допомогти?';
 
   @override
   String get botGreeting8 => 'Добрий день! Допоможу розібратися зі складом косметичних засобів.';
@@ -1017,25 +936,25 @@ class AppLocalizationsUk extends AppLocalizations {
   String get botGreeting9 => 'Вітаю! Давайте зробимо вашу косметику безпечнішою.';
 
   @override
-  String get botGreeting10 => 'Привітую! Готовий поділитися знаннями про косметику.';
+  String get botGreeting10 => 'Добридень! Готовий поділитися знаннями про косметику.';
 
   @override
   String get botGreeting11 => 'Добрий день! Допоможу знайти найкращі косметичні рішення для вас.';
 
   @override
-  String get botGreeting12 => 'Вітаю! Ваш експерт з безпеки косметики до ваших послуг.';
+  String get botGreeting12 => 'Радий вас вітати! Ваш експерт з безпеки косметики до ваших послуг.';
 
   @override
   String get botGreeting13 => 'Привіт! Давайте разом підберемо ідеальну косметику для вас.';
 
   @override
-  String get botGreeting14 => 'Ласкаво просимо! Готовий допомогти з аналізом інгредієнтів.';
+  String get botGreeting14 => 'Ласкаво прошу! Готовий допомогти з аналізом інгредієнтів.';
 
   @override
-  String get botGreeting15 => 'Вітаю! Допоможу зрозуміти склад вашої косметики.';
+  String get botGreeting15 => 'Бажаю доброго дня! Допоможу зрозуміти склад вашої косметики.';
 
   @override
-  String get botGreeting16 => 'Привітую! Ваш гід у світі косметології готовий допомогти.';
+  String get botGreeting16 => 'Бажаю здоров\'я! Ваш гід у світі косметології готовий допомогти.';
 
   @override
   String get copiedToClipboard => 'Скопійовано в буфер обміну';
@@ -1139,13 +1058,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get darkOcean => 'Темний океан';
 
   @override
-  String get darkForest => 'Темний ліс';
+  String get darkForest => 'Нічний ліс';
 
   @override
-  String get darkSunset => 'Темний захід';
+  String get darkSunset => 'Таємничий захід';
 
   @override
-  String get darkVibrant => 'Темна яскрава';
+  String get darkVibrant => 'Темно-яскрава';
 
   @override
   String get darkOceanThemeDescription => 'Темна океанічна тема з блакитними акцентами';
@@ -1237,4 +1156,73 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get developer => 'Розробник';
+
+  @override
+  String get marketing_screen1_title => 'Instant Cosmetics Analysis';
+
+  @override
+  String get marketing_screen1_subtitle => 'Scan any product and discover what\'s inside';
+
+  @override
+  String get marketing_screen1_feature1 => 'AI-powered ingredient detection';
+
+  @override
+  String get marketing_screen1_feature2 => 'Safety ratings in seconds';
+
+  @override
+  String get marketing_screen1_feature3 => 'Works with any cosmetic product';
+
+  @override
+  String get marketing_screen2_title => 'Know What You\'re Putting On Your Skin';
+
+  @override
+  String get marketing_screen2_subtitle => 'Detailed analysis of every ingredient';
+
+  @override
+  String get marketing_screen2_feature1 => 'Personalized safety warnings';
+
+  @override
+  String get marketing_screen2_feature2 => 'Allergen detection';
+
+  @override
+  String get marketing_screen2_feature3 => 'Research-backed insights';
+
+  @override
+  String get marketing_screen3_title => 'Your AI Skincare Expert';
+
+  @override
+  String get marketing_screen3_subtitle => 'Get instant answers about any cosmetic ingredient';
+
+  @override
+  String get marketing_screen3_feature1 => '24/7 AI consultant';
+
+  @override
+  String get marketing_screen3_feature2 => 'Unlimited questions';
+
+  @override
+  String get marketing_screen4_title => 'Track Your Cosmetics';
+
+  @override
+  String get marketing_screen4_subtitle => 'Build your personal product database';
+
+  @override
+  String get marketing_screen4_feature1 => 'Full scan history';
+
+  @override
+  String get marketing_screen4_feature2 => 'Compare products side-by-side';
+
+  @override
+  String get marketing_screen5_title => 'Go Premium';
+
+  @override
+  String get marketing_screen5_subtitle => 'Unlock unlimited scans and expert features';
+
+  @override
+  String get marketing_screen5_feature1 => 'Unlimited product scans';
+
+  @override
+  String get marketing_screen5_feature2 => 'Advanced AI analysis';
+
+  @override
+  String get marketing_screen5_feature3 => 'Ad-free experience';
 }

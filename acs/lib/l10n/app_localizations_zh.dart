@@ -57,87 +57,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get save => '保存';
 
   @override
-  String get language_en => '英语';
-
-  @override
-  String get language_ru => '俄语';
-
-  @override
-  String get language_uk => '乌克兰语';
-
-  @override
-  String get language_es => '西班牙语';
-
-  @override
-  String get language_de => '德语';
-
-  @override
-  String get language_fr => '法语';
-
-  @override
-  String get language_it => '意大利语';
-
-  @override
-  String get language_ar => '阿拉伯语';
-
-  @override
-  String get language_ko => '韩语';
-
-  @override
-  String get language_cs => '捷克语';
-
-  @override
-  String get language_da => '丹麦语';
-
-  @override
-  String get language_el => '希腊语';
-
-  @override
-  String get language_fi => '芬兰语';
-
-  @override
-  String get language_hi => '印地语';
-
-  @override
-  String get language_hu => '匈牙利语';
-
-  @override
-  String get language_id => '印度尼西亚语';
-
-  @override
-  String get language_ja => '日语';
-
-  @override
-  String get language_nl => '荷兰语';
-
-  @override
-  String get language_no => '挪威语';
-
-  @override
-  String get language_pl => '波兰语';
-
-  @override
-  String get language_pt => '葡萄牙语';
-
-  @override
-  String get language_ro => '罗马尼亚语';
-
-  @override
-  String get language_sv => '瑞典语';
-
-  @override
-  String get language_th => '泰语';
-
-  @override
-  String get language_tr => '土耳其语';
-
-  @override
-  String get language_vi => '越南语';
-
-  @override
-  String get language_zh => '中文';
-
-  @override
   String get selectIngredientsAllergicSensitive => '选择你敏感的成分';
 
   @override
@@ -328,7 +247,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sampleData => '示例数据:';
 
   @override
-  String get aiChats => 'AI Cosmetic Scanners';
+  String get aiChats => 'AI对话';
 
   @override
   String get noDialoguesYet => '还没有对话。';
@@ -581,10 +500,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get home => '首页';
 
   @override
-  String get scan => '扫描';
+  String get scan => '扫描仪';
 
   @override
-  String get aiChatNav => 'AI 聊天';
+  String get aiChatNav => '顾问';
 
   @override
   String get profileNav => '个人资料';
@@ -1237,6 +1156,75 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get developer => 'Developer';
+
+  @override
+  String get marketing_screen1_title => 'Instant Cosmetics Analysis';
+
+  @override
+  String get marketing_screen1_subtitle => 'Scan any product and discover what\'s inside';
+
+  @override
+  String get marketing_screen1_feature1 => 'AI-powered ingredient detection';
+
+  @override
+  String get marketing_screen1_feature2 => 'Safety ratings in seconds';
+
+  @override
+  String get marketing_screen1_feature3 => 'Works with any cosmetic product';
+
+  @override
+  String get marketing_screen2_title => 'Know What You\'re Putting On Your Skin';
+
+  @override
+  String get marketing_screen2_subtitle => 'Detailed analysis of every ingredient';
+
+  @override
+  String get marketing_screen2_feature1 => 'Personalized safety warnings';
+
+  @override
+  String get marketing_screen2_feature2 => 'Allergen detection';
+
+  @override
+  String get marketing_screen2_feature3 => 'Research-backed insights';
+
+  @override
+  String get marketing_screen3_title => 'Your AI Skincare Expert';
+
+  @override
+  String get marketing_screen3_subtitle => 'Get instant answers about any cosmetic ingredient';
+
+  @override
+  String get marketing_screen3_feature1 => '24/7 AI consultant';
+
+  @override
+  String get marketing_screen3_feature2 => 'Unlimited questions';
+
+  @override
+  String get marketing_screen4_title => 'Track Your Cosmetics';
+
+  @override
+  String get marketing_screen4_subtitle => 'Build your personal product database';
+
+  @override
+  String get marketing_screen4_feature1 => 'Full scan history';
+
+  @override
+  String get marketing_screen4_feature2 => 'Compare products side-by-side';
+
+  @override
+  String get marketing_screen5_title => 'Go Premium';
+
+  @override
+  String get marketing_screen5_subtitle => 'Unlock unlimited scans and expert features';
+
+  @override
+  String get marketing_screen5_feature1 => 'Unlimited product scans';
+
+  @override
+  String get marketing_screen5_feature2 => 'Advanced AI analysis';
+
+  @override
+  String get marketing_screen5_feature3 => 'Ad-free experience';
 }
 
 /// The translations for Chinese, as used in China (`zh_CN`).
@@ -1290,87 +1278,6 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get save => '保存';
-
-  @override
-  String get language_en => 'English';
-
-  @override
-  String get language_ru => 'Russian';
-
-  @override
-  String get language_uk => 'Ukrainian';
-
-  @override
-  String get language_es => 'Spanish';
-
-  @override
-  String get language_de => 'German';
-
-  @override
-  String get language_fr => 'French';
-
-  @override
-  String get language_it => 'Italian';
-
-  @override
-  String get language_ar => 'العربية';
-
-  @override
-  String get language_ko => '한국어';
-
-  @override
-  String get language_cs => 'Čeština';
-
-  @override
-  String get language_da => 'Dansk';
-
-  @override
-  String get language_el => 'Ελληνικά';
-
-  @override
-  String get language_fi => 'Suomi';
-
-  @override
-  String get language_hi => 'हिन्दी';
-
-  @override
-  String get language_hu => 'Magyar';
-
-  @override
-  String get language_id => 'Bahasa Indonesia';
-
-  @override
-  String get language_ja => '日本語';
-
-  @override
-  String get language_nl => 'Nederlands';
-
-  @override
-  String get language_no => 'Norsk';
-
-  @override
-  String get language_pl => 'Polski';
-
-  @override
-  String get language_pt => 'Português';
-
-  @override
-  String get language_ro => 'Română';
-
-  @override
-  String get language_sv => 'Svenska';
-
-  @override
-  String get language_th => 'ไทย';
-
-  @override
-  String get language_tr => 'Türkçe';
-
-  @override
-  String get language_vi => 'Tiếng Việt';
-
-  @override
-  String get language_zh => '中文';
 
   @override
   String get selectIngredientsAllergicSensitive => '选择你敏感的成分';
@@ -1563,7 +1470,7 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get sampleData => '示例数据:';
 
   @override
-  String get aiChats => 'AI Cosmetic Scanners';
+  String get aiChats => 'AI对话';
 
   @override
   String get noDialoguesYet => '还没有对话。';
@@ -1816,10 +1723,10 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get home => '首页';
 
   @override
-  String get scan => '扫描';
+  String get scan => '扫描仪';
 
   @override
-  String get aiChatNav => 'AI 聊天';
+  String get aiChatNav => '顾问';
 
   @override
   String get profileNav => '个人资料';
@@ -2521,87 +2428,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get save => '儲存';
 
   @override
-  String get language_en => 'English';
-
-  @override
-  String get language_ru => 'Russian';
-
-  @override
-  String get language_uk => 'Ukrainian';
-
-  @override
-  String get language_es => 'Spanish';
-
-  @override
-  String get language_de => 'German';
-
-  @override
-  String get language_fr => 'French';
-
-  @override
-  String get language_it => 'Italian';
-
-  @override
-  String get language_ar => 'العربية';
-
-  @override
-  String get language_ko => '한국어';
-
-  @override
-  String get language_cs => 'Čeština';
-
-  @override
-  String get language_da => 'Dansk';
-
-  @override
-  String get language_el => 'Ελληνικά';
-
-  @override
-  String get language_fi => 'Suomi';
-
-  @override
-  String get language_hi => 'हिन्दी';
-
-  @override
-  String get language_hu => 'Magyar';
-
-  @override
-  String get language_id => 'Bahasa Indonesia';
-
-  @override
-  String get language_ja => '日本語';
-
-  @override
-  String get language_nl => 'Nederlands';
-
-  @override
-  String get language_no => 'Norsk';
-
-  @override
-  String get language_pl => 'Polski';
-
-  @override
-  String get language_pt => 'Português';
-
-  @override
-  String get language_ro => 'Română';
-
-  @override
-  String get language_sv => 'Svenska';
-
-  @override
-  String get language_th => 'ไทย';
-
-  @override
-  String get language_tr => 'Türkçe';
-
-  @override
-  String get language_vi => 'Tiếng Việt';
-
-  @override
-  String get language_zh => '中文';
-
-  @override
   String get selectIngredientsAllergicSensitive => '選擇你敏感的成分';
 
   @override
@@ -2792,7 +2618,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get sampleData => '範例資料:';
 
   @override
-  String get aiChats => 'AI Cosmetic Scanners';
+  String get aiChats => 'AI對話';
 
   @override
   String get noDialoguesYet => '還沒有對話。';
@@ -3045,10 +2871,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get home => '首頁';
 
   @override
-  String get scan => '掃描';
+  String get scan => '掃描儀';
 
   @override
-  String get aiChatNav => 'AI 聊天';
+  String get aiChatNav => '顧問';
 
   @override
   String get profileNav => '個人檔案';
