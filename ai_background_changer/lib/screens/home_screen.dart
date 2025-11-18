@@ -125,6 +125,22 @@ class HomeScreen extends StatelessWidget {
                     ),
                     child: const Text('View History'),
                   ),
+                  const SizedBox(height: 16),
+
+                  // Feature Voting Button
+                  OutlinedButton.icon(
+                    onPressed: () => context.push('/polls'),
+                    icon: const Icon(Icons.how_to_vote),
+                    label: const Text('Vote for Features'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white, width: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

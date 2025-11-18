@@ -20,6 +20,7 @@ import 'screens/processing_screen.dart';
 import 'screens/result_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/chat_screen.dart';
+import 'screens/polls_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -141,6 +142,12 @@ final GoRouter _router = GoRouter(
         return _buildSlideTransition(
             context, state, ChatScreen(dialogueId: dialogueId));
       },
+    ),
+    GoRoute(
+      path: '/polls',
+      name: 'polls',
+      pageBuilder: (context, state) =>
+          _buildSlideTransition(context, state, const PollsScreen()),
     ),
   ],
 );
