@@ -5,19 +5,22 @@ A comprehensive Flutter application for creating professional resumes with AI as
 ## Features
 
 ### Core Functionality
-- **Professional Templates**: Multiple beautifully designed resume templates created by recruiters
+- **Professional Templates**: Three beautifully designed resume templates (Professional, Creative, Modern)
 - **Easy Editing**: Intuitive interface with dedicated editors for each section
+- **Template Switching**: Real-time template preview and switching in preview mode
 - **AI Assistant**: AI-powered content suggestions and grammar checking
 - **PDF Export**: Download, share, and print resumes as PDF files
 - **Multi-language Support**: Available in 8 languages (English, Spanish, German, French, Italian, Polish, Portuguese, Turkish)
 - **Dark Mode**: Full dark mode support with 3 color themes
 - **Interview Preparation**: Built-in interview questions and answer guidelines
+- **Demo Data**: Three complete demo resumes for testing (Software Engineer, UX Designer, Marketing Manager)
 
 ### Advanced Editors
 - **Experience Editor**: Full-featured form with responsibilities, date ranges, and current job tracking
 - **Education Editor**: Comprehensive editor with achievements, GPA, and current studies tracking
 - **Skills Editor**: Categorized skills with proficiency levels (Beginner to Expert)
 - **Languages Editor**: CEFR standard proficiency levels (A1 to C2)
+- **Custom Sections Editor**: Flexible editor for any resume content (Certifications, Projects, Awards, etc.)
 - **Photo Upload**: Support for profile photos with compression and cropping
 
 ### Resume Sections
@@ -29,12 +32,45 @@ A comprehensive Flutter application for creating professional resumes with AI as
 - Languages (CEFR proficiency standards)
 - Custom Sections (flexible for any additional content)
 
+### Resume Templates
+
+The app includes three professionally designed templates, each with a unique visual style:
+
+#### 1. Professional Template (Blue - #1976D2)
+- Clean, traditional layout perfect for corporate roles
+- Section headers with underlines
+- Contact info with icons
+- Grouped skills by category
+- Traditional bullet points
+
+#### 2. Creative Template (Purple - #9C27B0)
+- Bold, modern design for creative professionals
+- Gradient header and section icons
+- Card-based layout for experiences
+- Star ratings for skills
+- Gradient language badges
+- Professional yet artistic styling
+
+#### 3. Modern Template (Teal - #009688)
+- Minimalist, tech-focused two-column layout
+- Left sidebar: Contact, Skills, Languages
+- Timeline-style experience/education with gradient dots
+- Clean typography with proper spacing
+- Perfect for tech and startup roles
+
+All templates:
+- Support all resume sections including custom sections
+- Respect user font size and margin preferences
+- Export beautifully to PDF
+- Switch instantly in preview mode
+
 ### Customization
 - 3 professional color themes (Professional, Creative, Modern)
 - Each theme supports light and dark modes
+- Template switching in real-time preview
 - Adjustable font sizes (8-16pt)
 - Customizable page margins (10-40pt)
-- Real-time preview updates
+- Smooth animations and transitions
 
 ## Architecture
 
@@ -42,18 +78,20 @@ The app follows a clean architecture pattern inspired by the ACS project:
 
 ```
 lib/
-├── animations/          # Animation utilities
+├── animations/          # Page transitions and animation utilities
 ├── config/             # App configuration
 ├── constants/          # App-wide constants
-├── l10n/               # Localization files
-├── models/             # Data models
-├── navigation/         # Routing configuration
+├── l10n/               # Localization files (8 languages)
+├── models/             # Data models (Resume, Experience, Education, etc.)
+├── navigation/         # Routing configuration (go_router)
 ├── providers/          # State management (Provider)
-├── screens/            # UI screens
-├── services/           # Business logic services
-├── theme/              # Theme configuration
-├── utils/              # Utility functions
+├── screens/            # UI screens (Home, Editor, Preview, etc.)
+├── services/           # Business logic services (PDF, AI, Storage, Image)
+├── theme/              # Theme configuration (colors, themes, dimensions)
+├── utils/              # Utility functions and demo data
 └── widgets/            # Reusable widgets
+    ├── templates/      # Resume templates (Professional, Creative, Modern)
+    └── animated_card.dart  # Animated UI components
 ```
 
 ## Technology Stack
@@ -121,11 +159,15 @@ If you want to use Supabase for cloud storage:
 - [x] Skill categorization and proficiency levels
 - [x] CEFR language proficiency standards
 
-### Phase 3: Polish and Optimization (In Progress)
-- [ ] Animations and transitions
+### Phase 3: Polish and Optimization ✅
+- [x] Custom Sections editor for flexible resume content
+- [x] Smooth animations and page transitions
+- [x] Three professional resume templates with visual customization
+- [x] Template switching in preview mode
+- [x] Demo resume data for testing
+- [x] Animated UI components (cards, lists, progress indicators)
 - [ ] Performance optimization
 - [ ] Cloud backup with Supabase
-- [ ] Advanced resume templates
 - [ ] Comprehensive testing
 - [ ] App store deployment
 
