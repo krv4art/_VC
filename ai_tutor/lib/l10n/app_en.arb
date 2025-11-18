@@ -282,5 +282,12 @@
   "newExercise": "New!",
   "correct": "Correct",
   "efficiency": "Efficiency",
-  "moves": "Moves"
+  "moves": "Moves",
+
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "leaderboard": "Leaderboard",
+  "friends": "Friends",
+  "analytics": "Analytics",
+  "premium": "Premium"
 }

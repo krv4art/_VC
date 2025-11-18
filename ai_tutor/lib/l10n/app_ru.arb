@@ -227,5 +227,12 @@
   "newExercise": "Новое!",
   "correct": "Правильных",
   "efficiency": "Эффективность",
-  "moves": "Ходов"
+  "moves": "Ходов",
+
+  "signIn": "Войти",
+  "signUp": "Регистрация",
+  "leaderboard": "Таблица лидеров",
+  "friends": "Друзья",
+  "analytics": "Аналитика",
+  "premium": "Premium"
 }

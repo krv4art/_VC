@@ -15,6 +15,12 @@ import '../screens/challenges/challenges_screen.dart';
 import '../screens/reports/weekly_report_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/brain_training/brain_training_screen.dart';
+import '../screens/auth/login_screen.dart';
+import '../screens/auth/register_screen.dart';
+import '../screens/social/leaderboard_screen.dart';
+import '../screens/social/friends_screen.dart';
+import '../screens/analytics/analytics_screen.dart';
+import '../screens/premium/premium_screen.dart';
 import '../config/app_config.dart';
 
 /// App router configuration
@@ -113,6 +119,38 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/brain-training',
       builder: (context, state) => const BrainTrainingScreen(),
+    ),
+
+    // Auth
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterScreen(),
+    ),
+
+    // Social
+    GoRoute(
+      path: '/leaderboard',
+      builder: (context, state) => const LeaderboardScreen(),
+    ),
+    GoRoute(
+      path: '/friends',
+      builder: (context, state) => const FriendsScreen(),
+    ),
+
+    // Analytics
+    GoRoute(
+      path: '/analytics',
+      builder: (context, state) => const AnalyticsScreen(),
+    ),
+
+    // Premium
+    GoRoute(
+      path: '/premium',
+      builder: (context, state) => const PremiumScreen(),
     ),
   ],
 );
