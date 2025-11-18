@@ -1,10 +1,11 @@
 # This file tracks properties of this Flutter project.
-# Used by Flutter tooling to track, build and provide additional context about this project.
-# This file should be version controlled.
+# Used by Flutter tool to assess capabilities and perform upgrades etc.
+#
+# This file should be version controlled and should not be manually edited.
 
 version:
-  revision: 3ce5013f9ce4db0c064ffeb78c1fb183d3c45e6c
-  channel: stable
+  revision: "077b4a4ce10a07b82caa6897f0c626f9c0a3ac90"
+  channel: "stable"
 
 project_type: app
 
@@ -12,24 +13,21 @@ project_type: app
 migration:
   platforms:
     - platform: root
-      create: true
+      create_revision: 077b4a4ce10a07b82caa6897f0c626f9c0a3ac90
+      base_revision: 077b4a4ce10a07b82caa6897f0c626f9c0a3ac90
     - platform: android
-      create: true
+      create_revision: 077b4a4ce10a07b82caa6897f0c626f9c0a3ac90
+      base_revision: 077b4a4ce10a07b82caa6897f0c626f9c0a3ac90
     - platform: ios
-      create: true
-    - platform: linux
-      create: false
-    - platform: macos
-      create: false
-    - platform: web
-      create: false
-    - platform: windows
-      create: false
+      create_revision: 077b4a4ce10a07b82caa6897f0c626f9c0a3ac90
+      base_revision: 077b4a4ce10a07b82caa6897f0c626f9c0a3ac90
 
   # User provided section
 
-  # List of Local properties (user defined, local only, in machine-specific cache).
-  # Important: Never check-in the Local properties file.
-  #           If you have Flutter repo cloned in your machine, you should remove the local properties file.
-  local-properties:
-    sdk-path:
+  # List of Local paths (relative to this file) that should be
+  # ignored by the migrate tool.
+  #
+  # Files that are not part of the templates will be ignored by default.
+  unmanaged_files:
+    - 'lib/main.dart'
+    - 'ios/Runner.xcodeproj/project.pbxproj'

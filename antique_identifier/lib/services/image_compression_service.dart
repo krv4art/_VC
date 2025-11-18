@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// Сервис для сжатия изображений перед отправкой
 class ImageCompressionService {
@@ -19,19 +20,20 @@ class ImageCompressionService {
       final int originalSize = await file.length();
       debugPrint('Original size: ${(originalSize / 1024).toStringAsFixed(2)} KB');
 
-      final List<int>? compressed = await FlutterImageCompress.compressImageFile(
+      final XFile? compressedFile = await FlutterImageCompress.compressAndGetFile(
         filePath,
+        '${filePath}_compressed.jpg',
         minWidth: _targetWidth,
         minHeight: _targetHeight,
         quality: _quality,
       );
 
-      if (compressed == null) {
+      if (compressedFile == null) {
         debugPrint('Compression failed, using original');
         return file.readAsBytes();
       }
 
-      final Uint8List result = Uint8List.fromList(compressed);
+      final Uint8List result = await compressedFile.readAsBytes();
       final int compressedSize = result.length;
       final double ratio = 100 - ((compressedSize / originalSize) * 100);
 
@@ -63,6 +65,11 @@ class ImageCompressionService {
         quality: quality,
         format: CompressFormat.jpeg,
       );
+
+      if (compressed == null) {
+        debugPrint('Compression failed, using original');
+        return imageBytes;
+      }
 
       final Uint8List result = Uint8List.fromList(compressed);
       final double ratio = 100 - ((result.length / imageBytes.length) * 100);

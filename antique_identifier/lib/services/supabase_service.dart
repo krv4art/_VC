@@ -176,7 +176,7 @@ class SupabaseService {
 
   /// Загружает изображение в Supabase Storage
   Future<String> uploadImage(
-    List<int> imageBytes,
+    Uint8List imageBytes,
     String fileName,
   ) async {
     try {

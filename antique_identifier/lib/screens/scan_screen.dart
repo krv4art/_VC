@@ -125,7 +125,7 @@ class _ScanScreenState extends State<ScanScreen> {
                     valueColor: AlwaysStoppedAnimation(Colors.white),
                   ),
                 )
-                    : const Icon(Icons.analysis),
+                    : const Icon(Icons.auto_awesome),
                 label: Text(
                   _isAnalyzing ? 'Analyzing...' : 'Analyze with AI',
                 ),

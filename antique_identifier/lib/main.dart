@@ -79,7 +79,7 @@ final GoRouter _router = GoRouter(
       path: '/results',
       name: 'results',
       pageBuilder: (context, state) {
-        final resultId = state.queryParameters['id'];
+        final resultId = state.uri.queryParameters['id'];
         return _buildSlideTransition(context, state, ResultsScreen(resultId: resultId));
       },
     ),
@@ -87,7 +87,7 @@ final GoRouter _router = GoRouter(
       path: '/chat',
       name: 'chat',
       pageBuilder: (context, state) {
-        final dialogueId = state.queryParameters['dialogueId'];
+        final dialogueId = state.uri.queryParameters['dialogueId'];
         return _buildSlideTransition(context, state, ChatScreen(dialogueId: dialogueId));
       },
     ),
