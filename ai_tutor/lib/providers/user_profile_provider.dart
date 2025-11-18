@@ -17,6 +17,8 @@ class UserProfileProvider with ChangeNotifier {
 
   // Getters for easier access
   List<Interest> get selectedInterests => _profile.interests;
+  List<Interest> get customInterests => _profile.customInterests;
+  List<Interest> get allInterests => _profile.interests; // Includes both predefined and custom
   CulturalTheme get culturalTheme => _profile.culturalTheme;
   LearningStyle get learningStyle => _profile.learningStyle;
 
@@ -84,6 +86,32 @@ class UserProfileProvider with ChangeNotifier {
     } else {
       await addInterest(interestId);
     }
+  }
+
+  /// Add custom interest
+  Future<void> addCustomInterest(Interest customInterest) async {
+    final updated = List<Interest>.from(_profile.customInterests)
+      ..add(customInterest);
+    _profile = _profile.copyWith(customInterests: updated);
+    await _saveProfile();
+    notifyListeners();
+  }
+
+  /// Remove custom interest
+  Future<void> removeCustomInterest(String interestId) async {
+    final updated = _profile.customInterests
+        .where((i) => i.id != interestId)
+        .toList();
+    _profile = _profile.copyWith(customInterests: updated);
+    await _saveProfile();
+    notifyListeners();
+  }
+
+  /// Update custom interests
+  Future<void> updateCustomInterests(List<Interest> customInterests) async {
+    _profile = _profile.copyWith(customInterests: customInterests);
+    await _saveProfile();
+    notifyListeners();
   }
 
   /// Update cultural theme

@@ -4,7 +4,8 @@ import 'cultural_theme.dart';
 /// User's learning profile with personalization settings
 class UserProfile {
   final String? userId;
-  final List<String> selectedInterests; // Interest IDs
+  final List<String> selectedInterests; // Interest IDs (for predefined interests)
+  final List<Interest> customInterests; // User-created custom interests
   final String culturalThemeId;
   final LearningStyle learningStyle;
   final Map<String, int> subjectLevels; // subject -> grade level
@@ -16,6 +17,7 @@ class UserProfile {
   UserProfile({
     this.userId,
     List<String>? selectedInterests,
+    List<Interest>? customInterests,
     String? culturalThemeId,
     LearningStyle? learningStyle,
     Map<String, int>? subjectLevels,
@@ -24,6 +26,7 @@ class UserProfile {
     DateTime? createdAt,
     this.lastActiveAt,
   })  : selectedInterests = selectedInterests ?? [],
+        customInterests = customInterests ?? [],
         culturalThemeId = culturalThemeId ?? 'classic',
         learningStyle = learningStyle ?? LearningStyle.balanced,
         subjectLevels = subjectLevels ?? {},
@@ -31,11 +34,14 @@ class UserProfile {
         preferredLanguage = preferredLanguage ?? 'en',
         createdAt = createdAt ?? DateTime.now();
 
-  // Get actual Interest objects from IDs
-  List<Interest> get interests => selectedInterests
-      .map((id) => Interests.getById(id))
-      .whereType<Interest>()
-      .toList();
+  // Get actual Interest objects from IDs (both predefined and custom)
+  List<Interest> get interests {
+    final predefinedInterests = selectedInterests
+        .map((id) => Interests.getById(id))
+        .whereType<Interest>()
+        .toList();
+    return [...predefinedInterests, ...customInterests];
+  }
 
   // Get actual CulturalTheme object
   CulturalTheme get culturalTheme =>
@@ -44,6 +50,7 @@ class UserProfile {
   UserProfile copyWith({
     String? userId,
     List<String>? selectedInterests,
+    List<Interest>? customInterests,
     String? culturalThemeId,
     LearningStyle? learningStyle,
     Map<String, int>? subjectLevels,
@@ -55,6 +62,7 @@ class UserProfile {
     return UserProfile(
       userId: userId ?? this.userId,
       selectedInterests: selectedInterests ?? this.selectedInterests,
+      customInterests: customInterests ?? this.customInterests,
       culturalThemeId: culturalThemeId ?? this.culturalThemeId,
       learningStyle: learningStyle ?? this.learningStyle,
       subjectLevels: subjectLevels ?? this.subjectLevels,
@@ -68,6 +76,7 @@ class UserProfile {
   Map<String, dynamic> toJson() => {
         'user_id': userId,
         'selected_interests': selectedInterests,
+        'custom_interests': customInterests.map((i) => i.toJson()).toList(),
         'cultural_theme_id': culturalThemeId,
         'learning_style': learningStyle.name,
         'subject_levels': subjectLevels,
@@ -81,6 +90,11 @@ class UserProfile {
         userId: json['user_id'],
         selectedInterests: json['selected_interests'] != null
             ? List<String>.from(json['selected_interests'])
+            : null,
+        customInterests: json['custom_interests'] != null
+            ? (json['custom_interests'] as List)
+                .map((i) => Interest.fromJson(i))
+                .toList()
             : null,
         culturalThemeId: json['cultural_theme_id'],
         learningStyle: json['learning_style'] != null

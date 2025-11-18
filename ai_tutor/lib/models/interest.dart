@@ -6,6 +6,7 @@ class Interest {
   final String description;
   final List<String> keywords; // For personalizing examples
   final List<String> examples; // Sample contexts
+  final bool isCustom; // Whether this is a user-created custom interest
 
   const Interest({
     required this.id,
@@ -14,6 +15,7 @@ class Interest {
     required this.description,
     required this.keywords,
     required this.examples,
+    this.isCustom = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -23,6 +25,7 @@ class Interest {
         'description': description,
         'keywords': keywords,
         'examples': examples,
+        'isCustom': isCustom,
       };
 
   factory Interest.fromJson(Map<String, dynamic> json) => Interest(
@@ -31,8 +34,27 @@ class Interest {
         emoji: json['emoji'],
         description: json['description'],
         keywords: List<String>.from(json['keywords']),
-        examples: List<String>.from(json['examples']),
+        examples: List<String>.from(json['examples'] ?? []),
+        isCustom: json['isCustom'] ?? false,
       );
+
+  /// Create a custom interest from user input
+  factory Interest.custom({
+    required String name,
+    required String emoji,
+    required List<String> keywords,
+  }) {
+    final id = 'custom_${name.toLowerCase().replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}';
+    return Interest(
+      id: id,
+      name: name,
+      emoji: emoji,
+      description: 'Custom interest: $name',
+      keywords: keywords,
+      examples: [], // Custom interests don't need predefined examples
+      isCustom: true,
+    );
+  }
 }
 
 /// Predefined interests
