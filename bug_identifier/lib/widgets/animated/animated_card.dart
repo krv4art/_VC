@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../theme/theme_extensions_v2.dart';
+import '../../constants/app_dimensions.dart';
 
-/// Animated card with various effects
+/// Универсальная анимированная карточка с различными эффектами
 class AnimatedCard extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
@@ -61,8 +63,8 @@ class _AnimatedCardState extends State<AnimatedCard>
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _elevationAnimation = Tween<double>(
-      begin: widget.elevation ?? 2.0,
-      end: (widget.elevation ?? 2.0) * 2.0,
+      begin: widget.elevation ?? 4.0,
+      end: (widget.elevation ?? 4.0) * 2.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
@@ -99,9 +101,9 @@ class _AnimatedCardState extends State<AnimatedCard>
   @override
   Widget build(BuildContext context) {
     final effectiveBackgroundColor =
-        widget.backgroundColor ?? Theme.of(context).cardColor;
+        widget.backgroundColor ?? context.colors.cardBackground;
     final effectiveShadowColor =
-        widget.shadowColor ?? Colors.black.withOpacity(0.1);
+        widget.shadowColor ?? context.colors.shadowColor;
     final effectiveBorderRadius =
         widget.borderRadius ?? BorderRadius.circular(16.0);
 
@@ -118,7 +120,7 @@ class _AnimatedCardState extends State<AnimatedCard>
               margin: EdgeInsets.zero,
               elevation: widget.animationType == AnimationType.elevation
                   ? _elevationAnimation.value
-                  : widget.elevation ?? 2.0,
+                  : widget.elevation ?? 4.0,
               shadowColor: effectiveShadowColor,
               shape: RoundedRectangleBorder(
                 borderRadius: effectiveBorderRadius,
@@ -128,15 +130,15 @@ class _AnimatedCardState extends State<AnimatedCard>
             ),
           );
 
-          // Add hover glow effect
+          // Добавляем эффект свечения при наведении
           if (_isHovered && widget.enableHoverEffect) {
             cardWidget = Container(
               decoration: BoxDecoration(
                 borderRadius: effectiveBorderRadius,
                 boxShadow: [
                   BoxShadow(
-                    color: effectiveShadowColor.withOpacity(0.3),
-                    blurRadius: 8,
+                    color: effectiveShadowColor.withValues(alpha: 0.3),
+                    blurRadius: AppDimensions.space8,
                     spreadRadius: 1,
                   ),
                 ],
@@ -145,7 +147,7 @@ class _AnimatedCardState extends State<AnimatedCard>
             );
           }
 
-          // Wrap with MouseRegion and GestureDetector if needed
+          // ИСПРАВЛЕНИЕ: Оборачиваем в MouseRegion и GestureDetector если есть onTap
           if (widget.onTap != null || widget.onLongPress != null) {
             cardWidget = MouseRegion(
               cursor: SystemMouseCursors.click,
@@ -174,5 +176,173 @@ class _AnimatedCardState extends State<AnimatedCard>
   }
 }
 
-/// Animation types for cards
+/// Анимированная карточка с появлением
+class AnimatedEntranceCard extends StatefulWidget {
+  final Widget child;
+  final Duration delay;
+  final Duration duration;
+  final Offset slideDirection;
+  final Curve curve;
+  final bool autoStart;
+
+  const AnimatedEntranceCard({
+    super.key,
+    required this.child,
+    this.delay = const Duration(milliseconds: 0),
+    this.duration = const Duration(milliseconds: 600),
+    this.slideDirection = const Offset(0, 0.3),
+    this.curve = Curves.easeOutCubic,
+    this.autoStart = true,
+  });
+
+  @override
+  State<AnimatedEntranceCard> createState() => _AnimatedEntranceCardState();
+}
+
+class _AnimatedEntranceCardState extends State<AnimatedEntranceCard>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAnimations();
+    if (widget.autoStart) {
+      _startAnimation();
+    }
+  }
+
+  void _initializeAnimations() {
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
+
+    _slideAnimation = Tween<Offset>(
+      begin: widget.slideDirection,
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
+
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
+  }
+
+  void _startAnimation() {
+    Future.delayed(widget.delay, () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  void restartAnimation() {
+    _controller.reset();
+    _startAnimation();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return FadeTransition(
+          opacity: _fadeAnimation,
+          child: SlideTransition(
+            position: _slideAnimation,
+            child: Transform.scale(
+              scale: _scaleAnimation.value,
+              child: widget.child,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
+
+/// Анимированная карточка с пульсацией
+class PulseAnimatedCard extends StatefulWidget {
+  final Widget child;
+  final Duration duration;
+  final double minScale;
+  final double maxScale;
+  final bool autoStart;
+
+  const PulseAnimatedCard({
+    super.key,
+    required this.child,
+    this.duration = const Duration(milliseconds: 1500),
+    this.minScale = 0.95,
+    this.maxScale = 1.05,
+    this.autoStart = true,
+  });
+
+  @override
+  State<PulseAnimatedCard> createState() => _PulseAnimatedCardState();
+}
+
+class _PulseAnimatedCardState extends State<PulseAnimatedCard>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAnimations();
+    if (widget.autoStart) {
+      _controller.repeat(reverse: true);
+    }
+  }
+
+  void _initializeAnimations() {
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+
+    _scaleAnimation = Tween<double>(
+      begin: widget.minScale,
+      end: widget.maxScale,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  void startPulse() {
+    _controller.repeat(reverse: true);
+  }
+
+  void stopPulse() {
+    _controller.stop();
+    _controller.reset();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: widget.child,
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
+
+/// Типы анимации для карточек
 enum AnimationType { scale, elevation, both }
