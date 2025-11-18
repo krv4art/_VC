@@ -65,6 +65,17 @@ class PdfService {
             pw.SizedBox(height: 8),
             _buildLanguages(resume, regular),
           ],
+
+          // Custom Sections
+          ...resume.customSections.map((section) => pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.SizedBox(height: 16),
+                  _buildSectionTitle(section.title, bold),
+                  pw.SizedBox(height: 8),
+                  ...section.items.map((item) => _buildCustomSectionItem(item, bold, regular, resume.fontSize)),
+                ],
+              )),
         ],
       ),
     );
@@ -305,6 +316,52 @@ class PdfService {
           style: pw.TextStyle(font: regular, fontSize: resume.fontSize),
         );
       }).toList(),
+    );
+  }
+
+  pw.Widget _buildCustomSectionItem(dynamic item, pw.Font bold, pw.Font regular, double fontSize) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.only(bottom: 12),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            item.title,
+            style: pw.TextStyle(font: bold, fontSize: fontSize + 2),
+          ),
+          if (item.subtitle != null) ...[
+            pw.Text(
+              item.subtitle!,
+              style: pw.TextStyle(font: regular, fontSize: fontSize, color: PdfColors.grey700),
+            ),
+          ],
+          if (item.description != null && item.description!.isNotEmpty) ...[
+            pw.SizedBox(height: 4),
+            pw.Text(
+              item.description!,
+              style: pw.TextStyle(font: regular, fontSize: fontSize),
+            ),
+          ],
+          if (item.bulletPoints.isNotEmpty) ...[
+            pw.SizedBox(height: 4),
+            ...item.bulletPoints.map((bp) => pw.Padding(
+                  padding: const pw.EdgeInsets.only(left: 12, top: 2),
+                  child: pw.Row(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('•  ', style: pw.TextStyle(font: bold)),
+                      pw.Expanded(
+                        child: pw.Text(
+                          bp,
+                          style: pw.TextStyle(font: regular, fontSize: fontSize - 1),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ],
+        ],
+      ),
     );
   }
 

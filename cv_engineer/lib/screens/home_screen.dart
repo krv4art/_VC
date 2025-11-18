@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/resume_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/animated_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -96,13 +97,19 @@ class HomeScreen extends StatelessWidget {
 
                   // Current resume section
                   if (resumeProvider.hasCurrentResume) ...[
-                    Text(
-                      'Current Resume',
-                      style: theme.textTheme.headlineSmall,
+                    AnimatedListItem(
+                      index: 0,
+                      child: Text(
+                        'Current Resume',
+                        style: theme.textTheme.headlineSmall,
+                      ),
                     ),
                     const SizedBox(height: AppTheme.space16),
-                    _CurrentResumeCard(
-                      resumeProvider: resumeProvider,
+                    AnimatedListItem(
+                      index: 1,
+                      child: _CurrentResumeCard(
+                        resumeProvider: resumeProvider,
+                      ),
                     ),
                   ] else ...[
                     Center(
@@ -213,55 +220,50 @@ class _CurrentResumeCard extends StatelessWidget {
     final resume = resumeProvider.currentResume!;
     final completeness = resume.completenessPercentage;
 
-    return Card(
-      child: InkWell(
-        onTap: () => context.push('/editor'),
-        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        child: Padding(
-          padding: const EdgeInsets.all(AppTheme.space16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return AnimatedCard(
+      onTap: () => context.push('/editor'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          resume.personalInfo.fullName.isNotEmpty
-                              ? resume.personalInfo.fullName
-                              : 'Untitled Resume',
-                          style: theme.textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: AppTheme.space4),
-                        Text(
-                          'Last updated: ${_formatDate(resume.updatedAt)}',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      resume.personalInfo.fullName.isNotEmpty
+                          ? resume.personalInfo.fullName
+                          : 'Untitled Resume',
+                      style: theme.textTheme.titleLarge,
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.visibility),
-                    onPressed: () => context.push('/preview'),
-                    tooltip: 'Preview',
-                  ),
-                ],
+                    const SizedBox(height: AppTheme.space4),
+                    Text(
+                      'Last updated: ${_formatDate(resume.updatedAt)}',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: AppTheme.space16),
-              Text(
-                'Completeness: ${completeness.toStringAsFixed(0)}%',
-                style: theme.textTheme.bodySmall,
-              ),
-              const SizedBox(height: AppTheme.space8),
-              LinearProgressIndicator(
-                value: completeness / 100,
-                backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+              IconButton(
+                icon: const Icon(Icons.visibility),
+                onPressed: () => context.push('/preview'),
+                tooltip: 'Preview',
               ),
             ],
           ),
-        ),
+          const SizedBox(height: AppTheme.space16),
+          Text(
+            'Completeness: ${completeness.toStringAsFixed(0)}%',
+            style: theme.textTheme.bodySmall,
+          ),
+          const SizedBox(height: AppTheme.space8),
+          AnimatedProgressIndicator(
+            value: completeness / 100,
+            color: theme.colorScheme.primary,
+            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+          ),
+        ],
       ),
     );
   }

@@ -244,6 +244,81 @@ class PreviewScreen extends StatelessWidget {
                           ),
                         )),
                   ],
+
+                  // Custom Sections
+                  ...resume.customSections.map((section) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: AppTheme.space24),
+                          Text(
+                            section.title,
+                            style: TextStyle(
+                              fontSize: resume.fontSize + 4,
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          const Divider(),
+                          ...section.items.map((item) => Padding(
+                                padding: const EdgeInsets.only(bottom: AppTheme.space12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.title,
+                                      style: TextStyle(
+                                        fontSize: resume.fontSize + 2,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    if (item.subtitle != null) ...[
+                                      Text(
+                                        item.subtitle!,
+                                        style: TextStyle(
+                                          fontSize: resume.fontSize,
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                    ],
+                                    if (item.description != null) ...[
+                                      const SizedBox(height: AppTheme.space4),
+                                      Text(
+                                        item.description!,
+                                        style: TextStyle(fontSize: resume.fontSize),
+                                      ),
+                                    ],
+                                    if (item.bulletPoints.isNotEmpty) ...[
+                                      const SizedBox(height: AppTheme.space4),
+                                      ...item.bulletPoints.map((bp) => Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: AppTheme.space12,
+                                              top: AppTheme.space2,
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  '• ',
+                                                  style: TextStyle(
+                                                    fontSize: resume.fontSize,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    bp,
+                                                    style: TextStyle(fontSize: resume.fontSize),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )),
+                                    ],
+                                  ],
+                                ),
+                              )),
+                        ],
+                      )),
                 ],
               ),
             ),
