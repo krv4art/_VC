@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/analysis_provider.dart';
 import '../services/local_data_service.dart';
+import '../widgets/animated_entrance.dart';
 
 /// Экран с историей анализов
 class HistoryScreen extends StatefulWidget {
@@ -100,14 +101,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 itemCount: history.length,
                 itemBuilder: (context, index) {
                   final analysis = history[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: _buildHistoryCard(context, analysis, () {
-                      provider.setCurrentAnalysis(analysis);
-                      context.push('/results?id=${analysis.itemName}');
-                    }, () {
-                      provider.removeFromHistory(analysis);
-                    }),
+                  return AnimatedEntrance(
+                    delay: Duration(milliseconds: index * 100),
+                    duration: const Duration(milliseconds: 500),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _buildHistoryCard(context, analysis, () {
+                        provider.setCurrentAnalysis(analysis);
+                        context.push('/results?id=${analysis.itemName}');
+                      }, () {
+                        provider.removeFromHistory(analysis);
+                      }),
+                    ),
                   );
                 },
               );

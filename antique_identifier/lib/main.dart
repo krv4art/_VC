@@ -18,6 +18,49 @@ void main() async {
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
+/// Custom page transition builder for smooth slide animations
+Page<dynamic> _buildSlideTransition(BuildContext context, GoRouterState state, Widget child) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return SlideTransition(
+        position: animation.drive(
+          Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero).chain(
+            CurveTween(curve: Curves.easeInOutCubic),
+          ),
+        ),
+        child: FadeTransition(
+          opacity: animation.drive(
+            Tween<double>(begin: 0.8, end: 1.0).chain(
+              CurveTween(curve: Curves.easeInOutCubic),
+            ),
+          ),
+          child: child,
+        ),
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 400),
+  );
+}
+
+/// Custom page transition builder for fade animations
+Page<dynamic> _buildFadeTransition(BuildContext context, GoRouterState state, Widget child) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: animation.drive(
+          CurveTween(curve: Curves.easeInOutCubic),
+        ),
+        child: child,
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 300),
+  );
+}
+
 final GoRouter _router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/',
@@ -25,25 +68,19 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/',
       name: 'home',
-      pageBuilder: (context, state) => const MaterialPage(
-        child: HomeScreen(),
-      ),
+      pageBuilder: (context, state) => _buildFadeTransition(context, state, const HomeScreen()),
     ),
     GoRoute(
       path: '/scan',
       name: 'scan',
-      pageBuilder: (context, state) => const MaterialPage(
-        child: ScanScreen(),
-      ),
+      pageBuilder: (context, state) => _buildSlideTransition(context, state, const ScanScreen()),
     ),
     GoRoute(
       path: '/results',
       name: 'results',
       pageBuilder: (context, state) {
         final resultId = state.queryParameters['id'];
-        return MaterialPage(
-          child: ResultsScreen(resultId: resultId),
-        );
+        return _buildSlideTransition(context, state, ResultsScreen(resultId: resultId));
       },
     ),
     GoRoute(
@@ -51,17 +88,13 @@ final GoRouter _router = GoRouter(
       name: 'chat',
       pageBuilder: (context, state) {
         final dialogueId = state.queryParameters['dialogueId'];
-        return MaterialPage(
-          child: ChatScreen(dialogueId: dialogueId),
-        );
+        return _buildSlideTransition(context, state, ChatScreen(dialogueId: dialogueId));
       },
     ),
     GoRoute(
       path: '/history',
       name: 'history',
-      pageBuilder: (context, state) => const MaterialPage(
-        child: HistoryScreen(),
-      ),
+      pageBuilder: (context, state) => _buildSlideTransition(context, state, const HistoryScreen()),
     ),
   ],
 );

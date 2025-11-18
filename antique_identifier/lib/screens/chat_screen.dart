@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/chat_message.dart';
 import '../services/chat_service.dart';
 import '../providers/analysis_provider.dart';
+import '../widgets/animated_entrance.dart';
 
 /// Экран чата с AI эксп ертом
 class ChatScreen extends StatefulWidget {
@@ -64,9 +65,14 @@ class _ChatScreenState extends State<ChatScreen> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _buildMessageBubble(message),
+                return AnimatedEntrance(
+                  delay: Duration(milliseconds: index * 50),
+                  duration: const Duration(milliseconds: 400),
+                  beginOffset: const Offset(0, 30),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _buildMessageBubble(message),
+                  ),
                 );
               },
             ),

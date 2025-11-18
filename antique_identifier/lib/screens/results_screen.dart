@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../models/analysis_result.dart';
 import '../providers/analysis_provider.dart';
+import '../widgets/animated_entrance.dart';
 
 /// Экран с результатами анализа антиквариата
 class ResultsScreen extends StatelessWidget {
@@ -49,88 +50,124 @@ class ResultsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
-                _buildHeader(context, result),
+                // Header with fade animation
+                AnimatedEntrance(
+                  delay: Duration.zero,
+                  duration: const Duration(milliseconds: 500),
+                  child: _buildHeader(context, result),
+                ),
                 const SizedBox(height: 24),
 
-                // Warnings Banner
+                // Warnings Banner with staggered animation
                 if (result.warnings.isNotEmpty)
-                  _buildWarningsBanner(context, result),
-                const SizedBox(height: 24),
+                  AnimatedEntrance(
+                    delay: const Duration(milliseconds: 100),
+                    duration: const Duration(milliseconds: 500),
+                    child: _buildWarningsBanner(context, result),
+                  ),
+                if (result.warnings.isNotEmpty) const SizedBox(height: 24),
 
                 // Description
-                _buildSection(
-                  context,
-                  'Description',
-                  Icons.description,
-                  _buildDescriptionContent(result),
+                AnimatedEntrance(
+                  delay: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 500),
+                  child: _buildSection(
+                    context,
+                    'Description',
+                    Icons.description,
+                    _buildDescriptionContent(result),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
                 // Materials
                 if (result.materials.isNotEmpty)
-                  _buildSection(
-                    context,
-                    'Materials',
-                    Icons.construction,
-                    _buildMaterialsList(result),
+                  AnimatedEntrance(
+                    delay: const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 500),
+                    child: _buildSection(
+                      context,
+                      'Materials',
+                      Icons.construction,
+                      _buildMaterialsList(result),
+                    ),
                   ),
-                const SizedBox(height: 16),
+                if (result.materials.isNotEmpty) const SizedBox(height: 16),
 
                 // Historical Context
                 if (result.historicalContext.isNotEmpty)
-                  _buildSection(
-                    context,
-                    'Historical Context',
-                    Icons.history,
-                    _buildHistoricalContext(context, result),
+                  AnimatedEntrance(
+                    delay: const Duration(milliseconds: 400),
+                    duration: const Duration(milliseconds: 500),
+                    child: _buildSection(
+                      context,
+                      'Historical Context',
+                      Icons.history,
+                      _buildHistoricalContext(context, result),
+                    ),
                   ),
-                const SizedBox(height: 16),
+                if (result.historicalContext.isNotEmpty) const SizedBox(height: 16),
 
                 // Price Estimate
                 if (result.priceEstimate != null)
-                  _buildSection(
-                    context,
-                    'Estimated Value',
-                    Icons.attach_money,
-                    _buildPriceEstimate(context, result),
+                  AnimatedEntrance(
+                    delay: const Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
+                    child: _buildSection(
+                      context,
+                      'Estimated Value',
+                      Icons.attach_money,
+                      _buildPriceEstimate(context, result),
+                    ),
                   ),
-                const SizedBox(height: 16),
+                if (result.priceEstimate != null) const SizedBox(height: 16),
 
                 // Similar Items
                 if (result.similarItems.isNotEmpty)
-                  _buildSection(
-                    context,
-                    'Similar Items',
-                    Icons.compare,
-                    _buildSimilarItems(result),
+                  AnimatedEntrance(
+                    delay: const Duration(milliseconds: 600),
+                    duration: const Duration(milliseconds: 500),
+                    child: _buildSection(
+                      context,
+                      'Similar Items',
+                      Icons.compare,
+                      _buildSimilarItems(result),
+                    ),
                   ),
                 const SizedBox(height: 32),
 
                 // Chat Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton.icon(
-                    onPressed: () => context.push('/chat?dialogueId=1'),
-                    icon: const Icon(Icons.chat_bubble),
-                    label: const Text('Chat with AI Expert'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade700,
-                      foregroundColor: Colors.white,
+                AnimatedEntrance(
+                  delay: const Duration(milliseconds: 700),
+                  duration: const Duration(milliseconds: 500),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton.icon(
+                      onPressed: () => context.push('/chat?dialogueId=1'),
+                      icon: const Icon(Icons.chat_bubble),
+                      label: const Text('Chat with AI Expert'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue.shade700,
+                        foregroundColor: Colors.white,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
 
                 // Save Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: OutlinedButton.icon(
-                    onPressed: () => _saveToCollection(context, result),
-                    icon: const Icon(Icons.bookmark_add),
-                    label: const Text('Save to Collection'),
+                AnimatedEntrance(
+                  delay: const Duration(milliseconds: 800),
+                  duration: const Duration(milliseconds: 500),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: OutlinedButton.icon(
+                      onPressed: () => _saveToCollection(context, result),
+                      icon: const Icon(Icons.bookmark_add),
+                      label: const Text('Save to Collection'),
+                    ),
                   ),
                 ),
               ],
