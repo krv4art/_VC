@@ -6,9 +6,42 @@ import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/animated_card.dart';
 import '../utils/demo_data.dart';
+import '../services/rating_service.dart';
+import '../widgets/rating_request_dialog.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkAndShowRatingDialog();
+  }
+
+  Future<void> _checkAndShowRatingDialog() async {
+    // Wait a bit to let the screen build
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted) return;
+
+    final shouldShow = await RatingService().shouldShowRatingDialog();
+
+    if (shouldShow && mounted) {
+      await RatingService().incrementRatingDialogShows();
+
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => const RatingRequestDialog(),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
