@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'navigation/app_router.dart';
 import 'providers/user_profile_provider.dart';
@@ -139,10 +141,33 @@ class AITutorApp extends StatelessWidget {
             }
           }
 
+          // Get locale from user profile
+          Locale locale = const Locale('en');
+          if (profileProvider.profile.preferredLanguage == 'ru') {
+            locale = const Locale('ru');
+          }
+
           return MaterialApp.router(
             title: 'AI Tutor',
             debugShowCheckedModeBanner: false,
+
+            // Localization
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'), // English
+              Locale('ru'), // Russian
+            ],
+            locale: locale,
+
+            // Theme
             theme: themeProvider.themeData,
+
+            // Router
             routerConfig: appRouter,
           );
         },

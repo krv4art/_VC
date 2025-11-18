@@ -31,6 +31,20 @@ class SettingsScreen extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.pushNamed(context, '/profile'),
           ),
+          Consumer<UserProfileProvider>(
+            builder: (context, profileProvider, _) {
+              final currentLanguage = profileProvider.profile.preferredLanguage;
+              final languageName = currentLanguage == 'ru' ? 'Русский' : 'English';
+
+              return ListTile(
+                leading: const Icon(Icons.language),
+                title: const Text('Language'),
+                subtitle: Text(languageName),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _showLanguageDialog(context, profileProvider),
+              );
+            },
+          ),
           const Divider(),
 
           // Notifications Section
@@ -209,6 +223,52 @@ Join me in AI Tutor - Personalized learning! 🚀
 ''';
 
     Share.share(text);
+  }
+
+  void _showLanguageDialog(BuildContext context, UserProfileProvider profileProvider) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Language'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Text('🇬🇧', style: TextStyle(fontSize: 32)),
+              title: const Text('English'),
+              trailing: profileProvider.profile.preferredLanguage == 'en'
+                  ? const Icon(Icons.check, color: Colors.green)
+                  : null,
+              onTap: () async {
+                await profileProvider.updateLanguage('en');
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
+            ListTile(
+              leading: const Text('🇷🇺', style: TextStyle(fontSize: 32)),
+              title: const Text('Русский'),
+              trailing: profileProvider.profile.preferredLanguage == 'ru'
+                  ? const Icon(Icons.check, color: Colors.green)
+                  : null,
+              onTap: () async {
+                await profileProvider.updateLanguage('ru');
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showResetConfirmation(BuildContext context) {
