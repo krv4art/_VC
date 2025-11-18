@@ -13,6 +13,7 @@ class AppConfig {
   bool? _enableDebugMode;
   String? _appVersion;
   int? _maxRatingDialogShows;
+  String? _googlePlayPackageId;
   bool? _enableNotifications;
   bool? _enableOfflineMode;
 
@@ -29,6 +30,8 @@ class AppConfig {
       _appVersion = dotenv.env['APP_VERSION'] ?? '1.0.0';
       _maxRatingDialogShows =
           int.tryParse(dotenv.env['MAX_RATING_DIALOG_SHOWS'] ?? '3') ?? 3;
+      _googlePlayPackageId = dotenv.env['GOOGLE_PLAY_PACKAGE_ID'] ??
+          'com.example.plant_identifier';
       _enableNotifications =
           dotenv.env['ENABLE_NOTIFICATIONS']?.toLowerCase() == 'true';
       _enableOfflineMode =
@@ -66,6 +69,10 @@ class AppConfig {
 
   /// Maximum number of rating dialog shows
   int get maxRatingDialogShows => _maxRatingDialogShows ?? 3;
+
+  /// Google Play package ID для открытия страницы оценки
+  String get googlePlayPackageId => _googlePlayPackageId ??
+      'com.example.plant_identifier';
 
   /// Notifications enabled
   bool get enableNotifications => _enableNotifications ?? true;

@@ -6,6 +6,7 @@ import '../theme/app_theme.dart';
 import '../theme/theme_extensions_v2.dart';
 import '../flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/rating_service.dart';
+import '../../config/app_config.dart';
 import '../services/telegram_service.dart';
 import 'animated_rating_stars.dart';
 import '../constants/app_dimensions.dart';

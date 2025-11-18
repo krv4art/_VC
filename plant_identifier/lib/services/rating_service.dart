@@ -17,7 +17,7 @@ class RatingService {
   static const int _minDaysBetweenShows = 3;
   // Minimum hours before first show
   // TODO: Set to 24 for production!
-  static const int _minHoursBeforeFirstShow = 0;
+  static const int _minHoursBeforeFirstShow = 24;
 
   /// Initialize service
   Future<void> initialize() async {

@@ -17,7 +17,7 @@ class RatingService {
   static const int _minDaysBetweenShows = 3;
   // Минимальное время использования приложения перед первым показом в часах
   // TODO: Для тестирования установлено 0, вернуть на 24 для продакшена!
-  static const int _minHoursBeforeFirstShow = 0;
+  static const int _minHoursBeforeFirstShow = 24;
 
   /// Инициализация сервиса
   Future<void> initialize() async {

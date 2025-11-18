@@ -16,6 +16,7 @@ class AppConfig {
   int? _promptsCacheDurationHours;
   String? _appVersion;
   int? _maxRatingDialogShows;
+  String? _googlePlayPackageId;
   int? _freeScansPerWeek;
   int? _freeMessagesPerDay;
   int? _freeVisibleScans;
@@ -38,6 +39,8 @@ class AppConfig {
       _appVersion = dotenv.env['APP_VERSION'] ?? '1.0.0';
       _maxRatingDialogShows =
           int.tryParse(dotenv.env['MAX_RATING_DIALOG_SHOWS'] ?? '3') ?? 3;
+      _googlePlayPackageId = dotenv.env['GOOGLE_PLAY_PACKAGE_ID'] ??
+          'com.ai.cosmetic.scanner.beauty.ingredients.analyzer';
       _freeScansPerWeek = getEnvInt('FREE_SCANS_PER_WEEK', defaultValue: 5);
       _freeMessagesPerDay = getEnvInt('FREE_MESSAGES_PER_DAY', defaultValue: 5);
       _freeVisibleScans = getEnvInt('FREE_VISIBLE_SCANS', defaultValue: 1);
@@ -80,6 +83,10 @@ class AppConfig {
 
   /// Максимальное количество показов диалога оценки
   int get maxRatingDialogShows => _maxRatingDialogShows ?? 3;
+
+  /// Google Play package ID для открытия страницы оценки
+  String get googlePlayPackageId => _googlePlayPackageId ??
+      'com.ai.cosmetic.scanner.beauty.ingredients.analyzer';
 
   /// Лимит сканов для бесплатных пользователей
   int get freeScansPerWeek => _freeScansPerWeek ?? 5;
