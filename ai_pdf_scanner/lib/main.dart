@@ -7,6 +7,7 @@ import 'config/api_config.dart';
 import 'navigation/app_router.dart';
 import 'providers/app_state_provider.dart';
 import 'providers/document_provider.dart';
+import 'providers/scan_provider.dart';
 import 'theme/app_theme.dart';
 
 /// Main entry point for AI PDF Scanner application
@@ -46,8 +47,10 @@ class MyApp extends StatelessWidget {
         // Document provider (PDF management)
         ChangeNotifierProvider(create: (_) => DocumentProvider()..loadDocuments()),
 
+        // Scan provider (scanning state)
+        ChangeNotifierProvider(create: (_) => ScanProvider()),
+
         // TODO: Add more providers as needed
-        // - ScanProvider (scanning state)
         // - EditorProvider (editing state)
         // - AIProvider (AI analysis state)
       ],
