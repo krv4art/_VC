@@ -4,6 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import '../services/antique_identification_service.dart';
+import '../services/image_compression_service.dart';
+import '../services/local_data_service.dart';
+import '../services/supabase_service.dart';
 import '../providers/analysis_provider.dart';
 
 /// Экран для загрузки и сканирования фото антиквариата
@@ -181,23 +184,57 @@ class _ScanScreenState extends State<ScanScreen> {
     provider.setLoading(true);
 
     try {
+      // 1. Читаем исходное изображение
       final imageBytes = await _selectedImage!.readAsBytes();
-      final service = AntiqueIdentificationService();
+      debugPrint('Original image size: ${(imageBytes.length / 1024).toStringAsFixed(2)} KB');
 
+      // 2. Сжимаем изображение
+      final compressedBytes = await ImageCompressionService.compressImageBytes(imageBytes);
+      debugPrint('Compressed image size: ${(compressedBytes.length / 1024).toStringAsFixed(2)} KB');
+
+      // 3. Анализируем с помощью Gemini
+      final service = AntiqueIdentificationService();
       final result = await service.analyzeAntiqueImage(
-        imageBytes,
+        compressedBytes,
         languageCode: 'en',
       );
 
       if (!mounted) return;
 
+      // 4. Сохраняем в локальную БД
+      await LocalDataService().saveAnalysis(
+        result,
+        imagePath: _selectedImage!.path,
+      );
+      debugPrint('✓ Saved to local database');
+
+      // 5. Пытаемся сохранить в Supabase (облако)
+      try {
+        final supabaseService = SupabaseService();
+        final analysisId = await supabaseService.saveAnalysisResult(result);
+
+        // 6. Загружаем изображение в облачное хранилище
+        if (analysisId.isNotEmpty) {
+          final fileName = '${result.itemName}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          await supabaseService.uploadImage(compressedBytes, fileName);
+          debugPrint('✓ Uploaded to Supabase');
+        }
+      } catch (e) {
+        debugPrint('⚠️ Cloud sync failed (offline mode): $e');
+        // Продолжаем работу даже если облако недоступно
+      }
+
+      // 7. Обновляем UI
       provider.setCurrentAnalysis(result);
       provider.setLoading(false);
 
-      // Navigate to results
-      context.push('/results?id=${result.itemName}');
+      // 8. Навигируем на экран результатов
+      if (mounted) {
+        context.push('/results?id=${result.itemName}');
+      }
     } catch (e) {
       if (!mounted) return;
+      debugPrint('❌ Analysis error: $e');
       provider.setError('Analysis failed: $e');
       _showError('Analysis failed: $e');
     } finally {
