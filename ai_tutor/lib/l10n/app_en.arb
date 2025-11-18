@@ -263,5 +263,24 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "brainTraining": "Brain Training",
+  "stroopTest": "Stroop Test",
+  "memoryCards": "Memory Cards",
+  "speedReading": "Speed Reading",
+  "shapeCounter": "Shape Counter",
+  "numberSequences": "Number Sequences",
+  "nBackTest": "N-Back Test",
+  "quickMath": "Quick Math",
+  "spotTheDifference": "Spot the Difference",
+
+  "overallStats": "Overall Stats",
+  "exercises": "Exercises",
+  "played": "Played",
+  "best": "Best",
+  "newExercise": "New!",
+  "correct": "Correct",
+  "efficiency": "Efficiency",
+  "moves": "Moves"
 }

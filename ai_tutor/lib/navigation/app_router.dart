@@ -14,6 +14,7 @@ import '../screens/practice/practice_screen.dart';
 import '../screens/challenges/challenges_screen.dart';
 import '../screens/reports/weekly_report_screen.dart';
 import '../screens/settings/settings_screen.dart';
+import '../screens/brain_training/brain_training_screen.dart';
 import '../config/app_config.dart';
 
 /// App router configuration
@@ -108,6 +109,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/brain-training',
+      builder: (context, state) => const BrainTrainingScreen(),
     ),
   ],
 );

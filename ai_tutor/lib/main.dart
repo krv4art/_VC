@@ -13,6 +13,7 @@ import 'providers/theme_provider.dart';
 import 'providers/progress_provider.dart';
 import 'providers/achievement_provider.dart';
 import 'providers/challenge_provider.dart';
+import 'providers/brain_training_provider.dart';
 import 'services/ai_tutor_service.dart';
 import 'services/practice_service.dart';
 import 'services/notification_service.dart';
@@ -108,6 +109,11 @@ class AITutorApp extends StatelessWidget {
             provider.initialize();
             return provider;
           },
+        ),
+
+        // Brain Training Provider
+        ChangeNotifierProvider<BrainTrainingProvider>(
+          create: (_) => BrainTrainingProvider(),
         ),
 
         // AI Tutor Service

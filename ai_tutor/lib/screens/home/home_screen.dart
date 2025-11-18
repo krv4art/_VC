@@ -180,6 +180,21 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 12),
+                    // Brain Training button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () => context.push('/brain-training'),
+                        icon: const Text('🧠', style: TextStyle(fontSize: 20)),
+                        label: const Text('Brain Training'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          backgroundColor: colorScheme.secondary,
+                          foregroundColor: colorScheme.onSecondary,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 24),
 
                     // Subjects
