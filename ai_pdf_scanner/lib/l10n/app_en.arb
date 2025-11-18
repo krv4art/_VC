@@ -1,0 +1,63 @@
+{
+  "@@locale": "en",
+
+  "appName": "AI PDF Scanner",
+  "@appName": {
+    "description": "Application name"
+  },
+
+  "home": "Home",
+  "@home": {
+    "description": "Home screen title"
+  },
+
+  "library": "Library",
+  "@library": {
+    "description": "Library screen title"
+  },
+
+  "scanner": "Scanner",
+  "@scanner": {
+    "description": "Scanner screen title"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings screen title"
+  },
+
+  "scanDocument": "Scan Document",
+  "@scanDocument": {
+    "description": "Scan document action"
+  },
+
+  "myDocuments": "My Documents",
+  "@myDocuments": {
+    "description": "My documents title"
+  },
+
+  "convert": "Convert",
+  "@convert": {
+    "description": "Convert action"
+  },
+
+  "tools": "Tools",
+  "@tools": {
+    "description": "Tools menu"
+  },
+
+  "welcome": "Welcome!",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+
+  "noDocumentsYet": "No documents yet",
+  "@noDocumentsYet": {
+    "description": "Empty library message"
+  },
+
+  "startScanning": "Start by scanning a document",
+  "@startScanning": {
+    "description": "Instruction to start scanning"
+  }
+}
