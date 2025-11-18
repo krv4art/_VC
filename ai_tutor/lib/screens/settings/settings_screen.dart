@@ -31,7 +31,14 @@ class SettingsScreen extends StatelessWidget {
             title: const Text('Profile'),
             subtitle: const Text('Manage your profile and preferences'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.pushNamed(context, '/profile'),
+            onTap: () => context.push('/profile'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.manage_accounts),
+            title: const Text('Account Management'),
+            subtitle: const Text('Password, avatar, delete account'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/account'),
           ),
           Consumer<UserProfileProvider>(
             builder: (context, profileProvider, _) {
@@ -186,17 +193,13 @@ class SettingsScreen extends StatelessWidget {
             leading: const Icon(Icons.description),
             title: const Text('Privacy Policy'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // TODO: Show privacy policy
-            },
+            onTap: () => context.push('/privacy-policy'),
           ),
           ListTile(
             leading: const Icon(Icons.gavel),
             title: const Text('Terms of Service'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // TODO: Show terms
-            },
+            onTap: () => context.push('/terms-of-service'),
           ),
           ListTile(
             leading: const Icon(Icons.bug_report),

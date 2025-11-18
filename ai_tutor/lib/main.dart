@@ -15,6 +15,7 @@ import 'providers/achievement_provider.dart';
 import 'providers/challenge_provider.dart';
 import 'providers/brain_training_provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/subscription_provider.dart';
 import 'services/ai_tutor_service.dart';
 import 'services/practice_service.dart';
 import 'services/notification_service.dart';
@@ -125,6 +126,11 @@ class AITutorApp extends StatelessWidget {
           create: (_) => AuthProvider(
             authService: AuthService(supabase: Supabase.instance.client),
           ),
+        ),
+
+        // Subscription Provider
+        ChangeNotifierProvider<SubscriptionProvider>(
+          create: (_) => SubscriptionProvider(),
         ),
 
         // AI Tutor Service

@@ -24,6 +24,9 @@ import '../screens/social/leaderboard_screen.dart';
 import '../screens/social/friends_screen.dart';
 import '../screens/analytics/analytics_screen.dart';
 import '../screens/premium/premium_screen.dart';
+import '../screens/account/account_management_screen.dart';
+import '../screens/legal/privacy_policy_screen.dart';
+import '../screens/legal/terms_of_service_screen.dart';
 import '../config/app_config.dart';
 import '../providers/auth_provider.dart';
 
@@ -181,6 +184,22 @@ GoRouter createAppRouter() {
       GoRoute(
         path: '/premium',
         builder: (context, state) => const PremiumScreen(),
+      ),
+
+      // Account Management
+      GoRoute(
+        path: '/account',
+        builder: (context, state) => const AccountManagementScreen(),
+      ),
+
+      // Legal
+      GoRoute(
+        path: '/privacy-policy',
+        builder: (context, state) => const PrivacyPolicyScreen(),
+      ),
+      GoRoute(
+        path: '/terms-of-service',
+        builder: (context, state) => const TermsOfServiceScreen(),
       ),
     ],
   );
