@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../models/resume.dart';
 import '../../theme/app_theme.dart';
 import 'resume_template.dart';
@@ -39,6 +41,12 @@ class ModernTemplate extends ResumeTemplate {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (resume.personalInfo.photoPath != null &&
+                    resume.personalInfo.photoPath!.isNotEmpty) ...[
+                  _buildProfilePhoto(),
+                  const SizedBox(height: 24),
+                ],
+
                 _buildSidebarSection('Contact', _buildContactInfo(), theme),
                 const SizedBox(height: 24),
 
@@ -135,6 +143,32 @@ class ModernTemplate extends ResumeTemplate {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildProfilePhoto() {
+    final photoPath = resume.personalInfo.photoPath!;
+
+    return Container(
+      width: 150,
+      height: 150,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+        border: Border.all(color: primaryColor, width: 3),
+        boxShadow: [
+          BoxShadow(
+            color: primaryColor.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        image: DecorationImage(
+          image: kIsWeb
+            ? NetworkImage(photoPath) as ImageProvider
+            : FileImage(File(photoPath)),
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 

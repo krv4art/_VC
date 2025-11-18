@@ -32,7 +32,7 @@ class CustomSectionsEditorScreen extends StatelessWidget {
               padding: const EdgeInsets.all(AppTheme.space16),
               itemCount: sections.length,
               onReorder: (oldIndex, newIndex) {
-                // TODO: Implement reordering
+                resumeProvider.reorderCustomSections(oldIndex, newIndex);
               },
               itemBuilder: (context, index) {
                 final section = sections[index];

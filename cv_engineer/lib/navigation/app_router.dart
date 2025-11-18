@@ -4,6 +4,7 @@ import '../screens/splash_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/onboarding_screen.dart';
 import '../screens/resume_editor_screen.dart';
+import '../screens/resume_list_screen.dart';
 import '../screens/template_selection_screen.dart';
 import '../screens/preview_screen.dart';
 import '../screens/settings_screen.dart';
@@ -42,6 +43,11 @@ final GoRouter appRouter = GoRouter(
       path: '/home',
       pageBuilder: (context, state) =>
           _buildPageWithNoTransition(context, state, const HomeScreen()),
+    ),
+    GoRoute(
+      path: '/resumes',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const ResumeListScreen()),
     ),
     GoRoute(
       path: '/templates',

@@ -147,6 +147,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(width: AppTheme.space16),
                       Expanded(
                         child: _QuickActionCard(
+                          icon: Icons.folder_outlined,
+                          title: 'My Resumes',
+                          onTap: () => context.push('/resumes'),
+                        ),
+                      ),
+                      const SizedBox(width: AppTheme.space16),
+                      Expanded(
+                        child: _QuickActionCard(
                           icon: Icons.help_outline,
                           title: 'Interview Prep',
                           onTap: () => context.push('/interview-questions'),
