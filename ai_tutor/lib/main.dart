@@ -10,8 +10,10 @@ import 'providers/chat_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/progress_provider.dart';
 import 'providers/achievement_provider.dart';
+import 'providers/challenge_provider.dart';
 import 'services/ai_tutor_service.dart';
 import 'services/practice_service.dart';
+import 'services/notification_service.dart';
 import 'config/app_config.dart';
 
 void main() async {
@@ -19,6 +21,9 @@ void main() async {
 
   // Initialize app configuration
   await AppConfig().initialize();
+
+  // Initialize notification service
+  await NotificationService().initialize();
 
   // Load environment variables
   try {
@@ -94,6 +99,15 @@ class AITutorApp extends StatelessWidget {
           },
         ),
 
+        // Challenge Provider
+        ChangeNotifierProvider<ChallengeProvider>(
+          create: (_) {
+            final provider = ChallengeProvider();
+            provider.initialize();
+            return provider;
+          },
+        ),
+
         // AI Tutor Service
         Provider<AITutorService>(
           create: (_) => AITutorService(
@@ -106,6 +120,11 @@ class AITutorApp extends StatelessWidget {
           create: (_) => PracticeService(
             supabase: Supabase.instance.client,
           ),
+        ),
+
+        // Notification Service
+        Provider<NotificationService>(
+          create: (_) => NotificationService(),
         ),
       ],
       child: Consumer2<ThemeProvider, UserProfileProvider>(

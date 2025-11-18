@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../models/subject.dart';
 import '../../providers/user_profile_provider.dart';
 import '../../providers/chat_provider.dart';
+import '../../providers/challenge_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,6 +16,7 @@ class HomeScreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final profileProvider = context.watch<UserProfileProvider>();
     final chatProvider = context.read<ChatProvider>();
+    final challengeProvider = context.watch<ChallengeProvider>();
 
     return Scaffold(
       body: SafeArea(
@@ -29,14 +31,14 @@ class HomeScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () => context.push('/settings'),
+                  tooltip: 'Settings',
+                ),
+                IconButton(
                   icon: const Icon(Icons.bar_chart),
                   onPressed: () => context.push('/progress'),
                   tooltip: 'Progress',
-                ),
-                IconButton(
-                  icon: const Icon(Icons.person),
-                  onPressed: () => context.push('/profile'),
-                  tooltip: 'Profile',
                 ),
               ],
             ),
@@ -103,6 +105,55 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                     ],
 
+                    // Daily Challenge
+                    if (challengeProvider.todayChallenge != null &&
+                        !challengeProvider.todayChallenge!.isCompleted) ...[
+                      GestureDetector(
+                        onTap: () => context.push('/challenges'),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [colorScheme.primary, colorScheme.primary.withOpacity(0.7)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.emoji_events, color: Colors.white, size: 32),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Daily Challenge',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      challengeProvider.todayChallenge!.title,
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.9),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.chevron_right, color: Colors.white),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
                     // Quick actions
                     Row(
                       children: [
@@ -119,9 +170,9 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: OutlinedButton.icon(
-                            onPressed: () => context.push('/progress'),
-                            icon: const Icon(Icons.bar_chart),
-                            label: const Text('Progress'),
+                            onPressed: () => context.push('/challenges'),
+                            icon: const Icon(Icons.flag),
+                            label: const Text('Challenges'),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),

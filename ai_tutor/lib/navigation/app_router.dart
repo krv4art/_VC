@@ -11,6 +11,9 @@ import '../screens/subjects/subject_selection_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/progress/progress_screen.dart';
 import '../screens/practice/practice_screen.dart';
+import '../screens/challenges/challenges_screen.dart';
+import '../screens/reports/weekly_report_screen.dart';
+import '../screens/settings/settings_screen.dart';
 import '../config/app_config.dart';
 
 /// App router configuration
@@ -93,6 +96,18 @@ final appRouter = GoRouter(
         final subjectId = state.pathParameters['subjectId']!;
         return PracticeScreen(subjectId: subjectId);
       },
+    ),
+    GoRoute(
+      path: '/challenges',
+      builder: (context, state) => const ChallengesScreen(),
+    ),
+    GoRoute(
+      path: '/weekly-report',
+      builder: (context, state) => const WeeklyReportScreen(),
+    ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => const SettingsScreen(),
     ),
   ],
 );
