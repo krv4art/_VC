@@ -9,6 +9,8 @@ import '../screens/home/home_screen.dart';
 import '../screens/chat/tutor_chat_screen.dart';
 import '../screens/subjects/subject_selection_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../screens/progress/progress_screen.dart';
+import '../screens/practice/practice_screen.dart';
 import '../config/app_config.dart';
 
 /// App router configuration
@@ -80,6 +82,17 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/profile',
       builder: (context, state) => const ProfileScreen(),
+    ),
+    GoRoute(
+      path: '/progress',
+      builder: (context, state) => const ProgressScreen(),
+    ),
+    GoRoute(
+      path: '/practice/:subjectId',
+      builder: (context, state) {
+        final subjectId = state.pathParameters['subjectId']!;
+        return PracticeScreen(subjectId: subjectId);
+      },
     ),
   ],
 );

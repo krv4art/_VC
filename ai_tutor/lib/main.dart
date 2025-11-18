@@ -8,7 +8,10 @@ import 'navigation/app_router.dart';
 import 'providers/user_profile_provider.dart';
 import 'providers/chat_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/progress_provider.dart';
+import 'providers/achievement_provider.dart';
 import 'services/ai_tutor_service.dart';
+import 'services/practice_service.dart';
 import 'config/app_config.dart';
 
 void main() async {
@@ -70,9 +73,37 @@ class AITutorApp extends StatelessWidget {
           create: (_) => ChatProvider(),
         ),
 
+        // Progress Provider
+        ChangeNotifierProvider<ProgressProvider>(
+          create: (context) {
+            final provider = ProgressProvider();
+            final userId = context.read<UserProfileProvider>().profile.userId;
+            if (userId != null) {
+              provider.initialize(userId);
+            }
+            return provider;
+          },
+        ),
+
+        // Achievement Provider
+        ChangeNotifierProvider<AchievementProvider>(
+          create: (_) {
+            final provider = AchievementProvider();
+            provider.initialize();
+            return provider;
+          },
+        ),
+
         // AI Tutor Service
         Provider<AITutorService>(
           create: (_) => AITutorService(
+            supabase: Supabase.instance.client,
+          ),
+        ),
+
+        // Practice Service
+        Provider<PracticeService>(
+          create: (_) => PracticeService(
             supabase: Supabase.instance.client,
           ),
         ),

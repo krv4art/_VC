@@ -29,8 +29,14 @@ class HomeScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
+                  icon: const Icon(Icons.bar_chart),
+                  onPressed: () => context.push('/progress'),
+                  tooltip: 'Progress',
+                ),
+                IconButton(
                   icon: const Icon(Icons.person),
                   onPressed: () => context.push('/profile'),
+                  tooltip: 'Profile',
                 ),
               ],
             ),
@@ -96,6 +102,34 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 24),
                     ],
+
+                    // Quick actions
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () => context.push('/practice/math'),
+                            icon: const Icon(Icons.fitness_center),
+                            label: const Text('Practice'),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () => context.push('/progress'),
+                            icon: const Icon(Icons.bar_chart),
+                            label: const Text('Progress'),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
 
                     // Subjects
                     Text(

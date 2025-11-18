@@ -6,6 +6,42 @@ AI Tutor is a revolutionary educational app that personalizes learning through *
 
 ## ✨ Key Features
 
+### 🎯 Core Learning Features
+
+#### **Personalized AI Tutoring**
+- AI adapts to your interests, cultural background, and learning style
+- Socratic method: guides you to discover answers yourself
+- Multi-mode support: Explain, Practice, Hint, Check Solution
+
+#### **Practice Mode** 💪
+- AI-generated personalized practice problems
+- 1-10 difficulty levels
+- Up to 3 hints per problem
+- Instant feedback and step-by-step solutions
+- Problems adapt to your interests (e.g., "Minecraft math")
+
+#### **Progress Tracking** 📊
+- Comprehensive analytics per subject
+- Track: problems solved, accuracy, study time
+- Topic mastery detection
+- Session tracking
+- XP system
+
+#### **Achievement System** 🏆
+- 12 unique achievements to unlock
+- Categories: Problems, Streaks, Performance, Dedication
+- Real-time notifications
+- XP rewards (50-1000 XP)
+- Beautiful achievement gallery
+
+#### **Streak Tracking** 🔥
+- Daily practice streaks
+- Automatic detection
+- Streak achievements (3, 7, 30 days)
+- Longest streak record
+
+### 🌍 Personalization Features
+
 ### 🎯 Interest-Based Learning
 - **Personalized Examples**: Learn math through Minecraft, physics through sports, chemistry through cooking
 - **10+ Interest Categories**: Gaming, Sports, Space, Animals, Music, Art, Coding, Movies, Books, Food
@@ -61,6 +97,21 @@ Each theme includes:
 - **Backend**: Supabase
 - **AI**: OpenAI GPT-4 (via Supabase Edge Functions)
 - **Storage**: SharedPreferences, SQLite
+- **Charts**: fl_chart (for analytics)
+- **Edge Functions**: TypeScript/Deno
+
+### Supabase Edge Functions
+Two serverless functions power the AI features:
+
+**`ai-tutor`**: Personalized tutoring conversations
+- GPT-4 integration
+- Custom system prompts
+- Interaction logging
+
+**`generate-practice`**: AI problem generation
+- Personalized to interests
+- 5 problems per request
+- Includes hints and solutions
 
 ### Project Structure
 ```
@@ -68,25 +119,37 @@ ai_tutor/
 ├── lib/
 │   ├── models/
 │   │   ├── interest.dart              # 10 predefined interests
-│   │   ├── cultural_theme.dart        # 8 cultural themes with colors
+│   │   ├── cultural_theme.dart        # 8 cultural themes
 │   │   ├── user_profile.dart          # User preferences
 │   │   ├── subject.dart               # 6 subjects
-│   │   └── chat_message.dart          # Chat messages
+│   │   ├── chat_message.dart          # Chat messages
+│   │   ├── progress.dart              # 📊 Progress tracking
+│   │   ├── achievement.dart           # 🏆 12 achievements
+│   │   └── practice_problem.dart      # 💪 Practice problems
 │   ├── providers/
 │   │   ├── user_profile_provider.dart # Profile management
 │   │   ├── chat_provider.dart         # Chat state
-│   │   └── theme_provider.dart        # Theme switching
+│   │   ├── theme_provider.dart        # Theme switching
+│   │   ├── progress_provider.dart     # 📊 Progress tracking
+│   │   └── achievement_provider.dart  # 🏆 Achievement system
 │   ├── services/
-│   │   └── ai_tutor_service.dart      # AI integration
+│   │   ├── ai_tutor_service.dart      # AI chat integration
+│   │   └── practice_service.dart      # 💪 Problem generation
 │   ├── screens/
-│   │   ├── onboarding/                # 5-step onboarding flow
+│   │   ├── onboarding/                # 5-step onboarding
 │   │   ├── home/                      # Main dashboard
-│   │   ├── chat/                      # Tutor chat interface
+│   │   ├── chat/                      # Tutor chat
 │   │   ├── subjects/                  # Subject selection
-│   │   └── profile/                   # User profile
+│   │   ├── profile/                   # User profile
+│   │   ├── progress/                  # 📊 Analytics dashboard
+│   │   └── practice/                  # 💪 Practice mode
 │   ├── navigation/
 │   │   └── app_router.dart            # GoRouter config
 │   └── main.dart
+├── supabase/
+│   └── functions/
+│       ├── ai-tutor/                  # ⚡ Chat AI function
+│       └── generate-practice/         # ⚡ Problem generator
 └── pubspec.yaml
 ```
 
