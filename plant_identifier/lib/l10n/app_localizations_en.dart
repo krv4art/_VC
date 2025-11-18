@@ -24,11 +24,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get chat => 'Chat';
+
+  @override
+  String get chatHistory => 'Chat History';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
   String get homeTitle => 'Identify Plants & Mushrooms';
 
   @override
-  String get homeSubtitle =>
-      'Take a photo or upload an image to identify any plant, flower, tree, or mushroom instantly.';
+  String get homeSubtitle => 'Take a photo or upload an image to identify any plant, flower, tree, or mushroom instantly.';
 
   @override
   String get identifyPlant => 'Identify Plant';
@@ -55,8 +63,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseFromGallery => 'Choose from Gallery';
 
   @override
-  String get scanDescription =>
-      'Take a photo or select from gallery to identify plants';
+  String get scanDescription => 'Take a photo or select from gallery to identify plants';
 
   @override
   String get historyTitle => 'History';
@@ -65,15 +72,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noHistory => 'No History Yet';
 
   @override
-  String get noHistoryDesc =>
-      'Start identifying plants to see your history here';
+  String get noHistoryDesc => 'Start identifying plants to see your history here';
 
   @override
   String get clearHistory => 'Clear History';
 
   @override
-  String get clearHistoryConfirm =>
-      'Are you sure you want to clear all history?';
+  String get clearHistoryConfirm => 'Are you sure you want to clear all history?';
 
   @override
   String get cancel => 'Cancel';
@@ -274,8 +279,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whatCanBeImproved => 'What can be improved?';
 
   @override
-  String get wereSorryYouDidntHaveAGreatExperience =>
-      'We\'re sorry you didn\'t have a great experience. Please tell us what went wrong.';
+  String get wereSorryYouDidntHaveAGreatExperience => 'We\'re sorry you didn\'t have a great experience. Please tell us what went wrong.';
 
   @override
   String get yourFeedback => 'Your feedback...';
@@ -299,44 +303,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sendMessage => 'Send';
 
   @override
+  String get camera => 'Camera';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
   String get writeAMessage => 'Write a message...';
 
   @override
-  String get chatGreeting1 =>
-      '👋 Hello! I\'m your plant expert assistant. Got questions about plants or need care tips? Let\'s chat!';
+  String get chatGreeting1 => '👋 Hello! I\'m your plant expert assistant. Got questions about plants or need care tips? Let\'s chat!';
 
   @override
-  String get chatGreeting2 =>
-      '🌿 Welcome! Ready to explore the fascinating world of plants together?';
+  String get chatGreeting2 => '🌿 Welcome! Ready to explore the fascinating world of plants together?';
 
   @override
-  String get chatGreeting3 =>
-      '🌱 Hey there, plant lover! What can I help you discover today?';
+  String get chatGreeting3 => '🌱 Hey there, plant lover! What can I help you discover today?';
 
   @override
-  String get chatGreeting4 =>
-      '🪴 Greetings! I\'m here to help you learn about plants, their care, and much more.';
+  String get chatGreeting4 => '🪴 Greetings! I\'m here to help you learn about plants, their care, and much more.';
 
   @override
-  String get chatGreeting5 =>
-      '🌸 Hello! Ask me anything about plants - from identification to care guides!';
+  String get chatGreeting5 => '🌸 Hello! Ask me anything about plants - from identification to care guides!';
 
   @override
-  String get chatGreeting6 =>
-      '🍃 Hi! Whether it\'s about watering, sunlight, or plant health, I\'m here to help!';
+  String get chatGreeting6 => '🍃 Hi! Whether it\'s about watering, sunlight, or plant health, I\'m here to help!';
 
   @override
-  String get chatGreeting7 =>
-      '🌺 Welcome back! What plant questions do you have for me today?';
+  String get chatGreeting7 => '🌺 Welcome back! What plant questions do you have for me today?';
 
   @override
-  String get chatGreeting8 =>
-      '🌻 Hey! Let\'s talk plants - I\'m all ears (or should I say, leaves?)!';
+  String get chatGreeting8 => '🌻 Hey! Let\'s talk plants - I\'m all ears (or should I say, leaves?)!';
 
   @override
-  String get aiDisclaimer =>
-      'AI-generated responses may contain inaccuracies. Always verify important information.';
+  String get aiDisclaimer => 'AI-generated responses may contain inaccuracies. Always verify important information.';
 
   @override
   String get dismiss => 'Dismiss';
+
+  @override
+  String get chatPlaceholder => 'Ask about this plant...';
 }

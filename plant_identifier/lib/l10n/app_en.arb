@@ -1,11 +1,9 @@
 {
   "@@locale": "en",
-
   "appName": "Plant Identifier",
   "@appName": {
     "description": "Application name"
   },
-
   "home": "Home",
   "scan": "Scan",
   "history": "History",
@@ -13,7 +11,6 @@
   "chat": "Chat",
   "chatHistory": "Chat History",
   "profile": "Profile",
-
   "homeTitle": "Identify Plants & Mushrooms",
   "homeSubtitle": "Take a photo or upload an image to identify any plant, flower, tree, or mushroom instantly.",
   "identifyPlant": "Identify Plant",
@@ -21,12 +18,10 @@
   "viewHistoryDesc": "View your past identifications",
   "aboutApp": "About",
   "aboutAppDesc": "Learn more about plant identification",
-
   "scanTitle": "Scan Plant",
   "takePhoto": "Take Photo",
   "chooseFromGallery": "Choose from Gallery",
   "scanDescription": "Take a photo or select from gallery to identify plants",
-
   "historyTitle": "History",
   "noHistory": "No History Yet",
   "noHistoryDesc": "Start identifying plants to see your history here",
@@ -35,7 +30,6 @@
   "cancel": "Cancel",
   "clear": "Clear",
   "delete": "Delete",
-
   "settingsTitle": "Settings",
   "appearance": "Appearance",
   "theme": "Theme",
@@ -51,7 +45,6 @@
   "about": "About",
   "version": "Version",
   "privacyPolicy": "Privacy Policy",
-
   "setTemperature": "Set Temperature",
   "setTemperatureDesc": "Enter average temperature in Celsius",
   "temperatureLabel": "Temperature (°C)",
@@ -61,7 +54,6 @@
   "humidityLabel": "Humidity (%)",
   "humidityHint": "e.g., 65",
   "save": "Save",
-
   "themeGreenNature": "Green Nature",
   "themeForest": "Forest",
   "themeBotanical": "Botanical Garden",
@@ -69,7 +61,6 @@
   "themeDarkGreen": "Dark Green",
   "chooseTheme": "Choose Theme",
   "chooseLanguage": "Choose Language",
-
   "plantName": "Plant Name",
   "scientificName": "Scientific Name",
   "commonNames": "Common Names",
@@ -83,7 +74,6 @@
   "edible": "Edible",
   "nonEdible": "Non-edible",
   "usesAndBenefits": "Uses and Benefits",
-
   "careInformation": "Care Information",
   "watering": "Watering",
   "sunlight": "Sunlight",
@@ -93,10 +83,8 @@
   "fertilizer": "Fertilizer",
   "commonPests": "Common Pests",
   "commonDiseases": "Common Diseases",
-
   "confidence": "Confidence",
   "identifiedAt": "Identified at",
-
   "doYouEnjoyOurApp": "Do you enjoy our app?",
   "notReally": "Not really",
   "yesItsGreat": "Yes, it's great!",
@@ -109,7 +97,6 @@
   "yourFeedback": "Your feedback...",
   "sendFeedback": "Send Feedback",
   "thankYouForYourFeedback": "Thank you for your feedback!",
-
   "online": "Online",
   "copiedToClipboard": "Copied to clipboard",
   "typeAMessage": "Type a message...",
@@ -117,7 +104,6 @@
   "camera": "Camera",
   "gallery": "Gallery",
   "writeAMessage": "Write a message...",
-
   "chatGreeting1": "👋 Hello! I'm your plant expert assistant. Got questions about plants or need care tips? Let's chat!",
   "chatGreeting2": "🌿 Welcome! Ready to explore the fascinating world of plants together?",
   "chatGreeting3": "🌱 Hey there, plant lover! What can I help you discover today?",
@@ -126,7 +112,7 @@
   "chatGreeting6": "🍃 Hi! Whether it's about watering, sunlight, or plant health, I'm here to help!",
   "chatGreeting7": "🌺 Welcome back! What plant questions do you have for me today?",
   "chatGreeting8": "🌻 Hey! Let's talk plants - I'm all ears (or should I say, leaves?)!",
-
   "aiDisclaimer": "AI-generated responses may contain inaccuracies. Always verify important information.",
-  "dismiss": "Dismiss"
+  "dismiss": "Dismiss",
+  "chatPlaceholder": "Ask about this plant..."
 }

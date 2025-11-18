@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_dimensions.dart';
-import '../../flutter_gen/gen_l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Callback when message is submitted
 typedef OnMessageSubmitted = Future<void> Function(String text);

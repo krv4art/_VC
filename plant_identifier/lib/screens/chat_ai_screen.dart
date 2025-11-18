@@ -416,7 +416,7 @@ class _ChatAIScreenState extends State<ChatAIScreen>
                 ChatInputField(
                   controller: _textController,
                   animation: _inputAnimationController,
-                  onSubmitted: _handleMessageSubmitted,
+                  onSubmitted: (text) => _handleMessageSubmitted(text, null),
                 ),
               ],
             ),
