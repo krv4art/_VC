@@ -5,6 +5,7 @@ import '../providers/resume_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/animated_card.dart';
+import '../utils/demo_data.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,9 +20,37 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(l10n.appName),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.push('/settings'),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) {
+              if (value == 'demo') {
+                _showDemoDialog(context, resumeProvider);
+              } else if (value == 'settings') {
+                context.push('/settings');
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'demo',
+                child: Row(
+                  children: [
+                    Icon(Icons.dashboard_customize),
+                    SizedBox(width: 12),
+                    Text('Load Demo Resume'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'settings',
+                child: Row(
+                  children: [
+                    Icon(Icons.settings),
+                    SizedBox(width: 12),
+                    Text('Settings'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -167,6 +196,55 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
+    );
+  }
+
+  void _showDemoDialog(BuildContext context, ResumeProvider resumeProvider) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Load Demo Resume'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Choose a demo resume to load:',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 16),
+            ...DemoData.getDemoResumeNames().asMap().entries.map((entry) {
+              return ListTile(
+                leading: CircleAvatar(
+                  child: Text('${entry.key + 1}'),
+                ),
+                title: Text(entry.value),
+                onTap: () async {
+                  Navigator.pop(context);
+                  await resumeProvider.loadDemoResume(entry.key);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Loaded ${entry.value} demo resume'),
+                        action: SnackBarAction(
+                          label: 'View',
+                          onPressed: () => context.push('/preview'),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              );
+            }),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
     );
   }
 }

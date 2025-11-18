@@ -8,6 +8,7 @@ import '../models/language.dart' as lang;
 import '../models/custom_section.dart';
 import '../models/personal_info.dart';
 import '../services/storage_service.dart';
+import '../utils/demo_data.dart';
 
 /// Provider for managing current resume state
 class ResumeProvider extends ChangeNotifier {
@@ -61,6 +62,16 @@ class ResumeProvider extends ChangeNotifier {
   Future<void> loadResume(String resumeId) async {
     final resume = _savedResumes.firstWhere((r) => r.id == resumeId);
     _currentResume = resume;
+    notifyListeners();
+  }
+
+  // Load demo resume
+  Future<void> loadDemoResume(int demoIndex) async {
+    final demos = DemoData.getAllDemoResumes();
+    if (demoIndex < 0 || demoIndex >= demos.length) return;
+
+    _currentResume = demos[demoIndex];
+    await _saveCurrentResume();
     notifyListeners();
   }
 
