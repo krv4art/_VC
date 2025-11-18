@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../services/onboarding_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,8 +18,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _navigateToNext() async {
     await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted) return;
+
+    // Check if onboarding has been completed
+    final isOnboardingCompleted = await OnboardingService().isOnboardingCompleted();
+
     if (mounted) {
-      context.go('/onboarding');
+      if (isOnboardingCompleted) {
+        context.go('/home');
+      } else {
+        context.go('/onboarding');
+      }
     }
   }
 

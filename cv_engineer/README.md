@@ -5,6 +5,7 @@ A comprehensive Flutter application for creating professional resumes with AI as
 ## Features
 
 ### Core Functionality
+- **Onboarding Experience**: Beautiful 4-page introduction for first-time users with smooth animations
 - **Professional Templates**: Three beautifully designed resume templates (Professional, Creative, Modern)
 - **Easy Editing**: Intuitive interface with dedicated editors for each section
 - **Template Switching**: Real-time template preview and switching in preview mode
@@ -12,6 +13,7 @@ A comprehensive Flutter application for creating professional resumes with AI as
 - **PDF Export**: Download, share, and print resumes as PDF files
 - **Multi-language Support**: Available in 8 languages (English, Spanish, German, French, Italian, Polish, Portuguese, Turkish)
 - **Dark Mode**: Full dark mode support with 3 color themes
+- **App Rating System**: Smart rating dialog with intelligent timing and feedback collection
 - **Interview Preparation**: Built-in interview questions and answer guidelines
 - **Demo Data**: Three complete demo resumes for testing (Software Engineer, UX Designer, Marketing Manager)
 
@@ -166,6 +168,8 @@ If you want to use Supabase for cloud storage:
 - [x] Template switching in preview mode
 - [x] Demo resume data for testing
 - [x] Animated UI components (cards, lists, progress indicators)
+- [x] Beautiful onboarding experience (4 pages with animations)
+- [x] App rating system with intelligent timing
 - [ ] Performance optimization
 - [ ] Cloud backup with Supabase
 - [ ] Comprehensive testing

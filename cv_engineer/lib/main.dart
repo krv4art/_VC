@@ -10,6 +10,8 @@ import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/resume_provider.dart';
 import 'services/storage_service.dart';
+import 'services/rating_service.dart';
+import 'services/onboarding_service.dart';
 import 'utils/supabase_constants.dart';
 import 'navigation/app_router.dart';
 import 'l10n/app_localizations.dart';
@@ -57,8 +59,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // Initialize providers after frame is built
+    // Initialize services and providers after frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      OnboardingService().initialize();
+      RatingService().initialize();
       context.read<ThemeProvider>().initialize();
       context.read<LocaleProvider>().initialize();
       context.read<ResumeProvider>().initialize();
