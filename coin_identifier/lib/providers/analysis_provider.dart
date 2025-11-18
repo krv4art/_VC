@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/analysis_result.dart';
 import '../models/dialogue.dart';
 
-/// Provider для управления состоянием анализа антиквариата
+/// Provider для управления состоянием анализа монет и банкнот
 class AnalysisProvider extends ChangeNotifier {
   AnalysisResult? _currentAnalysis;
   Dialogue? _currentDialogue;
@@ -64,7 +64,7 @@ class AnalysisProvider extends ChangeNotifier {
 
   /// Добавляет анализ в историю
   void addToHistory(AnalysisResult analysis) {
-    if (!_history.any((a) => a.itemName == analysis.itemName)) {
+    if (!_history.any((a) => a.name == analysis.name)) {
       _history.insert(0, analysis);
       notifyListeners();
     }

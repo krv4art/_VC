@@ -3,13 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
-import '../services/antique_identification_service.dart';
-import '../services/image_compression_service.dart';
-import '../services/local_data_service.dart';
-import '../services/supabase_service.dart';
+import '../services/coin_identification_service.dart';
+import '../services/scanning/image_compression_service.dart';
 import '../providers/analysis_provider.dart';
 
-/// Экран для загрузки и сканирования фото антиквариата
+/// Экран для загрузки и сканирования фото монет и банкнот
 class ScanScreen extends StatefulWidget {
   const ScanScreen({Key? key}) : super(key: key);
 
@@ -25,7 +23,7 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Scan Antique')),
+      appBar: AppBar(title: const Text('Scan Coin')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -57,7 +55,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   border: Border.all(color: Colors.grey.shade400),
                 ),
                 child: const Center(
-                  child: Icon(Icons.image, size: 80, color: Colors.grey),
+                  child: Icon(Icons.monetization_on, size: 80, color: Colors.grey),
                 ),
               ),
             const SizedBox(height: 24),
@@ -68,7 +66,7 @@ class _ScanScreenState extends State<ScanScreen> {
               label: const Text('Take Photo'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                backgroundColor: Colors.blue.shade700,
+                backgroundColor: const Color(0xFFD4AF37),
                 foregroundColor: Colors.white,
               ),
             ),
@@ -97,7 +95,7 @@ class _ScanScreenState extends State<ScanScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Photo Tips for Better Results:',
+                    'Photo Tips for Best Results:',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.amber.shade900,
@@ -105,9 +103,9 @@ class _ScanScreenState extends State<ScanScreen> {
                   ),
                   const SizedBox(height: 12),
                   _buildTip('💡 Use good natural lighting'),
-                  _buildTip('📐 Show all sides or key details'),
-                  _buildTip('🎯 Focus on unique characteristics'),
-                  _buildTip('🚫 Avoid shadows and reflections'),
+                  _buildTip('🪙 Photograph both obverse and reverse sides'),
+                  _buildTip('🎯 Focus on mint marks and details'),
+                  _buildTip('🚫 Avoid glare, shadows, and reflections'),
                 ],
               ),
             ),
@@ -127,11 +125,11 @@ class _ScanScreenState extends State<ScanScreen> {
                 )
                     : const Icon(Icons.auto_awesome),
                 label: Text(
-                  _isAnalyzing ? 'Analyzing...' : 'Analyze with AI',
+                  _isAnalyzing ? 'Analyzing Coin...' : 'Analyze with AI',
                 ),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.amber.shade700,
+                  backgroundColor: const Color(0xFFD4AF37),
                   foregroundColor: Colors.white,
                 ),
               ),
@@ -184,53 +182,30 @@ class _ScanScreenState extends State<ScanScreen> {
     provider.setLoading(true);
 
     try {
-      // 1. Читаем исходное изображение
+      // 1. Read original image
       final imageBytes = await _selectedImage!.readAsBytes();
       debugPrint('Original image size: ${(imageBytes.length / 1024).toStringAsFixed(2)} KB');
 
-      // 2. Сжимаем изображение
+      // 2. Compress image for AI analysis
       final compressedBytes = await ImageCompressionService.compressImageBytes(imageBytes);
       debugPrint('Compressed image size: ${(compressedBytes.length / 1024).toStringAsFixed(2)} KB');
 
-      // 3. Анализируем с помощью Gemini
-      final service = AntiqueIdentificationService();
-      final result = await service.analyzeAntiqueImage(
+      // 3. Analyze with Gemini AI
+      final service = CoinIdentificationService();
+      final result = await service.analyzeCoinImage(
         compressedBytes,
         languageCode: 'en',
       );
 
       if (!mounted) return;
 
-      // 4. Сохраняем в локальную БД
-      await LocalDataService().saveAnalysis(
-        result,
-        imagePath: _selectedImage!.path,
-      );
-      debugPrint('✓ Saved to local database');
-
-      // 5. Пытаемся сохранить в Supabase (облако)
-      try {
-        final supabaseService = SupabaseService();
-        final analysisId = await supabaseService.saveAnalysisResult(result);
-
-        // 6. Загружаем изображение в облачное хранилище
-        if (analysisId.isNotEmpty) {
-          final fileName = '${result.itemName}_${DateTime.now().millisecondsSinceEpoch}.jpg';
-          await supabaseService.uploadImage(compressedBytes, fileName);
-          debugPrint('✓ Uploaded to Supabase');
-        }
-      } catch (e) {
-        debugPrint('⚠️ Cloud sync failed (offline mode): $e');
-        // Продолжаем работу даже если облако недоступно
-      }
-
-      // 7. Обновляем UI
+      // 4. Update UI through provider
       provider.setCurrentAnalysis(result);
       provider.setLoading(false);
 
-      // 8. Навигируем на экран результатов
+      // 5. Navigate to results screen
       if (mounted) {
-        context.push('/results?id=${result.itemName}');
+        context.push('/results?id=${result.name}');
       }
     } catch (e) {
       if (!mounted) return;

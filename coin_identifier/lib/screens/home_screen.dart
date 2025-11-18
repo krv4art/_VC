@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Antique Identifier')),
+      appBar: AppBar(title: const Text('Coin Identifier')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -16,13 +16,13 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.history,
+                Icons.monetization_on,
                 size: 80,
                 color: Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(height: 24),
               Text(
-                'Identify Your Antiques',
+                'Identify Coins & Banknotes',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'AI-powered identification with expert analysis,\nhistorical context, and valuation',
+                'AI-powered numismatic analysis with rarity assessment,\nmarket valuation, and expert advice',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Colors.grey[600],
                 ),
@@ -40,9 +40,9 @@ class HomeScreen extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.camera_alt,
-                label: 'Scan Antique',
+                label: 'Scan Coin',
                 onPressed: () => context.push('/scan'),
-                backgroundColor: Colors.amber.shade700,
+                backgroundColor: const Color(0xFFD4AF37),
               ),
               const SizedBox(height: 16),
               _buildActionButton(
@@ -70,13 +70,13 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    _buildStep(context, '1', 'Take a clear photo of your antique'),
+                    _buildStep(context, '1', 'Take a clear photo of both sides of the coin'),
                     const SizedBox(height: 8),
-                    _buildStep(context, '2', 'Get AI-powered analysis and valuation'),
+                    _buildStep(context, '2', 'Get instant numismatic analysis and valuation'),
                     const SizedBox(height: 8),
-                    _buildStep(context, '3', 'Chat with AI expert for more details'),
+                    _buildStep(context, '3', 'Learn about rarity, mint errors, and history'),
                     const SizedBox(height: 8),
-                    _buildStep(context, '4', 'Save to your collection'),
+                    _buildStep(context, '4', 'Save to your collection and track value'),
                   ],
                 ),
               ),
