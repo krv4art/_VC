@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -6,6 +7,7 @@ import '../../providers/user_profile_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/achievement_provider.dart';
 import '../../providers/challenge_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../services/notification_service.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -44,6 +46,45 @@ class SettingsScreen extends StatelessWidget {
                 onTap: () => _showLanguageDialog(context, profileProvider),
               );
             },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text('Logout', style: TextStyle(color: Colors.red)),
+            subtitle: const Text('Sign out of your account'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _showLogoutConfirmation(context),
+          ),
+          const Divider(),
+
+          // Social & Features Section
+          _SectionHeader(title: 'Features'),
+          ListTile(
+            leading: const Icon(Icons.leaderboard),
+            title: const Text('Leaderboard'),
+            subtitle: const Text('Compete with others'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/leaderboard'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.people),
+            title: const Text('Friends'),
+            subtitle: const Text('Connect with other learners'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/friends'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.analytics),
+            title: const Text('Analytics'),
+            subtitle: const Text('Detailed progress insights'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/analytics'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.star, color: Colors.amber),
+            title: const Text('Premium'),
+            subtitle: const Text('Upgrade for unlimited features'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/premium'),
           ),
           const Divider(),
 
@@ -265,6 +306,35 @@ Join me in AI Tutor - Personalized learning! 🚀
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLogoutConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final authProvider = context.read<AuthProvider>();
+              await authProvider.signOut();
+
+              if (context.mounted) {
+                Navigator.pop(context);
+                context.go('/login');
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Logout'),
           ),
         ],
       ),

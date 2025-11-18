@@ -202,31 +202,136 @@ class _FriendsScreenState extends State<FriendsScreen> {
 
   Future<void> _showAddFriendDialog() async {
     final controller = TextEditingController();
+    List<Friend> searchResults = [];
+    bool isSearching = false;
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(_isRussian ? 'Найти друга' : 'Find Friend'),
-        content: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            labelText: _isRussian ? 'Имя пользователя' : 'Username',
-            hintText: _isRussian ? 'Введите имя...' : 'Enter name...',
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(_isRussian ? 'Отмена' : 'Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // TODO: Search and add friend
-              Navigator.pop(context);
-            },
-            child: Text(_isRussian ? 'Поиск' : 'Search'),
-          ),
-        ],
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text(_isRussian ? 'Найти друга' : 'Find Friend'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: controller,
+                    decoration: InputDecoration(
+                      labelText: _isRussian ? 'Имя пользователя' : 'Username',
+                      hintText: _isRussian ? 'Введите имя...' : 'Enter name...',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () async {
+                          final userId = context.read<AuthProvider>().userId;
+                          if (userId == null || controller.text.trim().isEmpty) return;
+
+                          setState(() {
+                            isSearching = true;
+                          });
+
+                          final results = await _friendsService.searchUsers(
+                            query: controller.text.trim(),
+                            currentUserId: userId,
+                          );
+
+                          setState(() {
+                            searchResults = results;
+                            isSearching = false;
+                          });
+                        },
+                      ),
+                    ),
+                    onSubmitted: (value) async {
+                      final userId = context.read<AuthProvider>().userId;
+                      if (userId == null || value.trim().isEmpty) return;
+
+                      setState(() {
+                        isSearching = true;
+                      });
+
+                      final results = await _friendsService.searchUsers(
+                        query: value.trim(),
+                        currentUserId: userId,
+                      );
+
+                      setState(() {
+                        searchResults = results;
+                        isSearching = false;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  if (isSearching)
+                    const CircularProgressIndicator()
+                  else if (searchResults.isEmpty && controller.text.isNotEmpty)
+                    Text(
+                      _isRussian ? 'Ничего не найдено' : 'No users found',
+                      style: const TextStyle(color: Colors.grey),
+                    )
+                  else if (searchResults.isNotEmpty)
+                    SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: searchResults.length,
+                        itemBuilder: (context, index) {
+                          final user = searchResults[index];
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: user.avatarUrl != null
+                                  ? NetworkImage(user.avatarUrl!)
+                                  : null,
+                              child: user.avatarUrl == null
+                                  ? Text(user.fullName[0].toUpperCase())
+                                  : null,
+                            ),
+                            title: Text(user.fullName),
+                            subtitle: Text('${user.totalXp} XP'),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.person_add),
+                              onPressed: () async {
+                                final userId = context.read<AuthProvider>().userId;
+                                if (userId == null) return;
+
+                                final success = await _friendsService.sendFriendRequest(
+                                  fromUserId: userId,
+                                  toUserId: user.userId,
+                                );
+
+                                if (success) {
+                                  if (context.mounted) {
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          _isRussian
+                                              ? 'Запрос отправлен'
+                                              : 'Friend request sent',
+                                        ),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(_isRussian ? 'Закрыть' : 'Close'),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

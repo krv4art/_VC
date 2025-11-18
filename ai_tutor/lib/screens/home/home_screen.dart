@@ -195,6 +195,43 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 16),
+
+                    // Social Features Grid
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 2.5,
+                      children: [
+                        _QuickAccessCard(
+                          icon: Icons.leaderboard,
+                          label: 'Leaderboard',
+                          color: Colors.amber,
+                          onTap: () => context.push('/leaderboard'),
+                        ),
+                        _QuickAccessCard(
+                          icon: Icons.people,
+                          label: 'Friends',
+                          color: Colors.blue,
+                          onTap: () => context.push('/friends'),
+                        ),
+                        _QuickAccessCard(
+                          icon: Icons.analytics,
+                          label: 'Analytics',
+                          color: Colors.purple,
+                          onTap: () => context.push('/analytics'),
+                        ),
+                        _QuickAccessCard(
+                          icon: Icons.star,
+                          label: 'Premium',
+                          color: Colors.orange,
+                          onTap: () => context.push('/premium'),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 24),
 
                     // Subjects
@@ -308,6 +345,51 @@ class _SubjectCard extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickAccessCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _QuickAccessCard({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color, size: 20),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
         ),
       ),

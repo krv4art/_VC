@@ -185,7 +185,7 @@ class AITutorApp extends StatelessWidget {
             theme: themeProvider.themeData,
 
             // Router
-            routerConfig: appRouter,
+            routerConfig: createAppRouter(),
           );
         },
       ),

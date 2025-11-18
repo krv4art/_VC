@@ -151,19 +151,27 @@ class _LeaderboardScreenState extends State<LeaderboardScreen>
             height: 50,
             color: Colors.white30,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildStatRow(
-                '🏆',
-                '${context.read<UserProfileProvider>().profile.userId ?? 0} XP',
-              ),
-              const SizedBox(height: 4),
-              _buildStatRow(
-                '📊',
-                '${context.read<UserProfileProvider>().profile.userId ?? 0} ${_isRussian ? "задач" : "problems"}',
-              ),
-            ],
+          Consumer<ProgressProvider>(
+            builder: (context, progressProvider, _) {
+              final stats = progressProvider.getOverallStats();
+              final totalXp = stats['total_problems'] * 10; // 10 XP per problem
+              final totalProblems = stats['total_problems'];
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildStatRow(
+                    '🏆',
+                    '$totalXp XP',
+                  ),
+                  const SizedBox(height: 4),
+                  _buildStatRow(
+                    '📊',
+                    '$totalProblems ${_isRussian ? "задач" : "problems"}',
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),

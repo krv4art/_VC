@@ -228,4 +228,38 @@ class FriendsService {
       return [];
     }
   }
+
+  /// Search users by name
+  Future<List<Friend>> searchUsers({
+    required String query,
+    required String currentUserId,
+    int limit = 20,
+  }) async {
+    try {
+      // Search in user_profiles table for matching names
+      final response = await _supabase
+          .from('user_profiles')
+          .select('user_id, full_name, avatar_url, total_xp')
+          .ilike('full_name', '%$query%')
+          .neq('user_id', currentUserId)
+          .limit(limit);
+
+      final List<dynamic> data = response as List<dynamic>;
+
+      // Convert to Friend objects with pending status
+      return data.map((json) {
+        return Friend(
+          userId: json['user_id'] as String,
+          fullName: json['full_name'] as String,
+          avatarUrl: json['avatar_url'] as String?,
+          totalXp: json['total_xp'] as int? ?? 0,
+          status: FriendStatus.pending,
+          lastActive: DateTime.now(),
+        );
+      }).toList();
+    } catch (e) {
+      debugPrint('Error searching users: $e');
+      return [];
+    }
+  }
 }

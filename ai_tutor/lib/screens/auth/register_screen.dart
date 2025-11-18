@@ -62,13 +62,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SnackBar(
           content: Text(
             _isRussian
-                ? 'Аккаунт создан! Проверьте email для подтверждения.'
-                : 'Account created! Check your email to confirm.',
+                ? 'Аккаунт создан! Давайте настроим ваш профиль.'
+                : 'Account created! Let\'s set up your profile.',
           ),
           backgroundColor: Colors.green,
         ),
       );
-      context.go('/home');
+      // Redirect to onboarding for new users
+      context.go('/onboarding/welcome');
     } else if (mounted && authProvider.errorMessage != null) {
       _showError(authProvider.errorMessage!);
     }
