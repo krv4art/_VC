@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/rating_service.dart';
+import '../../config/app_config.dart';
 import '../../theme/app_theme.dart';
 import '../../constants/app_dimensions.dart';
 import '../../constants/app_constants.dart';

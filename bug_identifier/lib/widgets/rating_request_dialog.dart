@@ -6,6 +6,7 @@ import 'package:bug_identifier/theme/app_theme.dart';
 import 'package:bug_identifier/theme/theme_extensions_v2.dart';
 import '../l10n/app_localizations.dart';
 import '../services/rating_service.dart';
+import '../config/app_config.dart';
 import '../services/telegram_service.dart';
 import 'animated_rating_stars.dart';
 import '../constants/app_dimensions.dart';
@@ -266,7 +267,7 @@ class _RatingRequestDialogState extends State<RatingRequestDialog> {
                     await RatingService().markRatingCompleted();
 
                     final Uri url = Uri.parse(
-                      'https://play.google.com/store/apps/details?id=com.ai.cosmetic.scanner.beauty.ingredients.analyzer',
+                      'https://play.google.com/store/apps/details?id=${AppConfig().googlePlayPackageId}',
                     );
                     if (await canLaunchUrl(url)) {
                       await launchUrl(

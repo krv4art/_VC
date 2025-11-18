@@ -11,15 +11,11 @@ class AppConfig {
 
   bool _isInitialized = false;
   String? _environment;
-  bool? _enableRemotePrompts;
   bool? _enableDebugMode;
-  int? _promptsCacheDurationHours;
   String? _appVersion;
   int? _maxRatingDialogShows;
   String? _googlePlayPackageId;
-  int? _freeScansPerWeek;
-  int? _freeMessagesPerDay;
-  int? _freeVisibleScans;
+  int? _freeIdentificationsPerDay;
 
   /// Инициализация конфигурации из .env файла
   Future<void> initialize() async {
@@ -29,21 +25,14 @@ class AppConfig {
       await dotenv.load(fileName: 'assets/config/.env');
 
       _environment = dotenv.env['ENVIRONMENT'] ?? 'development';
-      _enableRemotePrompts =
-          dotenv.env['ENABLE_REMOTE_PROMPTS']?.toLowerCase() == 'true';
       _enableDebugMode =
           dotenv.env['ENABLE_DEBUG_MODE']?.toLowerCase() == 'true';
-      _promptsCacheDurationHours =
-          int.tryParse(dotenv.env['PROMPTS_CACHE_DURATION_HOURS'] ?? '24') ??
-          24;
       _appVersion = dotenv.env['APP_VERSION'] ?? '1.0.0';
       _maxRatingDialogShows =
           int.tryParse(dotenv.env['MAX_RATING_DIALOG_SHOWS'] ?? '3') ?? 3;
       _googlePlayPackageId = dotenv.env['GOOGLE_PLAY_PACKAGE_ID'] ??
-          'com.unseen.app';
-      _freeScansPerWeek = getEnvInt('FREE_SCANS_PER_WEEK', defaultValue: 5);
-      _freeMessagesPerDay = getEnvInt('FREE_MESSAGES_PER_DAY', defaultValue: 5);
-      _freeVisibleScans = getEnvInt('FREE_VISIBLE_SCANS', defaultValue: 1);
+          'com.example.antique_identifier';
+      _freeIdentificationsPerDay = getEnvInt('FREE_IDENTIFICATIONS_PER_DAY', defaultValue: 5);
 
       _isInitialized = true;
 
@@ -54,11 +43,11 @@ class AppConfig {
       debugPrint('Error initializing AppConfig: $e');
       // Устанавливаем значения по умолчанию в случае ошибки
       _environment = 'development';
-      _enableRemotePrompts = false;
-      _enableDebugMode = true;
-      _promptsCacheDurationHours = 24;
+      _enableDebugMode = kDebugMode;
       _appVersion = '1.0.0';
       _maxRatingDialogShows = 3;
+      _googlePlayPackageId = 'com.example.antique_identifier';
+      _freeIdentificationsPerDay = 5;
       _isInitialized = true;
     }
   }
@@ -69,14 +58,8 @@ class AppConfig {
   /// Текущее окружение (development, production, etc.)
   String get environment => _environment ?? 'development';
 
-  /// Включено ли удаленное обновление промптов
-  bool get enableRemotePrompts => _enableRemotePrompts ?? false;
-
   /// Включен ли режим отладки
-  bool get enableDebugMode => _enableDebugMode ?? true;
-
-  /// Длительность кеширования промптов в часах
-  int get promptsCacheDurationHours => _promptsCacheDurationHours ?? 24;
+  bool get enableDebugMode => _enableDebugMode ?? kDebugMode;
 
   /// Версия приложения
   String get appVersion => _appVersion ?? '1.0.0';
@@ -86,30 +69,36 @@ class AppConfig {
 
   /// Google Play package ID для открытия страницы оценки
   String get googlePlayPackageId => _googlePlayPackageId ??
-      'com.unseen.app';
+      'com.example.antique_identifier';
 
-  /// Лимит сканов для бесплатных пользователей
-  int get freeScansPerWeek => _freeScansPerWeek ?? 5;
-
-  /// Лимит сообщений в чате для бесплатных пользователей
-  int get freeMessagesPerDay => _freeMessagesPerDay ?? 5;
-
-  /// Количество доступных позиций в истории для бесплатных
-  int get freeVisibleScans => _freeVisibleScans ?? 1;
+  /// Лимит идентификаций для бесплатных пользователей (в день)
+  int get freeIdentificationsPerDay => _freeIdentificationsPerDay ?? 5;
 
   /// Получить значение из .env по ключу с значением по умолчанию
   String? getEnvValue(String key, {String? defaultValue}) {
-    return dotenv.env[key] ?? defaultValue;
+    try {
+      return dotenv.env[key] ?? defaultValue;
+    } catch (e) {
+      return defaultValue;
+    }
   }
 
   /// Получить булево значение из .env по ключу
   bool getEnvBool(String key, {bool defaultValue = false}) {
-    final value = dotenv.env[key]?.toLowerCase();
-    return value == 'true' || value == '1';
+    try {
+      final value = dotenv.env[key]?.toLowerCase();
+      return value == 'true' || value == '1';
+    } catch (e) {
+      return defaultValue;
+    }
   }
 
   /// Получить числовое значение из .env по ключу
   int getEnvInt(String key, {int defaultValue = 0}) {
-    return int.tryParse(dotenv.env[key] ?? '') ?? defaultValue;
+    try {
+      return int.tryParse(dotenv.env[key] ?? '') ?? defaultValue;
+    } catch (e) {
+      return defaultValue;
+    }
   }
 }

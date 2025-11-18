@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../l10n/app_localizations.dart';
 import '../services/rating_service.dart';
+import '../config/app_config.dart';
 import '../services/telegram_service.dart';
 import 'animated_rating_stars.dart';
 

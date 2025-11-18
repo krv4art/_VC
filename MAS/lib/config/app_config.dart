@@ -14,6 +14,7 @@ class AppConfig {
   bool? _enableDebugMode;
   String? _appVersion;
   int? _maxRatingDialogShows;
+  String? _googlePlayPackageId;
   int? _freeSolutionsPerDay;
   int? _freeChatMessagesPerDay;
 
@@ -23,7 +24,7 @@ class AppConfig {
 
     try {
       // Пытаемся загрузить .env файл, если он существует
-      await dotenv.load(fileName: '.env');
+      await dotenv.load(fileName: 'assets/config/.env');
 
       _environment = dotenv.env['ENVIRONMENT'] ?? 'development';
       _enableDebugMode =
@@ -31,6 +32,8 @@ class AppConfig {
       _appVersion = dotenv.env['APP_VERSION'] ?? '1.0.0';
       _maxRatingDialogShows =
           int.tryParse(dotenv.env['MAX_RATING_DIALOG_SHOWS'] ?? '3') ?? 3;
+      _googlePlayPackageId = dotenv.env['GOOGLE_PLAY_PACKAGE_ID'] ??
+          'com.example.mas';
       _freeSolutionsPerDay = getEnvInt('FREE_SOLUTIONS_PER_DAY', defaultValue: 10);
       _freeChatMessagesPerDay = getEnvInt('FREE_CHAT_MESSAGES_PER_DAY', defaultValue: 5);
 
@@ -67,6 +70,10 @@ class AppConfig {
 
   /// Максимальное количество показов диалога оценки
   int get maxRatingDialogShows => _maxRatingDialogShows ?? 3;
+
+  /// Google Play package ID для открытия страницы оценки
+  String get googlePlayPackageId => _googlePlayPackageId ??
+      'com.example.mas';
 
   /// Лимит решений задач для бесплатных пользователей
   int get freeSolutionsPerDay => _freeSolutionsPerDay ?? 10;
