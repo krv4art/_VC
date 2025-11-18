@@ -3,6 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/resume_provider.dart';
 import '../theme/app_theme.dart';
+import 'experience_editor_screen.dart';
+import 'education_editor_screen.dart';
+import 'skills_editor_screen.dart';
+import 'languages_editor_screen.dart';
 
 class ResumeEditorScreen extends StatelessWidget {
   const ResumeEditorScreen({super.key});
@@ -53,7 +57,12 @@ class ResumeEditorScreen extends StatelessWidget {
             title: 'Experience',
             subtitle: '${resume.experiences.length} entries',
             onTap: () {
-              _showSnackBar(context, 'Experience editor coming soon');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ExperienceEditorScreen(),
+                ),
+              );
             },
           ),
           const SizedBox(height: AppTheme.space12),
@@ -62,7 +71,12 @@ class ResumeEditorScreen extends StatelessWidget {
             title: 'Education',
             subtitle: '${resume.educations.length} entries',
             onTap: () {
-              _showSnackBar(context, 'Education editor coming soon');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const EducationEditorScreen(),
+                ),
+              );
             },
           ),
           const SizedBox(height: AppTheme.space12),
@@ -71,7 +85,12 @@ class ResumeEditorScreen extends StatelessWidget {
             title: 'Skills',
             subtitle: '${resume.skills.length} skills',
             onTap: () {
-              _showSnackBar(context, 'Skills editor coming soon');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SkillsEditorScreen(),
+                ),
+              );
             },
           ),
           const SizedBox(height: AppTheme.space12),
@@ -80,7 +99,12 @@ class ResumeEditorScreen extends StatelessWidget {
             title: 'Languages',
             subtitle: '${resume.languages.length} languages',
             onTap: () {
-              _showSnackBar(context, 'Languages editor coming soon');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LanguagesEditorScreen(),
+                ),
+              );
             },
           ),
           const SizedBox(height: AppTheme.space12),
