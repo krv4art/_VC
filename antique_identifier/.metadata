@@ -1,0 +1,35 @@
+# This file tracks properties of this Flutter project.
+# Used by Flutter tooling to track, build and provide additional context about this project.
+# This file should be version controlled.
+
+version:
+  revision: 3ce5013f9ce4db0c064ffeb78c1fb183d3c45e6c
+  channel: stable
+
+project_type: app
+
+# Tracks metadata for the flutter migrate command
+migration:
+  platforms:
+    - platform: root
+      create: true
+    - platform: android
+      create: true
+    - platform: ios
+      create: true
+    - platform: linux
+      create: false
+    - platform: macos
+      create: false
+    - platform: web
+      create: false
+    - platform: windows
+      create: false
+
+  # User provided section
+
+  # List of Local properties (user defined, local only, in machine-specific cache).
+  # Important: Never check-in the Local properties file.
+  #           If you have Flutter repo cloned in your machine, you should remove the local properties file.
+  local-properties:
+    sdk-path:
