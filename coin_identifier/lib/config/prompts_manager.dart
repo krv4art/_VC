@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-import 'package:acs/config/app_config.dart';
+import 'app_config.dart';
 
 /// Менеджер для управления промптами приложения
 /// Поддерживает загрузку из локальных файлов и шаблонизацию переменных

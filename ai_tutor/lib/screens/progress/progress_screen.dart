@@ -6,6 +6,7 @@ import '../../providers/progress_provider.dart';
 import '../../providers/achievement_provider.dart';
 import '../../providers/user_profile_provider.dart';
 import '../../models/subject.dart';
+import '../../models/achievement.dart';
 
 class ProgressScreen extends StatelessWidget {
   const ProgressScreen({super.key});

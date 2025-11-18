@@ -245,6 +245,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
         _isTransforming = false;
       });
       if (mounted) {
+        final profileProvider = context.read<UserProfileProvider>();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

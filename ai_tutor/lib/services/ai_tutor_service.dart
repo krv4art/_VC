@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import '../models/chat_message.dart';
 import '../models/user_profile.dart';
 import '../models/subject.dart';
+import '../models/cultural_theme.dart';
 
 /// AI Tutor Service for personalized learning
 class AITutorService {

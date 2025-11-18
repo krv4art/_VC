@@ -224,6 +224,36 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Update password
+  Future<bool> updatePassword(String newPassword) async {
+    try {
+      _errorMessage = null;
+      notifyListeners();
+
+      final response = await _authService.updatePassword(newPassword);
+      return response.user != null;
+    } catch (e) {
+      _errorMessage = _parseError(e);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  /// Delete account
+  Future<bool> deleteAccount() async {
+    try {
+      _errorMessage = null;
+      notifyListeners();
+
+      await _authService.deleteAccount();
+      return true;
+    } catch (e) {
+      _errorMessage = _parseError(e);
+      notifyListeners();
+      return false;
+    }
+  }
+
   /// Parse error message
   String _parseError(dynamic error) {
     if (error is AuthException) {

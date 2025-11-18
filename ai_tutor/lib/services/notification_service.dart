@@ -10,10 +10,10 @@ class NotificationService {
 
   bool _initialized = false;
   bool _remindersEnabled = true;
-  TimeOfDay _reminderTime = const TimeOfDay(hour: 19, minute: 0); // 7 PM
+  NotificationTime _reminderTime = const NotificationTime(hour: 19, minute: 0); // 7 PM
 
   bool get remindersEnabled => _remindersEnabled;
-  TimeOfDay get reminderTime => _reminderTime;
+  NotificationTime get reminderTime => _reminderTime;
 
   /// Initialize notification service
   Future<void> initialize() async {
@@ -25,7 +25,7 @@ class NotificationService {
 
       final hour = prefs.getInt('reminder_hour') ?? 19;
       final minute = prefs.getInt('reminder_minute') ?? 0;
-      _reminderTime = TimeOfDay(hour: hour, minute: minute);
+      _reminderTime = NotificationTime(hour: hour, minute: minute);
 
       _initialized = true;
       debugPrint('✅ NotificationService initialized');
@@ -49,7 +49,7 @@ class NotificationService {
   }
 
   /// Set reminder time
-  Future<void> setReminderTime(TimeOfDay time) async {
+  Future<void> setReminderTime(NotificationTime time) async {
     _reminderTime = time;
 
     final prefs = await SharedPreferences.getInstance();
@@ -135,11 +135,11 @@ class NotificationService {
   }
 }
 
-class TimeOfDay {
+class NotificationTime {
   final int hour;
   final int minute;
 
-  const TimeOfDay({required this.hour, required this.minute});
+  const NotificationTime({required this.hour, required this.minute});
 
   @override
   String toString() => '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';

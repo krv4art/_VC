@@ -14,6 +14,50 @@ class ProgressProvider with ChangeNotifier {
   PracticeSession? get currentSession => _currentSession;
   bool get isSessionActive => _currentSession != null;
 
+  Map<String, int> get topicProgress {
+    final allTopics = <String, int>{};
+    for (var progress in _progressBySubject.values) {
+      progress.topicProgress.forEach((topic, count) {
+        allTopics[topic] = (allTopics[topic] ?? 0) + count;
+      });
+    }
+    return allTopics;
+  }
+
+  Map<String, double> get topicMastery {
+    final mastery = <String, double>{};
+    for (var progress in _progressBySubject.values) {
+      progress.topicProgress.forEach((topic, count) {
+        mastery[topic] = (count / 10.0).clamp(0.0, 1.0);
+      });
+    }
+    return mastery;
+  }
+
+  int get problemsSolved {
+    return _progressBySubject.values.fold(0, (sum, progress) => sum + progress.solvedProblems);
+  }
+
+  double get accuracyPercentage {
+    int totalProblems = 0;
+    int correctAnswers = 0;
+    for (var progress in _progressBySubject.values) {
+      totalProblems += progress.totalProblems;
+      correctAnswers += progress.correctAnswers;
+    }
+    return totalProblems > 0 ? (correctAnswers / totalProblems) * 100 : 0;
+  }
+
+  int get currentStreak {
+    if (_progressBySubject.isEmpty) return 0;
+    return _progressBySubject.values.map((p) => p.currentStreak).reduce((a, b) => a > b ? a : b);
+  }
+
+  Duration get totalStudyTime {
+    final totalMinutes = _progressBySubject.values.fold(0, (sum, p) => sum + p.totalMinutesStudied);
+    return Duration(minutes: totalMinutes);
+  }
+
   /// Initialize progress data
   Future<void> initialize(String userId) async {
     try {
@@ -61,7 +105,7 @@ class ProgressProvider with ChangeNotifier {
     // Update total study time
     final progress = getProgress(session.userId, session.subjectId);
     final updatedProgress = progress.copyWith(
-      totalMinutesStudied: progress.totalMinutesStudied + session.durationMinutes,
+      totalMinutesStudied: (progress.totalMinutesStudied + session.durationMinutes).toInt(),
       lastPracticeDate: DateTime.now(),
     );
 

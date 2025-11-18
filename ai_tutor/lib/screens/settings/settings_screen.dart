@@ -244,7 +244,7 @@ class SettingsScreen extends StatelessWidget {
 
     if (time != null) {
       notificationService.setReminderTime(
-        TimeOfDay(hour: time.hour, minute: time.minute),
+        NotificationTime(hour: time.hour, minute: time.minute),
       );
     }
   }

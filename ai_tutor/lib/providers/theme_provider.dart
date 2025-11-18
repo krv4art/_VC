@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide AnimationStyle;
 import '../models/cultural_theme.dart';
 
 /// Provider for managing app theme based on cultural preferences
@@ -53,7 +53,7 @@ class ThemeProvider with ChangeNotifier {
           ),
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: colors.surface,
         elevation: 2,
         shape: RoundedRectangleBorder(

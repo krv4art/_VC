@@ -115,6 +115,17 @@ class UserProfile {
 
   bool get isOnboardingComplete =>
       selectedInterests.isNotEmpty && subjectLevels.isNotEmpty;
+
+  String getPersonalizationContext() {
+    final interestsList = interests.map((i) => i.name).join(', ');
+    return '''
+Learning Style: ${learningStyle.displayName}
+Interests: $interestsList
+Cultural Theme: ${culturalTheme.name}
+Goals: ${goals.join(', ')}
+Subject Levels: ${subjectLevels.entries.map((e) => '${e.key}: ${e.value}').join(', ')}
+''';
+  }
 }
 
 /// Learning style preferences

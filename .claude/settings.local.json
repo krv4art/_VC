@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(flutter gen-l10n:*)",
+      "Bash(flutter clean:*)"
     ],
     "deny": [],
     "ask": []

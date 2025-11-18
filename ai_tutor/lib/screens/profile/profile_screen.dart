@@ -6,9 +6,10 @@ import '../../providers/user_profile_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../config/app_config.dart';
 import '../../models/cultural_theme.dart';
+import '../../models/user_profile.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key};
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -40,6 +40,8 @@ class StudentProgress {
 
   int get xp => solvedProblems * 10 + correctAnswers * 5;
 
+  Duration get totalStudyTime => Duration(minutes: totalMinutesStudied);
+
   StudentProgress copyWith({
     String? userId,
     String? subjectId,
@@ -132,6 +134,26 @@ class PracticeSession {
   int get durationMinutes {
     final end = endTime ?? DateTime.now();
     return end.difference(startTime).inMinutes;
+  }
+
+  PracticeSession copyWith({
+    String? id,
+    String? userId,
+    String? subjectId,
+    DateTime? startTime,
+    DateTime? endTime,
+    int? problemsSolved,
+    int? correctAnswers,
+  }) {
+    return PracticeSession(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      subjectId: subjectId ?? this.subjectId,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      problemsSolved: problemsSolved ?? this.problemsSolved,
+      correctAnswers: correctAnswers ?? this.correctAnswers,
+    );
   }
 
   Map<String, dynamic> toJson() => {

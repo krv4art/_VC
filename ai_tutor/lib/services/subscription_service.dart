@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 enum SubscriptionTier {
@@ -63,7 +64,7 @@ class SubscriptionService {
   Future<bool> purchase(Package package) async {
     try {
       final purchaseResult = await Purchases.purchasePackage(package);
-      _customerInfo = purchaseResult.customerInfo;
+      _customerInfo = purchaseResult;
       _updateSubscriptionTier();
       return true;
     } on PlatformException catch (e) {

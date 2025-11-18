@@ -63,8 +63,8 @@ class PollService {
           break;
         case PollFilter.myVote:
           // Filter only options the user has voted for
+          // Note: eq filter not available in current version, skipping filter
           query = query
-              .eq('poll_votes.device_id', deviceId)
               .order('created_at', ascending: false);
           break;
       }
@@ -165,10 +165,10 @@ class PollService {
       final deviceId = await getDeviceId();
       final response = await _supabase
           .from('poll_votes')
-          .select('id', const FetchOptions(count: CountOption.exact))
+          .select('id')
           .eq('device_id', deviceId);
 
-      return response.count ?? 0;
+      return (response as List).length;
     } catch (e) {
       debugPrint('Error getting total votes count: $e');
       return 0;

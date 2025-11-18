@@ -247,12 +247,14 @@ class FriendsService {
       final List<dynamic> data = response as List<dynamic>;
 
       // Convert to Friend objects with pending status
-      return data.map((json) {
+      return data.map<Friend>((json) {
         return Friend(
           userId: json['user_id'] as String,
           fullName: json['full_name'] as String,
           avatarUrl: json['avatar_url'] as String?,
           totalXp: json['total_xp'] as int? ?? 0,
+          problemsSolved: json['problems_solved'] as int? ?? 0,
+          currentStreak: json['current_streak'] as int? ?? 0,
           status: FriendStatus.pending,
           lastActive: DateTime.now(),
         );

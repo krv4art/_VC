@@ -97,8 +97,8 @@ class AnalyticsScreen extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 12),
                 child: ListTile(
                   title: Text(entry.key),
-                  subtitle: _buildMasteryBar(entry.value),
-                  trailing: Text('${entry.value}%'),
+                  subtitle: _buildMasteryBar((entry.value * 100).toInt()),
+                  trailing: Text('${(entry.value * 100).toInt()}%'),
                 ),
               );
             }),

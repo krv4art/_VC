@@ -108,7 +108,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       padding: const EdgeInsets.only(bottom: 12),
                       child: _buildHistoryCard(context, analysis, () {
                         provider.setCurrentAnalysis(analysis);
-                        context.push('/results?id=${analysis.itemName}');
+                        context.push('/results?id=${analysis.name}');
                       }, () {
                         provider.removeFromHistory(analysis);
                       }),
@@ -127,10 +127,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
     VoidCallback onTap,
     VoidCallback onDelete,
   ) {
-    final itemName = analysis.itemName ?? 'Unknown Item';
-    final category = analysis.category ?? 'Uncategorized';
-    final period = analysis.estimatedPeriod ?? 'Unknown period';
-    final price = analysis.priceEstimate?.getFormattedRange() ?? 'N/A';
+    final itemName = analysis.name ?? 'Unknown Item';
+    final category = analysis.itemType ?? 'coin';
+    final period = analysis.yearOfIssue ?? 'Unknown period';
+    final price = analysis.marketValue?.getFormattedRange() ?? 'N/A';
 
     return Card(
       elevation: 2,

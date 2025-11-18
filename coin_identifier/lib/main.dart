@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+// import 'package:sqflite/sqflite.dart';
+// import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:go_router/go_router.dart';
 
 import 'utils/supabase_constants.dart';
@@ -22,9 +22,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize database factory for web
-  if (kIsWeb) {
-    databaseFactory = databaseFactoryFfiWeb;
-  }
+  // Disabled - not using sqflite_common_ffi_web
+  // if (kIsWeb) {
+  //   databaseFactory = databaseFactoryFfiWeb;
+  // }
 
   // Initialize app configuration
   await AppConfig().initialize();
@@ -170,7 +171,7 @@ class CoinIdentifierApp extends StatelessWidget {
             elevation: 0,
             centerTitle: true,
           ),
-          cardTheme: CardTheme(
+          cardTheme: CardThemeData(
             elevation: 2,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

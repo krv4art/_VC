@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -361,8 +362,6 @@ class _DocumentCard extends StatelessWidget {
     }
   }
 }
-
-import 'dart:io';
 
 enum DocumentFilter { all, scanned, converted, favorites }
 

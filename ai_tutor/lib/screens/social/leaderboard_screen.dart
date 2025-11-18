@@ -5,6 +5,7 @@ import '../../models/leaderboard_entry.dart';
 import '../../services/leaderboard_service.dart';
 import '../../providers/user_profile_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/progress_provider.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});

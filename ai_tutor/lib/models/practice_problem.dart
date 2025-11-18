@@ -25,6 +25,8 @@ class PracticeProblem {
   })  : id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
         createdAt = createdAt ?? DateTime.now();
 
+  String get correctAnswer => answer;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'subject_id': subjectId,

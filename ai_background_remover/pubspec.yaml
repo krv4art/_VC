@@ -57,7 +57,7 @@ dependencies:
   flutter_markdown: ^0.7.7+1
 
   # Image editing
-  photofilters: ^3.0.3
+  # photofilters: ^3.0.3  # Package not available
   screenshot: ^3.0.0
 
 dev_dependencies:
