@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/onboarding/welcome_screen.dart';
 import '../screens/onboarding/interests_selection_screen.dart';
@@ -14,35 +16,69 @@ import '../screens/practice/practice_screen.dart';
 import '../screens/challenges/challenges_screen.dart';
 import '../screens/reports/weekly_report_screen.dart';
 import '../screens/settings/settings_screen.dart';
+import '../screens/brain_training/brain_training_screen.dart';
+import '../screens/auth/login_screen.dart';
+import '../screens/auth/register_screen.dart';
+import '../screens/auth/forgot_password_screen.dart';
+import '../screens/social/leaderboard_screen.dart';
+import '../screens/social/friends_screen.dart';
+import '../screens/analytics/analytics_screen.dart';
+import '../screens/premium/premium_screen.dart';
+import '../screens/account/account_management_screen.dart';
+import '../screens/legal/privacy_policy_screen.dart';
+import '../screens/legal/terms_of_service_screen.dart';
 import '../config/app_config.dart';
+import '../providers/auth_provider.dart';
 
 /// App router configuration
-final appRouter = GoRouter(
-  initialLocation: '/',
-  redirect: (context, state) {
-    final isOnboardingComplete = AppConfig().isOnboardingComplete;
+GoRouter createAppRouter() {
+  return GoRouter(
+    initialLocation: '/',
+    redirect: (context, state) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final isAuthenticated = authProvider.status == AuthStatus.authenticated;
+      final isOnboardingComplete = AppConfig().isOnboardingComplete;
 
-    // If not onboarded and not going to onboarding, redirect to welcome
-    if (!isOnboardingComplete && !state.matchedLocation.startsWith('/onboarding')) {
-      return '/onboarding/welcome';
-    }
+      // Public routes that don't require authentication
+      final publicRoutes = ['/login', '/register', '/forgot-password'];
+      final isPublicRoute = publicRoutes.contains(state.matchedLocation);
 
-    // If onboarded and going to onboarding, redirect to home
-    if (isOnboardingComplete && state.matchedLocation.startsWith('/onboarding')) {
-      return '/home';
-    }
+      // If not authenticated and trying to access protected route, redirect to login
+      if (!isAuthenticated && !isPublicRoute) {
+        return '/login';
+      }
 
-    return null;
-  },
-  routes: [
-    // Root redirects to appropriate screen
-    GoRoute(
-      path: '/',
-      redirect: (context, state) {
-        final isOnboardingComplete = AppConfig().isOnboardingComplete;
-        return isOnboardingComplete ? '/home' : '/onboarding/welcome';
-      },
-    ),
+      // If authenticated but not onboarded, redirect to onboarding
+      if (isAuthenticated && !isOnboardingComplete && !state.matchedLocation.startsWith('/onboarding')) {
+        return '/onboarding/welcome';
+      }
+
+      // If onboarded and going to onboarding, redirect to home
+      if (isOnboardingComplete && state.matchedLocation.startsWith('/onboarding')) {
+        return '/home';
+      }
+
+      // If authenticated and trying to access auth pages, redirect to home
+      if (isAuthenticated && isPublicRoute) {
+        return '/home';
+      }
+
+      return null;
+    },
+    routes: [
+      // Root redirects to appropriate screen
+      GoRoute(
+        path: '/',
+        redirect: (context, state) {
+          final authProvider = Provider.of<AuthProvider>(context, listen: false);
+          final isAuthenticated = authProvider.status == AuthStatus.authenticated;
+          if (!isAuthenticated) {
+            return '/login';
+          }
+          final isOnboardingComplete = AppConfig().isOnboardingComplete;
+          return isOnboardingComplete ? '/home' : '/onboarding/welcome';
+        },
+      ),
 
     // Onboarding flow
     GoRoute(
@@ -109,5 +145,62 @@ final appRouter = GoRouter(
       path: '/settings',
       builder: (context, state) => const SettingsScreen(),
     ),
-  ],
-);
+    GoRoute(
+      path: '/brain-training',
+      builder: (context, state) => const BrainTrainingScreen(),
+    ),
+
+      // Auth
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+
+      // Social
+      GoRoute(
+        path: '/leaderboard',
+        builder: (context, state) => const LeaderboardScreen(),
+      ),
+      GoRoute(
+        path: '/friends',
+        builder: (context, state) => const FriendsScreen(),
+      ),
+
+      // Analytics
+      GoRoute(
+        path: '/analytics',
+        builder: (context, state) => const AnalyticsScreen(),
+      ),
+
+      // Premium
+      GoRoute(
+        path: '/premium',
+        builder: (context, state) => const PremiumScreen(),
+      ),
+
+      // Account Management
+      GoRoute(
+        path: '/account',
+        builder: (context, state) => const AccountManagementScreen(),
+      ),
+
+      // Legal
+      GoRoute(
+        path: '/privacy-policy',
+        builder: (context, state) => const PrivacyPolicyScreen(),
+      ),
+      GoRoute(
+        path: '/terms-of-service',
+        builder: (context, state) => const TermsOfServiceScreen(),
+      ),
+    ],
+  );
+}

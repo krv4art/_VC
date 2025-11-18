@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -6,6 +7,7 @@ import '../../providers/user_profile_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/achievement_provider.dart';
 import '../../providers/challenge_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../services/notification_service.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -29,7 +31,67 @@ class SettingsScreen extends StatelessWidget {
             title: const Text('Profile'),
             subtitle: const Text('Manage your profile and preferences'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.pushNamed(context, '/profile'),
+            onTap: () => context.push('/profile'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.manage_accounts),
+            title: const Text('Account Management'),
+            subtitle: const Text('Password, avatar, delete account'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/account'),
+          ),
+          Consumer<UserProfileProvider>(
+            builder: (context, profileProvider, _) {
+              final currentLanguage = profileProvider.profile.preferredLanguage;
+              final languageName = currentLanguage == 'ru' ? 'Русский' : 'English';
+
+              return ListTile(
+                leading: const Icon(Icons.language),
+                title: const Text('Language'),
+                subtitle: Text(languageName),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _showLanguageDialog(context, profileProvider),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text('Logout', style: TextStyle(color: Colors.red)),
+            subtitle: const Text('Sign out of your account'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _showLogoutConfirmation(context),
+          ),
+          const Divider(),
+
+          // Social & Features Section
+          _SectionHeader(title: 'Features'),
+          ListTile(
+            leading: const Icon(Icons.leaderboard),
+            title: const Text('Leaderboard'),
+            subtitle: const Text('Compete with others'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/leaderboard'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.people),
+            title: const Text('Friends'),
+            subtitle: const Text('Connect with other learners'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/friends'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.analytics),
+            title: const Text('Analytics'),
+            subtitle: const Text('Detailed progress insights'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/analytics'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.star, color: Colors.amber),
+            title: const Text('Premium'),
+            subtitle: const Text('Upgrade for unlimited features'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/premium'),
           ),
           const Divider(),
 
@@ -131,17 +193,13 @@ class SettingsScreen extends StatelessWidget {
             leading: const Icon(Icons.description),
             title: const Text('Privacy Policy'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // TODO: Show privacy policy
-            },
+            onTap: () => context.push('/privacy-policy'),
           ),
           ListTile(
             leading: const Icon(Icons.gavel),
             title: const Text('Terms of Service'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // TODO: Show terms
-            },
+            onTap: () => context.push('/terms-of-service'),
           ),
           ListTile(
             leading: const Icon(Icons.bug_report),
@@ -209,6 +267,81 @@ Join me in AI Tutor - Personalized learning! 🚀
 ''';
 
     Share.share(text);
+  }
+
+  void _showLanguageDialog(BuildContext context, UserProfileProvider profileProvider) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Language'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Text('🇬🇧', style: TextStyle(fontSize: 32)),
+              title: const Text('English'),
+              trailing: profileProvider.profile.preferredLanguage == 'en'
+                  ? const Icon(Icons.check, color: Colors.green)
+                  : null,
+              onTap: () async {
+                await profileProvider.updateLanguage('en');
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
+            ListTile(
+              leading: const Text('🇷🇺', style: TextStyle(fontSize: 32)),
+              title: const Text('Русский'),
+              trailing: profileProvider.profile.preferredLanguage == 'ru'
+                  ? const Icon(Icons.check, color: Colors.green)
+                  : null,
+              onTap: () async {
+                await profileProvider.updateLanguage('ru');
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLogoutConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final authProvider = context.read<AuthProvider>();
+              await authProvider.signOut();
+
+              if (context.mounted) {
+                Navigator.pop(context);
+                context.go('/login');
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showResetConfirmation(BuildContext context) {

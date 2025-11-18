@@ -1,0 +1,306 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "AI Tutor",
+  "@appTitle": {
+    "description": "Application title"
+  },
+
+  "welcome": "Welcome",
+  "continueButton": "Continue",
+  "cancel": "Cancel",
+  "done": "Done",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "add": "Add",
+  "back": "Back",
+  "next": "Next",
+  "skip": "Skip",
+
+  "onboardingWelcomeTitle": "Welcome to AI Tutor!",
+  "onboardingWelcomeSubtitle": "Your personalized learning companion",
+  "onboardingWelcomeDescription": "Learn through your interests with AI-powered tutoring",
+
+  "yourInterests": "Your Interests",
+  "selectInterestsPrompt": "What are you interested in?",
+  "selectInterestsDescription": "We'll use these to make learning fun and relatable!\nSelect 1-5 interests.",
+  "interestsSelected": "{count}/{max} selected",
+  "@interestsSelected": {
+    "description": "Number of interests selected",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "addYourOwnInterest": "Add Your Own Interest",
+  "selectAtLeastOneInterest": "Please select at least 1 interest",
+  "maxInterestsReached": "You can select up to {max} interests",
+  "@maxInterestsReached": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+
+  "addCustomInterestTitle": "Add Your Own Interest",
+  "chooseEmoji": "Choose an emoji",
+  "interestName": "Interest name",
+  "interestNameHint": "e.g., LEGO, Dinosaurs, Dancing",
+  "keywordsForAI": "Keywords (for AI personalization)",
+  "keywordsSeparator": "Separate with commas or spaces",
+  "keywordsHint": "e.g., blocks, build, bricks, pieces",
+  "keywordsInfo": "AI will use these keywords to create personalized examples in all lessons!",
+  "enterInterestName": "Please enter a name for your interest",
+  "enterKeywords": "Please enter at least one keyword",
+  "enterValidKeywords": "Please enter valid keywords",
+  "addInterest": "Add Interest",
+
+  "culturalTheme": "Cultural Theme",
+  "chooseCulturalTheme": "Choose Your Style",
+  "culturalThemeDescription": "Pick a theme that resonates with you",
+
+  "learningStyle": "Learning Style",
+  "chooseLearningStyle": "How do you learn best?",
+  "learningStyleDescription": "Choose your preferred teaching approach",
+
+  "levelAssessment": "Level Assessment",
+  "setYourLevel": "Set your grade level for each subject",
+  "gradeLevel": "Grade {level}",
+  "@gradeLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+
+  "home": "Home",
+  "chat": "Chat",
+  "practice": "Practice",
+  "progress": "Progress",
+  "profile": "Profile",
+  "settings": "Settings",
+
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+
+  "dailyChallenge": "Daily Challenge",
+  "todaysChallenge": "Today's Challenge",
+  "completedChallenges": "Completed",
+  "activeGoals": "Active Goals",
+  "viewAll": "View All",
+
+  "quickActions": "Quick Actions",
+  "startPractice": "Practice",
+  "challenges": "Challenges",
+  "weeklyReport": "Weekly Report",
+
+  "aiTutor": "AI Tutor",
+  "askQuestion": "Ask a question...",
+  "typeMessage": "Type your message...",
+  "send": "Send",
+
+  "practiceMode": "Practice Mode",
+  "selectDifficulty": "Select Difficulty",
+  "easy": "Easy",
+  "medium": "Medium",
+  "hard": "Hard",
+  "generateProblems": "Generate Problems",
+  "checkAnswer": "Check Answer",
+  "nextProblem": "Next Problem",
+  "showHint": "Show Hint",
+  "showSolution": "Show Solution",
+  "correct": "Correct!",
+  "incorrect": "Incorrect",
+  "tryAgain": "Try Again",
+
+  "yourProgress": "Your Progress",
+  "totalProblems": "Total Problems",
+  "accuracy": "Accuracy",
+  "currentStreak": "Current Streak",
+  "longestStreak": "Longest Streak",
+  "studyTime": "Study Time",
+  "achievements": "Achievements",
+  "unlocked": "Unlocked",
+  "locked": "Locked",
+
+  "challengesAndGoals": "Challenges & Goals",
+  "createNewGoal": "Create New Goal",
+  "goalType": "Goal Type",
+  "targetValue": "Target Value",
+  "deadline": "Deadline",
+  "problemsSolved": "Problems Solved",
+  "accuracyTarget": "Accuracy Target",
+  "streakGoal": "Streak Goal",
+  "studyTimeGoal": "Study Time",
+  "topicMastery": "Topic Mastery",
+
+  "weeklyReportTitle": "Weekly Report",
+  "last7Days": "Last 7 Days",
+  "problemsPerDay": "Problems per Day",
+  "averageAccuracy": "Average Accuracy",
+  "totalStudyTime": "Total Study Time",
+  "minutes": "{count} min",
+  "@minutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hours": "{count} hrs",
+  "@hours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "settingsTitle": "Settings",
+  "account": "Account",
+  "editProfile": "Edit Profile",
+  "editInterests": "Edit Interests",
+  "changeTheme": "Change Theme",
+  "changeLearningStyle": "Change Learning Style",
+
+  "notifications": "Notifications",
+  "enableNotifications": "Enable Notifications",
+  "dailyReminders": "Daily Reminders",
+  "streakReminders": "Streak Reminders",
+  "achievementAlerts": "Achievement Alerts",
+
+  "progressAndGoals": "Progress & Goals",
+  "viewGoals": "View Goals",
+  "resetProgress": "Reset Progress",
+  "resetProgressWarning": "This will delete all your progress. Are you sure?",
+
+  "data": "Data",
+  "shareProgress": "Share Progress",
+  "exportData": "Export Data",
+  "exportDataComingSoon": "Coming soon",
+
+  "about": "About",
+  "version": "Version",
+  "feedback": "Send Feedback",
+  "rateApp": "Rate App",
+  "privacyPolicy": "Privacy Policy",
+  "termsOfService": "Terms of Service",
+
+  "language": "Language",
+  "selectLanguage": "Select Language",
+  "english": "English",
+  "russian": "Русский",
+
+  "subjects": "Subjects",
+  "mathematics": "Mathematics",
+  "physics": "Physics",
+  "chemistry": "Chemistry",
+  "programming": "Programming",
+  "biology": "Biology",
+  "englishSubject": "English",
+
+  "interests": "Interests",
+  "gaming": "Gaming",
+  "sports": "Sports",
+  "spaceAstronomy": "Space & Astronomy",
+  "animalsNature": "Animals & Nature",
+  "music": "Music",
+  "artDrawing": "Art & Drawing",
+  "coding": "Programming",
+  "moviesTV": "Movies & TV",
+  "booksReading": "Books & Reading",
+  "cookingFood": "Cooking & Food",
+
+  "themes": "Themes",
+  "classic": "Classic",
+  "japanese": "Japanese",
+  "eastern": "Eastern",
+  "cyberpunk": "Cyberpunk",
+  "scandinavian": "Scandinavian",
+  "vibrant": "Vibrant",
+  "african": "African",
+  "latinAmerican": "Latin American",
+
+  "learningStyles": "Learning Styles",
+  "visual": "Visual (Charts & Diagrams)",
+  "practical": "Practical (Examples & Practice)",
+  "theoretical": "Theoretical (Detailed Explanations)",
+  "balanced": "Balanced (Mix of Everything)",
+  "quick": "Quick (Fast & Concise)",
+
+  "achievementUnlocked": "Achievement Unlocked!",
+  "achievementMathWizard": "Math Wizard",
+  "achievementScholar": "Scholar",
+  "achievementEinstein": "Einstein",
+  "achievementOnFire": "On Fire",
+  "achievementUnstoppable": "Unstoppable",
+  "achievementDiamondStreak": "Diamond Streak",
+  "achievementPerfectionist": "Perfectionist",
+  "achievementAceStudent": "Ace Student",
+  "achievementSpeedDemon": "Speed Demon",
+  "achievementBookworm": "Bookworm",
+  "achievementRisingStar": "Rising Star",
+  "achievementMasterLearner": "Master Learner",
+
+  "shareProgressText": "🎓 My AI Tutor Progress\n📊 Problems Solved: {problems}\n✅ Accuracy: {accuracy}%\n🔥 Streak: {streak} days",
+  "@shareProgressText": {
+    "placeholders": {
+      "problems": {
+        "type": "int"
+      },
+      "accuracy": {
+        "type": "int"
+      },
+      "streak": {
+        "type": "int"
+      }
+    }
+  },
+
+  "brainTraining": "Brain Training",
+  "stroopTest": "Stroop Test",
+  "memoryCards": "Memory Cards",
+  "speedReading": "Speed Reading",
+  "shapeCounter": "Shape Counter",
+  "numberSequences": "Number Sequences",
+  "nBackTest": "N-Back Test",
+  "quickMath": "Quick Math",
+  "spotTheDifference": "Spot the Difference",
+
+  "overallStats": "Overall Stats",
+  "exercises": "Exercises",
+  "played": "Played",
+  "best": "Best",
+  "newExercise": "New!",
+  "correct": "Correct",
+  "efficiency": "Efficiency",
+  "moves": "Moves",
+
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "leaderboard": "Leaderboard",
+  "friends": "Friends",
+  "analytics": "Analytics",
+  "premium": "Premium",
+
+  "transformProblem": "Make it Fun ✨",
+  "transforming": "Transforming...",
+  "transformed": "Transformed: {interest}",
+  "@transformed": {
+    "placeholders": {
+      "interest": {
+        "type": "String"
+      }
+    }
+  },
+  "original": "Original",
+  "errorTransforming": "Error transforming problem"
+}

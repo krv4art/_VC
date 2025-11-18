@@ -128,6 +128,13 @@ class UserProfileProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Update preferred language
+  Future<void> updateLanguage(String languageCode) async {
+    _profile = _profile.copyWith(preferredLanguage: languageCode);
+    await _saveProfile();
+    notifyListeners();
+  }
+
   /// Update subject level
   Future<void> updateSubjectLevel(String subjectId, int level) async {
     final updatedLevels = Map<String, int>.from(_profile.subjectLevels);

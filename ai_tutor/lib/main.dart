@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'navigation/app_router.dart';
 import 'providers/user_profile_provider.dart';
@@ -11,9 +13,15 @@ import 'providers/theme_provider.dart';
 import 'providers/progress_provider.dart';
 import 'providers/achievement_provider.dart';
 import 'providers/challenge_provider.dart';
+import 'providers/brain_training_provider.dart';
+import 'providers/auth_provider.dart';
+import 'providers/subscription_provider.dart';
 import 'services/ai_tutor_service.dart';
 import 'services/practice_service.dart';
 import 'services/notification_service.dart';
+import 'services/auth_service.dart';
+import 'services/data_sync_service.dart';
+import 'services/subscription_service.dart';
 import 'config/app_config.dart';
 
 void main() async {
@@ -108,6 +116,23 @@ class AITutorApp extends StatelessWidget {
           },
         ),
 
+        // Brain Training Provider
+        ChangeNotifierProvider<BrainTrainingProvider>(
+          create: (_) => BrainTrainingProvider(),
+        ),
+
+        // Auth Provider
+        ChangeNotifierProvider<AuthProvider>(
+          create: (_) => AuthProvider(
+            authService: AuthService(supabase: Supabase.instance.client),
+          ),
+        ),
+
+        // Subscription Provider
+        ChangeNotifierProvider<SubscriptionProvider>(
+          create: (_) => SubscriptionProvider(),
+        ),
+
         // AI Tutor Service
         Provider<AITutorService>(
           create: (_) => AITutorService(
@@ -139,11 +164,34 @@ class AITutorApp extends StatelessWidget {
             }
           }
 
+          // Get locale from user profile
+          Locale locale = const Locale('en');
+          if (profileProvider.profile.preferredLanguage == 'ru') {
+            locale = const Locale('ru');
+          }
+
           return MaterialApp.router(
             title: 'AI Tutor',
             debugShowCheckedModeBanner: false,
+
+            // Localization
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'), // English
+              Locale('ru'), // Russian
+            ],
+            locale: locale,
+
+            // Theme
             theme: themeProvider.themeData,
-            routerConfig: appRouter,
+
+            // Router
+            routerConfig: createAppRouter(),
           );
         },
       ),
