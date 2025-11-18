@@ -55,6 +55,7 @@ dependencies:
 
   # In-app purchases (RevenueCat)
   purchases_flutter: ^8.2.3
+  flutter_markdown: ^0.7.7+1
 
 dev_dependencies:
   flutter_test:

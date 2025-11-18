@@ -25,7 +25,7 @@ dependencies:
   flutter_svg: ^2.0.9
   url_launcher: ^6.2.2
   http: ^1.1.2
-  flutter_markdown: ^0.6.18+2
+  flutter_markdown: ^0.7.7+1
   collection: ^1.18.0
   permission_handler: ^11.1.0
   sqflite_common_ffi_web: ^0.4.5+4
@@ -40,6 +40,7 @@ dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/images/
