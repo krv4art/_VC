@@ -47,6 +47,9 @@ class ChatMessage {
   }
 
   /// Создание копии с изменениями
+  /// Check if message is from user
+  bool get isUser => role == 'user';
+
   ChatMessage copyWith({
     String? id,
     String? dialogueId,

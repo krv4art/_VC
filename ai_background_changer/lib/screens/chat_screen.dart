@@ -3,6 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/chat_provider.dart';
 import '../models/chat_message.dart';
+import '../services/typing_animation_service.dart';
+import '../widgets/chat/chat_message_bubble.dart';
+import '../widgets/chat/chat_input_field.dart';
+import '../constants/app_dimensions.dart';
 
 class ChatScreen extends StatefulWidget {
   final String? dialogueId;
@@ -16,6 +20,11 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final TypingAnimationService _typingService = TypingAnimationService();
+
+  // Track which message is currently typing
+  String? _typingMessageId;
+  String? _typingDisplayText;
 
   @override
   void initState() {
@@ -36,6 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();
+    _typingService.dispose();
     super.dispose();
   }
 
@@ -48,6 +58,17 @@ class _ChatScreenState extends State<ChatScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          // Avatar state indicator
+          Consumer<ChatProvider>(
+            builder: (context, provider, _) {
+              return Padding(
+                padding: const EdgeInsets.only(right: AppDimensions.space8),
+                child: _buildAvatarState(provider.isSending),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -60,18 +81,45 @@ class _ChatScreenState extends State<ChatScreen> {
 
                 return ListView.builder(
                   controller: _scrollController,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppDimensions.space16,
+                  ),
                   itemCount: provider.messages.length,
                   itemBuilder: (context, index) {
                     final message = provider.messages[index];
-                    return _buildMessageBubble(message);
+                    return _buildMessage(message, provider.isSending && index == provider.messages.length - 1);
                   },
                 );
               },
             ),
           ),
-          _buildInputArea(),
+          Consumer<ChatProvider>(
+            builder: (context, provider, _) {
+              return ChatInputField(
+                controller: _messageController,
+                onSend: _sendMessage,
+                isEnabled: !provider.isSending,
+              );
+            },
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAvatarState(bool isSending) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(
+        color: isSending ? const Color(0xFF6B4EFF) : Colors.grey[300],
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        Icons.smart_toy,
+        size: 20,
+        color: isSending ? Colors.white : Colors.grey[600],
       ),
     );
   }
@@ -79,125 +127,109 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppDimensions.space24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.chat_bubble_outline,
-              size: 80,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Ask me anything!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[700],
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: const Color(0xFF6B4EFF).withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.chat_bubble_outline,
+                size: 50,
+                color: Color(0xFF6B4EFF),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppDimensions.space24),
+            const Text(
+              'Ask me anything!',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.space8),
             Text(
-              'I can help you with background ideas,\nphoto editing tips, and more!',
-              style: TextStyle(color: Colors.grey[600]),
+              'I can help you with background ideas,\nphoto editing tips, and creative suggestions!',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
               textAlign: TextAlign.center,
             ),
+            const SizedBox(height: AppDimensions.space32),
+            _buildSuggestionChips(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMessageBubble(ChatMessage message) {
-    final isUser = message.role == 'user';
+  Widget _buildSuggestionChips() {
+    final suggestions = [
+      'Nature backgrounds',
+      'Studio lighting',
+      'Creative ideas',
+      'Color palettes',
+    ];
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment:
-            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          if (!isUser) ...[
-            CircleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              child: const Icon(Icons.smart_toy, color: Colors.white),
-            ),
-            const SizedBox(width: 8),
-          ],
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: isUser
-                    ? Theme.of(context).colorScheme.primary
-                    : Colors.grey[200],
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Text(
-                message.content,
-                style: TextStyle(
-                  color: isUser ? Colors.white : Colors.black87,
-                ),
-              ),
-            ),
+    return Wrap(
+      spacing: AppDimensions.space8,
+      runSpacing: AppDimensions.space8,
+      alignment: WrapAlignment.center,
+      children: suggestions.map((suggestion) {
+        return ActionChip(
+          label: Text(suggestion),
+          onPressed: () {
+            _messageController.text = suggestion;
+            _sendMessage();
+          },
+          backgroundColor: const Color(0xFF6B4EFF).withOpacity(0.1),
+          labelStyle: const TextStyle(
+            color: Color(0xFF6B4EFF),
           ),
-          if (isUser) ...[
-            const SizedBox(width: 8),
-            CircleAvatar(
-              backgroundColor: Colors.grey[300],
-              child: const Icon(Icons.person, color: Colors.white),
-            ),
-          ],
-        ],
-      ),
+        );
+      }).toList(),
     );
   }
 
-  Widget _buildInputArea() {
-    return Consumer<ChatProvider>(
-      builder: (context, provider, _) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _messageController,
-                  decoration: const InputDecoration(
-                    hintText: 'Type your message...',
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: null,
-                  enabled: !provider.isSending,
-                ),
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                onPressed: provider.isSending ? null : _sendMessage,
-                icon: provider.isSending
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.send),
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ],
-          ),
-        );
-      },
+  Widget _buildMessage(ChatMessage message, bool shouldAnimate) {
+    // Start typing animation for AI messages
+    if (!message.isUser && shouldAnimate && _typingMessageId != message.id) {
+      _typingMessageId = message.id;
+      _typingDisplayText = '';
+
+      _typingService.animateTyping(message.id, message.content).listen(
+        (displayText) {
+          if (mounted) {
+            setState(() {
+              _typingDisplayText = displayText;
+            });
+            _scrollToBottom();
+          }
+        },
+        onDone: () {
+          if (mounted) {
+            setState(() {
+              _typingMessageId = null;
+              _typingDisplayText = null;
+            });
+          }
+        },
+      );
+    }
+
+    final isTyping = _typingMessageId == message.id;
+    final displayText = isTyping ? _typingDisplayText : null;
+
+    return ChatMessageBubble(
+      message: message,
+      isTyping: isTyping,
+      displayText: displayText,
     );
   }
 
