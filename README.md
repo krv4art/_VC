@@ -67,6 +67,19 @@ Privacy-first notification listener for capturing messages without read receipts
 
 ---
 
+### [AI Background Changer](./ai_background_changer)
+AI-powered background removal and replacement tool with smart scene generation.
+- 🎨 Smart background removal using AI
+- 🌄 Creative background styles and custom prompts
+- 🤖 AI assistant for creative suggestions
+- 📸 Camera and gallery support
+- 💾 History and favorites
+- 🔄 Share processed images
+
+**Status:** 🚧 Development | **Platform:** Mobile, Web
+
+---
+
 ## 🏗️ Architecture
 
 All applications share a common architecture pattern:
