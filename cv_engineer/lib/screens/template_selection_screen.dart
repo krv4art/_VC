@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/resume_provider.dart';
 import '../theme/app_theme.dart';
+import '../widgets/templates/template_factory.dart';
 
 class TemplateSelectionScreen extends StatelessWidget {
   const TemplateSelectionScreen({super.key});
@@ -11,27 +12,7 @@ class TemplateSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final resumeProvider = context.watch<ResumeProvider>();
-
-    final templates = [
-      {
-        'id': 'professional',
-        'name': 'Professional',
-        'description': 'Clean and modern design for corporate roles',
-        'icon': Icons.business_center,
-      },
-      {
-        'id': 'creative',
-        'name': 'Creative',
-        'description': 'Bold design for creative professionals',
-        'icon': Icons.palette,
-      },
-      {
-        'id': 'modern',
-        'name': 'Modern',
-        'description': 'Contemporary style with fresh colors',
-        'icon': Icons.auto_awesome,
-      },
-    ];
+    final templates = TemplateFactory.getAllTemplates();
 
     return Scaffold(
       appBar: AppBar(
@@ -49,19 +30,19 @@ class TemplateSelectionScreen extends StatelessWidget {
           itemCount: templates.length,
           itemBuilder: (context, index) {
             final template = templates[index];
-            final isSelected = resumeProvider.currentResume?.templateId == template['id'];
+            final isSelected = resumeProvider.currentResume?.templateId == template.id;
 
             return Card(
               elevation: isSelected ? 8 : 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppTheme.radiusCard),
                 side: isSelected
-                    ? BorderSide(color: theme.colorScheme.primary, width: 2)
+                    ? BorderSide(color: template.primaryColor, width: 2)
                     : BorderSide.none,
               ),
               child: InkWell(
                 onTap: () async {
-                  await resumeProvider.updateTemplate(template['id'] as String);
+                  await resumeProvider.updateTemplate(template.id);
                   if (context.mounted) {
                     context.go('/editor');
                   }
@@ -72,36 +53,54 @@ class TemplateSelectionScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        template['icon'] as IconData,
-                        size: 64,
-                        color: isSelected
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: template.primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
+                        ),
+                        child: Icon(
+                          _getTemplateIcon(template.id),
+                          size: 48,
+                          color: template.primaryColor,
+                        ),
                       ),
                       const SizedBox(height: AppTheme.space16),
                       Text(
-                        template['name'] as String,
+                        template.name,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: isSelected ? theme.colorScheme.primary : null,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected ? template.primaryColor : null,
+                          fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: AppTheme.space8),
                       Text(
-                        template['description'] as String,
+                        template.description,
                         style: theme.textTheme.bodySmall,
                         textAlign: TextAlign.center,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
                       if (isSelected) ...[
-                        const SizedBox(height: AppTheme.space8),
-                        Icon(
-                          Icons.check_circle,
-                          color: theme.colorScheme.primary,
-                          size: 24,
+                        const SizedBox(height: AppTheme.space12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: template.primaryColor,
+                            borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+                          ),
+                          child: const Text(
+                            'Selected',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                       ],
                     ],
@@ -113,5 +112,18 @@ class TemplateSelectionScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  IconData _getTemplateIcon(String templateId) {
+    switch (templateId) {
+      case 'professional':
+        return Icons.business_center;
+      case 'creative':
+        return Icons.palette;
+      case 'modern':
+        return Icons.auto_awesome;
+      default:
+        return Icons.description;
+    }
   }
 }
