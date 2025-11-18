@@ -289,5 +289,18 @@
   "leaderboard": "Leaderboard",
   "friends": "Friends",
   "analytics": "Analytics",
-  "premium": "Premium"
+  "premium": "Premium",
+
+  "transformProblem": "Make it Fun ✨",
+  "transforming": "Transforming...",
+  "transformed": "Transformed: {interest}",
+  "@transformed": {
+    "placeholders": {
+      "interest": {
+        "type": "String"
+      }
+    }
+  },
+  "original": "Original",
+  "errorTransforming": "Error transforming problem"
 }

@@ -7,6 +7,8 @@ import '../../providers/user_profile_provider.dart';
 import '../../providers/progress_provider.dart';
 import '../../providers/achievement_provider.dart';
 import '../../services/practice_service.dart';
+import '../../services/problem_transformer_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PracticeScreen extends StatefulWidget {
   final String subjectId;
@@ -25,6 +27,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
   final TextEditingController _answerController = TextEditingController();
   bool? _isCorrect;
   String? _feedback;
+  TransformedProblem? _transformedProblem;
+  bool _isTransforming = false;
+  bool _showingTransformed = false;
 
   @override
   void initState() {
@@ -180,6 +185,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
         _isCorrect = null;
         _feedback = null;
         _answerController.clear();
+        _transformedProblem = null;
+        _showingTransformed = false;
       });
     } else {
       // Show completion dialog
@@ -207,6 +214,54 @@ class _PracticeScreenState extends State<PracticeScreen> {
         ),
       );
     }
+  }
+
+  Future<void> _transformProblem() async {
+    setState(() {
+      _isTransforming = true;
+    });
+
+    try {
+      final profileProvider = context.read<UserProfileProvider>();
+      final transformerService = ProblemTransformerService(
+        supabase: Supabase.instance.client,
+      );
+
+      final transformed = await transformerService.transformProblem(
+        originalProblem: _currentProblem.problem,
+        originalAnswer: _currentProblem.correctAnswer,
+        userInterests: profileProvider.profile.interests,
+        preferredLanguage: profileProvider.profile.preferredLanguage,
+      );
+
+      setState(() {
+        _transformedProblem = transformed;
+        _showingTransformed = true;
+        _isTransforming = false;
+      });
+    } catch (e) {
+      debugPrint('Error transforming problem: $e');
+      setState(() {
+        _isTransforming = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              profileProvider.profile.preferredLanguage == 'ru'
+                  ? 'Ошибка трансформации задачи'
+                  : 'Error transforming problem',
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  void _toggleTransformation() {
+    setState(() {
+      _showingTransformed = !_showingTransformed;
+    });
   }
 
   PracticeProblem get _currentProblem => _problems[_currentProblemIndex];
@@ -297,13 +352,87 @@ class _PracticeScreenState extends State<PracticeScreen> {
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    _currentProblem.problem,
-                    style: theme.textTheme.titleLarge,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        _showingTransformed && _transformedProblem != null
+                            ? _transformedProblem!.transformed
+                            : _currentProblem.problem,
+                        style: theme.textTheme.titleLarge,
+                      ),
+                      if (_transformedProblem != null) ...[
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.purple.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.auto_awesome, size: 16),
+                              const SizedBox(width: 6),
+                              Text(
+                                _showingTransformed
+                                    ? context.read<UserProfileProvider>().profile.preferredLanguage == 'ru'
+                                        ? 'Трансформировано: ${_transformedProblem!.appliedInterest}'
+                                        : 'Transformed: ${_transformedProblem!.appliedInterest}'
+                                    : context.read<UserProfileProvider>().profile.preferredLanguage == 'ru'
+                                        ? 'Оригинал'
+                                        : 'Original',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.purple[700],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              InkWell(
+                                onTap: _toggleTransformation,
+                                child: Icon(
+                                  _showingTransformed
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  size: 16,
+                                  color: Colors.purple[700],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+
+              // Transform button
+              if (_transformedProblem == null && !_isTransforming && _isCorrect == null)
+                OutlinedButton.icon(
+                  onPressed: _transformProblem,
+                  icon: const Icon(Icons.auto_awesome),
+                  label: Text(
+                    context.read<UserProfileProvider>().profile.preferredLanguage == 'ru'
+                        ? 'Сделать интереснее ✨'
+                        : 'Make it Fun ✨',
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.purple,
+                  ),
+                )
+              else if (_isTransforming)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              const SizedBox(height: 8),
 
               // Answer input
               TextField(

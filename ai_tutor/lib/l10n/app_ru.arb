@@ -234,5 +234,11 @@
   "leaderboard": "Таблица лидеров",
   "friends": "Друзья",
   "analytics": "Аналитика",
-  "premium": "Premium"
+  "premium": "Premium",
+
+  "transformProblem": "Сделать интереснее ✨",
+  "transforming": "Трансформация...",
+  "transformed": "Трансформировано: {interest}",
+  "original": "Оригинал",
+  "errorTransforming": "Ошибка трансформации задачи"
 }
