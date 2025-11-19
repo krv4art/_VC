@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/resume_provider.dart';
 import '../theme/app_theme.dart';
 import '../services/pdf_service.dart';
+import '../services/export_helper.dart';
 import '../widgets/templates/template_factory.dart';
 
 class PreviewScreen extends StatefulWidget {
@@ -67,13 +68,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.picture_as_pdf),
-            onPressed: () => _exportPdf(context, resume),
-            tooltip: 'Export PDF',
+            icon: const Icon(Icons.file_download),
+            onPressed: () => _exportResume(context, resume),
+            tooltip: 'Export',
           ),
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => _sharePdf(context, resume),
+            onPressed: () => _shareResume(context, resume),
             tooltip: 'Share',
           ),
           IconButton(
@@ -101,52 +102,21 @@ class _PreviewScreenState extends State<PreviewScreen> {
     );
   }
 
-  Future<void> _exportPdf(BuildContext context, dynamic resume) async {
-    try {
-      final pdfService = PdfService();
-      final filePath = await pdfService.savePdf(resume);
-
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('PDF saved to: $filePath'),
-            action: SnackBarAction(
-              label: 'OK',
-              onPressed: () {},
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error exporting PDF: $e')),
-        );
-      }
-    }
+  Future<void> _exportResume(BuildContext context, dynamic resume) async {
+    await ExportHelper.saveWithDialog(context, resume);
   }
 
-  Future<void> _sharePdf(BuildContext context, dynamic resume) async {
-    try {
-      final pdfService = PdfService();
-      await pdfService.sharePdf(resume);
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error sharing PDF: $e')),
-        );
-      }
-    }
+  Future<void> _shareResume(BuildContext context, dynamic resume) async {
+    await ExportHelper.shareWithDialog(context, resume);
   }
 
   Future<void> _printPdf(BuildContext context, dynamic resume) async {
     try {
-      final pdfService = PdfService();
-      await pdfService.printPdf(resume);
+      await ExportHelper.printResume(resume);
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error printing PDF: $e')),
+          SnackBar(content: Text('Error printing: $e')),
         );
       }
     }
