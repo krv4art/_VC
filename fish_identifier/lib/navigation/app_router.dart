@@ -9,6 +9,9 @@ import '../screens/settings_screen.dart';
 import '../screens/main_screen.dart';
 import '../screens/premium_screen.dart';
 import '../screens/fishing_map_screen.dart';
+import '../screens/forecast_screen.dart';
+import '../screens/regulations_screen.dart';
+import '../screens/statistics_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -55,6 +58,19 @@ class AppRouter {
       GoRoute(
         path: '/fishing-map',
         builder: (context, state) => const FishingMapScreen(),
+      ),
+      // NEW ROUTES FOR ENHANCED FEATURES
+      GoRoute(
+        path: '/forecast',
+        builder: (context, state) => const ForecastScreen(),
+      ),
+      GoRoute(
+        path: '/regulations',
+        builder: (context, state) => const RegulationsScreen(),
+      ),
+      GoRoute(
+        path: '/statistics',
+        builder: (context, state) => const StatisticsScreen(),
       ),
     ],
   );
