@@ -201,9 +201,10 @@ class _HomepageScreenState extends State<HomepageScreen>
     );
 
     if (image != null && mounted) {
-      // TODO: Navigate to style selection with the selected image
-      // For now, just navigate to styles catalog
-      context.push('/styles');
+      // Navigate to style selection with the selected image
+      context.push('/styles', extra: {
+        'imagePath': image.path,
+      });
     }
   }
 
@@ -437,6 +438,46 @@ class _HomepageScreenState extends State<HomepageScreen>
                                   Icons.style_outlined,
                                   () => context.push('/styles'),
                                 ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  AppSpacer.v16(),
+
+                  // New AI Features Row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AnimatedBuilder(
+                          animation: _quickActionsCard1Animation,
+                          builder: (context, child) {
+                            return FadeTransition(
+                              opacity: _quickActionsCard1Animation,
+                              child: _buildQuickAction(
+                                context,
+                                'AI Editor',
+                                Icons.auto_fix_high,
+                                () => context.push('/advanced-editor'),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      AppSpacer.h16(),
+                      Expanded(
+                        child: AnimatedBuilder(
+                          animation: _quickActionsCard2Animation,
+                          builder: (context, child) {
+                            return FadeTransition(
+                              opacity: _quickActionsCard2Animation,
+                              child: _buildQuickAction(
+                                context,
+                                'Batch Gen',
+                                Icons.burst_mode,
+                                () => context.push('/batch-generation'),
                               ),
                             );
                           },

@@ -6,10 +6,12 @@ import '../theme/app_theme.dart';
 
 class StylesCatalogScreen extends StatefulWidget {
   final Function(StyleModel)? onStyleSelected;
+  final String? preselectedImagePath;
 
   const StylesCatalogScreen({
     super.key,
     this.onStyleSelected,
+    this.preselectedImagePath,
   });
 
   @override

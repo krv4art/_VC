@@ -5,12 +5,19 @@ import 'providers/locale_provider.dart';
 import 'providers/theme_provider_v2.dart';
 import 'providers/subscription_provider.dart';
 import 'providers/photo_generation_provider.dart';
+import 'providers/enhanced_photo_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:ai_photo_studio_pro/services/storage_service.dart';
 import 'package:ai_photo_studio_pro/services/replicate_service.dart';
 import 'package:ai_photo_studio_pro/services/local_photo_database_service.dart';
+import 'package:ai_photo_studio_pro/services/ai_retouch_service.dart';
+import 'package:ai_photo_studio_pro/services/background_removal_service.dart';
+import 'package:ai_photo_studio_pro/services/batch_generation_service.dart';
+import 'package:ai_photo_studio_pro/services/image_upscaling_service.dart';
+import 'package:ai_photo_studio_pro/services/ai_image_expansion_service.dart';
+import 'package:ai_photo_studio_pro/services/ai_outfit_change_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'utils/supabase_constants.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -70,6 +77,7 @@ void main() async {
           create: (context) => SubscriptionProvider()..initialize(),
         ),
         Provider<StorageService>(create: (_) => StorageService()),
+
         // Photo generation services
         Provider<ReplicateService>(
           create: (context) => ReplicateService(
@@ -80,6 +88,52 @@ void main() async {
         Provider<LocalPhotoDatabase>(
           create: (context) => LocalPhotoDatabase(),
         ),
+
+        // Enhanced AI services
+        Provider<AIRetouchService>(
+          create: (context) => AIRetouchService(
+            supabaseClient: Supabase.instance.client,
+          ),
+        ),
+        Provider<BackgroundRemovalService>(
+          create: (context) => BackgroundRemovalService(
+            supabaseClient: Supabase.instance.client,
+          ),
+        ),
+        Provider<ImageUpscalingService>(
+          create: (context) => ImageUpscalingService(
+            supabaseClient: Supabase.instance.client,
+          ),
+        ),
+        Provider<AIImageExpansionService>(
+          create: (context) => AIImageExpansionService(
+            supabaseClient: Supabase.instance.client,
+          ),
+        ),
+        Provider<AIOutfitChangeService>(
+          create: (context) => AIOutfitChangeService(
+            supabaseClient: Supabase.instance.client,
+          ),
+        ),
+
+        // Batch generation service
+        ProxyProvider6<ReplicateService, LocalPhotoDatabase, AIRetouchService,
+            BackgroundRemovalService, ImageUpscalingService, AIImageExpansionService,
+            BatchGenerationService>(
+          update: (context, replicateService, databaseService, retouchService,
+              backgroundService, upscalingService, expansionService, previous) =>
+            BatchGenerationService(
+              replicateService: replicateService,
+              databaseService: databaseService,
+              retouchService: retouchService,
+              backgroundService: backgroundService,
+              upscalingService: upscalingService,
+              expansionService: expansionService,
+              supabaseClient: Supabase.instance.client,
+            ),
+        ),
+
+        // Photo generation provider
         ChangeNotifierProxyProvider2<ReplicateService, LocalPhotoDatabase,
             PhotoGenerationProvider>(
           create: (context) => PhotoGenerationProvider(
@@ -92,6 +146,31 @@ void main() async {
                 replicateService: replicateService,
                 databaseService: databaseService,
               ),
+        ),
+
+        // Enhanced photo provider
+        ChangeNotifierProxyProvider6<AIRetouchService, BackgroundRemovalService,
+            BatchGenerationService, ImageUpscalingService, AIImageExpansionService,
+            AIOutfitChangeService, EnhancedPhotoProvider>(
+          create: (context) => EnhancedPhotoProvider(
+            retouchService: context.read<AIRetouchService>(),
+            backgroundService: context.read<BackgroundRemovalService>(),
+            batchService: context.read<BatchGenerationService>(),
+            upscalingService: context.read<ImageUpscalingService>(),
+            expansionService: context.read<AIImageExpansionService>(),
+            outfitService: context.read<AIOutfitChangeService>(),
+          ),
+          update: (context, retouchService, backgroundService, batchService,
+              upscalingService, expansionService, outfitService, previous) =>
+            previous ??
+            EnhancedPhotoProvider(
+              retouchService: retouchService,
+              backgroundService: backgroundService,
+              batchService: batchService,
+              upscalingService: upscalingService,
+              expansionService: expansionService,
+              outfitService: outfitService,
+            ),
         ),
       ],
       child: const MyApp(),

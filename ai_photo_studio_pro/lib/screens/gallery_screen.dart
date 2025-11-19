@@ -6,6 +6,9 @@ import '../models/style_model.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_theme.dart';
 import 'dart:io';
+import 'package:share_plus/share_plus.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -336,17 +339,17 @@ class _PhotoDetailDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     TextButton.icon(
-                      onPressed: () {
-                        // TODO: Implement share
+                      onPressed: () async {
                         Navigator.pop(context);
+                        await _sharePhoto(context, photo);
                       },
                       icon: const Icon(Icons.share),
                       label: Text(l10n.sharePhoto),
                     ),
                     TextButton.icon(
-                      onPressed: () {
-                        // TODO: Implement download
+                      onPressed: () async {
                         Navigator.pop(context);
+                        await _downloadPhoto(context, photo);
                       },
                       icon: const Icon(Icons.download),
                       label: Text(l10n.downloadHD),
@@ -359,7 +362,7 @@ class _PhotoDetailDialog extends StatelessWidget {
                         style: const TextStyle(color: Colors.red),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
@@ -403,5 +406,96 @@ class _PhotoDetailDialog extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Share photo
+  Future<void> _sharePhoto(BuildContext context, GeneratedPhoto photo) async {
+    try {
+      final l10n = AppLocalizations.of(context)!;
+      final file = File(photo.imagePath);
+
+      if (await file.exists()) {
+        await Share.shareXFiles(
+          [XFile(photo.imagePath)],
+          text: '${l10n.generatedBy} ${l10n.appName}',
+          subject: l10n.sharePhoto,
+        );
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.errorPhotoUpload),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${AppLocalizations.of(context)!.error}: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Download photo to gallery
+  Future<void> _downloadPhoto(BuildContext context, GeneratedPhoto photo) async {
+    try {
+      final l10n = AppLocalizations.of(context)!;
+      final file = File(photo.imagePath);
+
+      if (!await file.exists()) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.errorPhotoUpload),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      // Get app directory
+      final directory = await getApplicationDocumentsDirectory();
+      final downloadsDir = Directory('${directory.path}/downloads');
+
+      // Create downloads directory if it doesn't exist
+      if (!await downloadsDir.exists()) {
+        await downloadsDir.create(recursive: true);
+      }
+
+      // Copy file to downloads
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final newPath = '${downloadsDir.path}/$fileName';
+      await file.copy(newPath);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${l10n.downloadHD} ✓'),
+            backgroundColor: Colors.green,
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {},
+              textColor: Colors.white,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${AppLocalizations.of(context)!.error}: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }
