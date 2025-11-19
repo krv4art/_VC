@@ -170,4 +170,20 @@ class UsageTrackingService {
     await prefs.setInt(_dailyMessagesCountKey, 0);
     debugPrint('Daily messages counter reset');
   }
+
+  // ========== SOFT PAYWALL ==========
+
+  /// Проверить, нужно ли показать soft paywall после сканирования
+  /// Показываем после 3-го сканирования (один раз)
+  Future<bool> shouldShowSoftPaywallAfterScan() async {
+    final count = await getWeeklyScansCount();
+    return count == 3; // Точно после 3-го сканирования
+  }
+
+  /// Проверить, нужно ли показать soft paywall после отправки сообщения
+  /// Показываем после 3-го сообщения (один раз)
+  Future<bool> shouldShowSoftPaywallAfterMessage() async {
+    final count = await getDailyMessagesCount();
+    return count == 3; // Точно после 3-го сообщения
+  }
 }

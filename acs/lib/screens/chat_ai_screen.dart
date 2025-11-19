@@ -21,6 +21,7 @@ import '../widgets/chat/chat_input_field.dart';
 import '../widgets/chat/disclaimer_banner.dart';
 import '../widgets/chat/message_limit_banner.dart';
 import '../widgets/animated/animated_ai_avatar.dart';
+import '../widgets/soft_paywall_dialog.dart';
 import '../constants/app_dimensions.dart';
 import '../widgets/common/app_spacer.dart';
 import '../config/prompts_manager.dart';
@@ -277,6 +278,20 @@ class _ChatAIScreenState extends State<ChatAIScreen>
         // Увеличиваем счетчик сообщений только для бесплатных пользователей
         if (!subscriptionProvider.isPremium) {
           await usageService.incrementMessagesCount();
+
+          // Проверяем, нужно ли показать soft paywall после 3-го сообщения
+          final shouldShowSoftPaywall =
+              await usageService.shouldShowSoftPaywallAfterMessage();
+
+          if (shouldShowSoftPaywall && mounted) {
+            final remainingMessages =
+                await usageService.getRemainingMessageCount();
+            await SoftPaywallDialog.show(
+              context,
+              type: 'message',
+              remaining: remainingMessages,
+            );
+          }
         }
 
         // Start typing animation for bot response
