@@ -178,5 +178,196 @@
   "logout": "Logout",
 
   "pollQuestion": "How do you like the app?",
-  "pollSubmitted": "Thank you for your feedback!"
+  "pollSubmitted": "Thank you for your feedback!",
+
+  "aiEditor": "AI Editor",
+  "batchGen": "Batch Gen",
+  "advancedPhotoEditor": "Advanced Photo Editor",
+  "advancedEditorSubtitle": "Professional AI editing suite",
+
+  "tabRetouch": "Retouch",
+  "tabBackground": "Background",
+  "tabOutfit": "Outfit",
+  "tabExpand": "Expand",
+  "tabQuality": "Quality",
+
+  "retouchTitle": "AI Portrait Retouch",
+  "retouchSubtitle": "Professional retouching with AI",
+  "retouchPresets": "Quick Presets",
+  "retouchPresetNatural": "Natural",
+  "retouchPresetProfessional": "Professional",
+  "retouchPresetGlamour": "Glamour",
+  "retouchCustomSettings": "Custom Settings",
+  "retouchRemoveBlemishes": "Remove Blemishes",
+  "retouchSmoothSkin": "Smooth Skin",
+  "retouchEnhanceLighting": "Enhance Lighting",
+  "retouchColorCorrection": "Color Correction",
+  "retouchRemoveShine": "Remove Shine",
+  "retouchEnhanceEyes": "Enhance Eyes",
+  "retouchWhitenTeeth": "Whiten Teeth",
+  "retouchSmoothnessLevel": "Smoothness Level",
+  "retouchLightingIntensity": "Lighting Intensity",
+  "applyRetouch": "Apply Retouch",
+
+  "backgroundTitle": "Background Editor",
+  "backgroundSubtitle": "Remove or replace background",
+  "backgroundRemove": "Remove Background",
+  "backgroundReplace": "Replace Background",
+  "backgroundStyles": "Professional Backgrounds",
+  "backgroundStyleOffice": "Modern Office",
+  "backgroundStyleStudio": "White Studio",
+  "backgroundStyleOutdoor": "Outdoor Scene",
+  "backgroundStyleUrban": "Urban Setting",
+  "backgroundStyleLibrary": "Library",
+  "backgroundStyleConference": "Conference Room",
+  "backgroundStyleModern": "Modern Interior",
+  "backgroundStyleClassic": "Classic Interior",
+  "backgroundCustom": "Custom Background",
+  "backgroundUpload": "Upload Background",
+  "backgroundColor": "Solid Color",
+  "backgroundBlur": "Blur Amount",
+  "backgroundApply": "Apply Background",
+
+  "outfitTitle": "Outfit Customization",
+  "outfitSubtitle": "Change clothing with AI",
+  "outfitPresets": "Outfit Presets",
+  "outfitBusinessSuitMale": "Business Suit (Male)",
+  "outfitBusinessSuitFemale": "Business Suit (Female)",
+  "outfitMedicalScrubs": "Medical Scrubs",
+  "outfitLabCoat": "Lab Coat",
+  "outfitCasualShirt": "Casual Shirt",
+  "outfitPolo": "Polo Shirt",
+  "outfitSweater": "Sweater",
+  "outfitBlazer": "Blazer",
+  "outfitFormalDress": "Formal Dress",
+  "outfitTurtleneck": "Turtleneck",
+  "outfitCustomPrompt": "Custom Outfit Description",
+  "outfitApply": "Change Outfit",
+
+  "expandTitle": "Aspect Ratio Expansion",
+  "expandSubtitle": "AI-powered outpainting",
+  "expandRatios": "Target Aspect Ratios",
+  "expandRatio1x1": "Square (1:1)",
+  "expandRatio4x5": "Instagram Post (4:5)",
+  "expandRatio9x16": "Stories/Reels (9:16)",
+  "expandRatio16x9": "YouTube Thumbnail (16:9)",
+  "expandRatioLinkedIn": "LinkedIn Banner",
+  "expandDirection": "Expansion Direction",
+  "expandDirectionAll": "All Sides",
+  "expandDirectionHorizontal": "Horizontal",
+  "expandDirectionVertical": "Vertical",
+  "expandApply": "Expand Image",
+
+  "qualityTitle": "Quality Enhancement",
+  "qualitySubtitle": "4K upscaling with AI",
+  "qualityUpscale": "Upscale Image",
+  "qualityUpscaleTo4K": "Upscale to 4K",
+  "qualityModes": "Quality Modes",
+  "qualityStandard": "Standard",
+  "qualityHigh": "High",
+  "qualityUltra": "Ultra",
+  "qualityScaleFactor": "Scale Factor",
+  "qualityScale2x": "2x (Double Size)",
+  "qualityScale4x": "4x (4K Quality)",
+  "qualityApply": "Apply Enhancement",
+
+  "batchGenerationTitle": "Batch Generation",
+  "batchGenerationSubtitle": "Process multiple photos at once",
+  "batchSelectPhotos": "Select Photos",
+  "batchPhotosSelected": "{count} photos selected",
+  "@batchPhotosSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "batchSelectStyle": "Select Style",
+  "batchNumberOfVariations": "Variations per Photo",
+  "batchVariations": "{count} variations",
+  "@batchVariations": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "batchHighResolution": "High Resolution",
+  "batchEnableRetouch": "Enable AI Retouch",
+  "batchEnableBackground": "Change Background",
+  "batchTotalGenerations": "Total: {count} photos will be generated",
+  "@batchTotalGenerations": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "batchStart": "Start Batch Generation",
+  "batchProcessing": "Processing...",
+  "batchProgress": "{completed} of {total} completed",
+  "@batchProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "batchComplete": "Batch generation complete!",
+  "batchFailed": "Batch generation failed",
+  "batchCancel": "Cancel Generation",
+  "batchViewResults": "View Results",
+
+  "processingRetouch": "Applying AI retouch...",
+  "processingBackground": "Processing background...",
+  "processingOutfit": "Changing outfit...",
+  "processingExpansion": "Expanding image...",
+  "processingUpscaling": "Upscaling to 4K...",
+  "processingBatch": "Processing batch...",
+
+  "errorRetouchFailed": "Retouch failed. Please try again.",
+  "errorBackgroundFailed": "Background processing failed.",
+  "errorOutfitFailed": "Outfit change failed.",
+  "errorExpansionFailed": "Image expansion failed.",
+  "errorUpscalingFailed": "Upscaling failed.",
+  "errorBatchFailed": "Batch generation failed.",
+  "errorSelectPhoto": "Please select a photo first",
+  "errorSelectStyle": "Please select a style",
+  "errorTooManyPhotos": "Maximum {max} photos allowed",
+  "@errorTooManyPhotos": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+
+  "successRetouchApplied": "Retouch applied successfully!",
+  "successBackgroundChanged": "Background changed!",
+  "successOutfitChanged": "Outfit changed!",
+  "successImageExpanded": "Image expanded!",
+  "successImageUpscaled": "Image upscaled to 4K!",
+  "successBatchStarted": "Batch generation started",
+
+  "selectFromGallery": "Select from Gallery",
+  "selectMultiplePhotos": "Select Multiple Photos",
+  "deselectAll": "Deselect All",
+  "selectedCount": "{count} selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "premiumFeatureRetouch": "Advanced AI retouch is a Pro feature",
+  "premiumFeatureBackground": "Background editing is a Pro feature",
+  "premiumFeatureOutfit": "Outfit customization is a Pro feature",
+  "premiumFeatureExpansion": "Aspect ratio expansion is a Pro feature",
+  "premiumFeature4K": "4K upscaling is a Pro feature",
+  "premiumFeatureBatch": "Batch generation is a Pro feature"
 }
