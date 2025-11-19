@@ -387,6 +387,29 @@
   "selectYourActionDescription": "What would you like to do now?",
   "scanCosmetic": "Scan Cosmetic",
   "goToChat": "Go to Chat",
+  "enjoyingScanning": "Enjoying the scanner?",
+  "enjoyingChat": "Enjoying the chat?",
+  "softPaywallScanMessage": "You've used 3 scans! You have {remaining} free scans left this week. Upgrade to Premium for unlimited access!",
+  "@softPaywallScanMessage": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "softPaywallMessageMessage": "You've sent 3 messages! You have {remaining} messages left today. Upgrade to Premium for unlimited chat!",
+  "@softPaywallMessageMessage": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "unlimitedScansAndChat": "Unlimited scans and chat",
+  "fullScanHistory": "Access full scan history",
+  "adFreeExperience": "Ad-free experience",
+  "tryPremium": "Try Premium",
+  "continueWithFree": "Continue with free plan",
   "customThemeInDevelopment": "Custom themes feature is under development",
   "customThemeComingSoon": "Coming soon in future updates",
   "dailyMessageLimitReached": "Limit Reached",

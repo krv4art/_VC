@@ -18,6 +18,7 @@ import '../../services/local_data_service.dart';
 import '../../services/usage_tracking_service.dart';
 import '../../services/rating_service.dart';
 import '../../widgets/rating_request_dialog.dart';
+import '../../widgets/soft_paywall_dialog.dart';
 import '../../exceptions/api_exceptions.dart';
 import '../scanning/scan_usage_validator.dart';
 import '../scanning/prompt_builder_service.dart';
@@ -157,6 +158,20 @@ class ImageAnalysisService {
       // Увеличиваем счетчик сканов для бесплатных пользователей
       if (!subscriptionProvider.isPremium) {
         await UsageTrackingService().incrementScansCount();
+
+        // Проверяем, нужно ли показать soft paywall после 3-го сканирования
+        final shouldShowSoftPaywall =
+            await UsageTrackingService().shouldShowSoftPaywallAfterScan();
+
+        if (shouldShowSoftPaywall && context.mounted) {
+          final remainingScans =
+              await UsageTrackingService().getRemainingScanCount();
+          await SoftPaywallDialog.show(
+            context,
+            type: 'scan',
+            remaining: remainingScans,
+          );
+        }
       }
 
       // Проверяем контекст перед диалогом оценки

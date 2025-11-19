@@ -387,6 +387,29 @@
   "selectYourActionDescription": "Что вы хотите сделать сейчас?",
   "scanCosmetic": "Сканировать косметику",
   "goToChat": "Перейти в чат",
+  "enjoyingScanning": "Нравится сканер?",
+  "enjoyingChat": "Нравится чат?",
+  "softPaywallScanMessage": "Вы использовали 3 сканирования! У вас осталось {remaining} бесплатных сканирований на этой неделе. Оформите Premium для безлимитного доступа!",
+  "@softPaywallScanMessage": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "softPaywallMessageMessage": "Вы отправили 3 сообщения! У вас осталось {remaining} сообщений на сегодня. Оформите Premium для неограниченного чата!",
+  "@softPaywallMessageMessage": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "unlimitedScansAndChat": "Безлимитные сканирования и чат",
+  "fullScanHistory": "Полная история сканирований",
+  "adFreeExperience": "Без рекламы",
+  "tryPremium": "Попробовать Premium",
+  "continueWithFree": "Продолжить с бесплатным планом",
   "customThemeInDevelopment": "Функция кастомных тем находится в разработке",
   "customThemeComingSoon": "Скоро будет доступно в следующих обновлениях",
   "dailyMessageLimitReached": "Лимит достигнут",
