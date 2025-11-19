@@ -3,7 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../models/analysis_result.dart';
 import '../providers/analysis_provider.dart';
+import '../providers/collection_provider.dart';
 import '../widgets/animated_entrance.dart';
+import '../widgets/visual_matches_widget.dart';
+import '../services/pdf_export_service.dart';
+import '../services/collection_service.dart';
 
 /// Экран с результатами анализа антиквариата
 class ResultsScreen extends StatelessWidget {
@@ -121,6 +125,24 @@ class ResultsScreen extends StatelessWidget {
                     ),
                   ),
                 if (result.priceEstimate != null) const SizedBox(height: 16),
+
+                // Visual Matches (Market Search)
+                if (result.visualMatches.isNotEmpty)
+                  AnimatedEntrance(
+                    delay: const Duration(milliseconds: 550),
+                    duration: const Duration(milliseconds: 500),
+                    child: _buildSection(
+                      context,
+                      'Visual Matches',
+                      Icons.shopping_bag,
+                      VisualMatchesWidget(
+                        itemName: result.itemName,
+                        category: result.category ?? 'antique',
+                        visualMatches: result.visualMatches,
+                      ),
+                    ),
+                  ),
+                if (result.visualMatches.isNotEmpty) const SizedBox(height: 16),
 
                 // Similar Items
                 if (result.similarItems.isNotEmpty)
@@ -408,18 +430,98 @@ class ResultsScreen extends StatelessWidget {
     );
   }
 
-  void _shareResults(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Share functionality coming soon!')),
-    );
+  Future<void> _shareResults(BuildContext context) async {
+    final provider = Provider.of<AnalysisProvider>(context, listen: false);
+    final result = provider.currentAnalysis;
+
+    if (result == null) return;
+
+    try {
+      // Show loading dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Generating PDF...'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final pdfService = PdfExportService();
+      final pdfBytes = await pdfService.generatePdfReport(result);
+
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Share or save PDF
+      if (context.mounted) {
+        await pdfService.sharePdf(pdfBytes, '${result.itemName}_analysis.pdf');
+      }
+    } catch (e) {
+      // Close loading dialog if still open
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error exporting PDF: $e')),
+        );
+      }
+    }
   }
 
-  void _saveToCollection(BuildContext context, AnalysisResult result) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${result.itemName} saved to collection!'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+  Future<void> _saveToCollection(BuildContext context, AnalysisResult result) async {
+    try {
+      final collectionService = CollectionService();
+      final success = await collectionService.saveToCollection(result);
+
+      if (success) {
+        // Update provider if available
+        final collectionProvider = Provider.of<CollectionProvider>(context, listen: false);
+        await collectionProvider.loadCollection();
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.check_circle, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Text('${result.itemName} saved to collection!'),
+                ],
+              ),
+              duration: const Duration(seconds: 2),
+              backgroundColor: Colors.green.shade700,
+            ),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to save to collection')),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
   }
 }
