@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 /// PDF splitter service
 /// Splits PDF into multiple files or extracts specific pages
@@ -17,12 +18,27 @@ class PdfSplitterService {
 
       final outputPaths = <String>[];
 
-      // TODO: Implement PDF splitting
-      // For each page in the PDF:
-      // 1. Extract the page
-      // 2. Create a new PDF with that page
-      // 3. Save to file
-      // 4. Add path to outputPaths
+      // Load source PDF
+      final pdfBytes = await File(pdfPath).readAsBytes();
+      final PdfDocument sourceDocument = PdfDocument(inputBytes: pdfBytes);
+      final totalPages = sourceDocument.pages.count;
+
+      // Split each page into a separate PDF
+      for (int i = 0; i < totalPages; i++) {
+        // Create new PDF for this page
+        final PdfDocument pageDocument = PdfDocument();
+        pageDocument.importPages(sourceDocument, i, i);
+
+        // Save page PDF
+        final outputPath = await _getOutputPath('page_${i + 1}');
+        final List<int> savedBytes = await pageDocument.save();
+        pageDocument.dispose();
+
+        await File(outputPath).writeAsBytes(savedBytes);
+        outputPaths.add(outputPath);
+      }
+
+      sourceDocument.dispose();
 
       debugPrint('✅ PDF split into ${outputPaths.length} pages');
       return outputPaths;
@@ -50,7 +66,6 @@ class PdfSplitterService {
 
         debugPrint('   Creating part ${i + 1}: pages $startPage-$endPage');
 
-        // TODO: Implement range extraction
         final outputPath = await _extractPages(
           pdfPath,
           startPage: startPage,
@@ -105,10 +120,28 @@ class PdfSplitterService {
       // Sort page numbers
       final sortedPages = List<int>.from(pageNumbers)..sort();
 
-      // TODO: Implement page extraction
+      // Load source PDF
+      final pdfBytes = await File(pdfPath).readAsBytes();
+      final PdfDocument sourceDocument = PdfDocument(inputBytes: pdfBytes);
+      final PdfDocument outputDocument = PdfDocument();
+
+      // Extract specified pages
+      for (final pageNum in sortedPages) {
+        final pageIndex = pageNum - 1; // Convert to 0-based
+        if (pageIndex >= 0 && pageIndex < sourceDocument.pages.count) {
+          outputDocument.importPages(sourceDocument, pageIndex, pageIndex);
+        }
+      }
+
+      // Save extracted pages
       final outputPath = await _getOutputPath(
         outputFileName ?? 'extracted_${sortedPages.first}_${sortedPages.last}',
       );
+      final List<int> savedBytes = await outputDocument.save();
+      sourceDocument.dispose();
+      outputDocument.dispose();
+
+      await File(outputPath).writeAsBytes(savedBytes);
 
       debugPrint('✅ Pages extracted: $outputPath');
       return outputPath;
@@ -127,11 +160,28 @@ class PdfSplitterService {
   }) async {
     try {
       final fileName = path.basenameWithoutExtension(pdfPath);
+      // Load source PDF
+      final pdfBytes = await File(pdfPath).readAsBytes();
+      final PdfDocument sourceDocument = PdfDocument(inputBytes: pdfBytes);
+      final PdfDocument outputDocument = PdfDocument();
+
+      // Extract page range (convert to 0-based)
+      final startIndex = startPage - 1;
+      final endIndex = endPage - 1;
+
+      if (startIndex >= 0 && endIndex < sourceDocument.pages.count) {
+        outputDocument.importPages(sourceDocument, startIndex, endIndex);
+      }
+
+      // Save extracted pages
       final outputPath = await _getOutputPath(
         '$fileName\_${suffix ?? 'extracted'}',
       );
+      final List<int> savedBytes = await outputDocument.save();
+      sourceDocument.dispose();
+      outputDocument.dispose();
 
-      // TODO: Implement actual page extraction
+      await File(outputPath).writeAsBytes(savedBytes);
 
       return outputPath;
     } catch (e) {
@@ -143,9 +193,11 @@ class PdfSplitterService {
   /// Get PDF page count
   Future<int> _getPageCount(String pdfPath) async {
     try {
-      // TODO: Implement page count retrieval
-      // For now, return placeholder
-      return 10;
+      final pdfBytes = await File(pdfPath).readAsBytes();
+      final PdfDocument document = PdfDocument(inputBytes: pdfBytes);
+      final pageCount = document.pages.count;
+      document.dispose();
+      return pageCount;
     } catch (e) {
       debugPrint('❌ Failed to get page count: $e');
       rethrow;

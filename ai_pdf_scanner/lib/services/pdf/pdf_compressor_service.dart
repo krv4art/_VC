@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 /// PDF compressor service
 /// Reduces PDF file size while maintaining quality
@@ -22,14 +23,30 @@ class PdfCompressorService {
 
       final outputPath = await _getOutputPath(pdfPath, '_compressed');
 
-      // TODO: Implement actual PDF compression
-      // Options:
-      // 1. Reduce image quality in PDF
-      // 2. Remove embedded fonts
-      // 3. Remove metadata
-      // 4. Optimize PDF structure
-      //
-      // For now, copy with different quality settings based on level
+      // Load existing PDF
+      final pdfFile = File(pdfPath);
+      final pdfBytes = await pdfFile.readAsBytes();
+      final PdfDocument document = PdfDocument(inputBytes: pdfBytes);
+
+      // Configure compression options based on level
+      final compressionOptions = PdfCompressionOptions();
+      compressionOptions.compressImages = true;
+      compressionOptions.optimizeFont = true;
+      compressionOptions.optimizePageContents = true;
+      compressionOptions.removeMetadata = level == CompressionLevel.maximum;
+
+      // Set image quality based on compression level
+      compressionOptions.imageQuality = level.imageQuality;
+
+      // Apply compression
+      document.compressionOptions = compressionOptions;
+      document.compress();
+
+      // Save compressed PDF
+      final List<int> savedBytes = await document.save();
+      document.dispose();
+
+      await File(outputPath).writeAsBytes(savedBytes);
 
       final compressedSize = await File(outputPath).length();
       final reduction = ((1 - compressedSize / originalSize) * 100).toStringAsFixed(1);
@@ -91,10 +108,25 @@ class PdfCompressorService {
 
       final outputPath = await _getOutputPath(pdfPath, '_web');
 
-      // TODO: Implement web optimization
-      // - Linearize PDF for fast web viewing
-      // - Reduce image quality
-      // - Remove unnecessary data
+      // Load PDF
+      final pdfBytes = await File(pdfPath).readAsBytes();
+      final PdfDocument document = PdfDocument(inputBytes: pdfBytes);
+
+      // Optimize for web viewing
+      final compressionOptions = PdfCompressionOptions();
+      compressionOptions.compressImages = true;
+      compressionOptions.optimizeFont = true;
+      compressionOptions.optimizePageContents = true;
+      compressionOptions.removeMetadata = true;
+      compressionOptions.imageQuality = 70; // Medium quality for web
+
+      document.compressionOptions = compressionOptions;
+      document.compress();
+
+      // Save optimized PDF
+      final savedBytes = await document.save();
+      document.dispose();
+      await File(outputPath).writeAsBytes(savedBytes);
 
       debugPrint('✅ PDF optimized for web: $outputPath');
       return outputPath;
@@ -111,11 +143,22 @@ class PdfCompressorService {
 
       final outputPath = await _getOutputPath(pdfPath, '_clean');
 
-      // TODO: Implement metadata removal
-      // Remove:
-      // - Author, title, subject, keywords
-      // - Creation date, modification date
-      // - Producer, creator information
+      // Load PDF
+      final pdfBytes = await File(pdfPath).readAsBytes();
+      final PdfDocument document = PdfDocument(inputBytes: pdfBytes);
+
+      // Remove metadata
+      document.documentInformation.title = '';
+      document.documentInformation.author = '';
+      document.documentInformation.subject = '';
+      document.documentInformation.keywords = '';
+      document.documentInformation.creator = '';
+      document.documentInformation.producer = '';
+
+      // Save PDF without metadata
+      final savedBytes = await document.save();
+      document.dispose();
+      await File(outputPath).writeAsBytes(savedBytes);
 
       debugPrint('✅ Metadata removed: $outputPath');
       return outputPath;
@@ -135,10 +178,24 @@ class PdfCompressorService {
 
       final outputPath = await _getOutputPath(pdfPath, '_optimized');
 
-      // TODO: Implement image optimization
-      // - Extract all images
-      // - Compress images
-      // - Re-embed compressed images
+      // Load PDF
+      final pdfBytes = await File(pdfPath).readAsBytes();
+      final PdfDocument document = PdfDocument(inputBytes: pdfBytes);
+
+      // Configure image compression
+      final compressionOptions = PdfCompressionOptions();
+      compressionOptions.compressImages = true;
+      compressionOptions.imageQuality = imageQuality;
+      compressionOptions.optimizeFont = false; // Only optimize images
+      compressionOptions.optimizePageContents = false;
+
+      document.compressionOptions = compressionOptions;
+      document.compress();
+
+      // Save optimized PDF
+      final savedBytes = await document.save();
+      document.dispose();
+      await File(outputPath).writeAsBytes(savedBytes);
 
       debugPrint('✅ Images optimized: $outputPath');
       return outputPath;
