@@ -1,4 +1,5 @@
 import '../../config/prompts_manager.dart';
+import '../../models/scan_image.dart';
 
 /// Service for building analysis prompts
 class PromptBuilderService {
@@ -16,6 +17,29 @@ class PromptBuilderService {
       variables,
     );
     return prompt ?? _getDefaultAnalysisPrompt(userProfilePrompt, languageCode);
+  }
+
+  /// Build multi-photo analysis prompt
+  String buildMultiPhotoAnalysisPrompt(
+    String userProfilePrompt,
+    String languageCode,
+    List<ScanImage> images,
+  ) {
+    final frontLabelCount = images.where((img) => img.type == ImageType.frontLabel).length;
+    final ingredientsCount = images.where((img) => img.type == ImageType.ingredients).length;
+
+    final imageDescription = '''
+IMPORTANT: You are provided with MULTIPLE IMAGES of the same cosmetic product:
+- ${frontLabelCount > 0 ? '$frontLabelCount front label image(s)' : 'No front label images'}
+- ${ingredientsCount > 0 ? '$ingredientsCount ingredients list image(s)' : 'No ingredients list images'}
+
+Please analyze ALL images together to extract complete information about the product.
+Use the front label image(s) to identify the brand name and product type.
+Use the ingredients list image(s) to extract ALL ingredient names.
+If ingredients are split across multiple images, combine them into one complete list.
+''';
+
+    return imageDescription + _getDefaultAnalysisPrompt(userProfilePrompt, languageCode);
   }
 
   /// Fallback метод на случай, если промпт не найден в конфигурации
