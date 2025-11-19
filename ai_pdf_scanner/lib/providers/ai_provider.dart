@@ -47,14 +47,14 @@ class AIProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _ocrService.extractText(imagePath);
+      final ocrResult = await _ocrService.extractText(imagePath);
 
-      _lastResult = {'text': result};
+      _lastResult = ocrResult.toJson();
       _isProcessing = false;
       _currentOperation = null;
       notifyListeners();
 
-      return result;
+      return ocrResult.text;
     } catch (e) {
       _errorMessage = 'OCR failed';
       _isProcessing = false;
@@ -78,12 +78,9 @@ class AIProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      // TODO: Implement actual classification using Gemini
-      final result = await _geminiService.analyzeImage(
-        imagePath,
-        'Classify this document type',
-      );
+      final classification = await _geminiService.classifyDocument(imagePath);
 
+      final result = classification.toJson();
       _lastResult = result;
       _isProcessing = false;
       _currentOperation = null;
@@ -112,10 +109,7 @@ class AIProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _geminiService.analyzeImage(
-        imagePath,
-        'Extract key information: dates, amounts, names, addresses',
-      );
+      final result = await _geminiService.extractKeyInformation(imagePath);
 
       _lastResult = result;
       _isProcessing = false;
@@ -145,12 +139,7 @@ class AIProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _geminiService.analyzeImage(
-        imagePath,
-        'Provide a concise summary of this document',
-      );
-
-      final summary = result['text'] as String?;
+      final summary = await _geminiService.generateSummary(imagePath);
 
       _lastResult = {'summary': summary};
       _isProcessing = false;
@@ -180,11 +169,9 @@ class AIProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _geminiService.analyzeImage(
-        imagePath,
-        'Scan for sensitive information: personal data, credit cards, SSN, etc.',
-      );
+      final sensitiveInfo = await _geminiService.detectSensitiveInfo(imagePath);
 
+      final result = {'sensitive_info': sensitiveInfo};
       _lastResult = result;
       _isProcessing = false;
       _currentOperation = null;
@@ -213,12 +200,7 @@ class AIProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _geminiService.analyzeImage(
-        imagePath,
-        'Suggest a descriptive filename for this document',
-      );
-
-      final filename = result['suggested_name'] as String?;
+      final filename = await _geminiService.generateFileName(imagePath);
 
       _lastResult = {'filename': filename};
       _isProcessing = false;

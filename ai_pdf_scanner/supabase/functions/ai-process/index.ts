@@ -1,19 +1,26 @@
 // AI Processing Edge Function
-// Proxies requests to Gemini API with secure API key handling
+// Secure proxy to Google Gemini API for AI-powered document analysis
+// Deployed to Supabase Edge Functions
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent'
 
-interface AIRequest {
-  type: 'analyze_image' | 'translate'
-  image?: string // base64
-  prompt?: string
-  text?: string
-  target_language?: string
+interface AnalyzeImageRequest {
+  type: 'analyze_image'
+  image: string // base64 encoded
+  prompt: string
   temperature?: number
 }
+
+interface TranslateRequest {
+  type: 'translate'
+  text: string
+  target_language: string
+}
+
+type RequestBody = AnalyzeImageRequest | TranslateRequest
 
 serve(async (req) => {
   // CORS headers
@@ -28,96 +35,80 @@ serve(async (req) => {
   }
 
   try {
-    // Parse request
-    const body: AIRequest = await req.json()
+    // Parse request body
+    const body: RequestBody = await req.json()
 
     // Validate API key
     if (!GEMINI_API_KEY) {
       throw new Error('GEMINI_API_KEY not configured')
     }
 
-    // Route to appropriate handler
+    // Process based on type
     let result: any
 
-    switch (body.type) {
-      case 'analyze_image':
-        result = await analyzeImage(body.image!, body.prompt!, body.temperature || 0.4)
-        break
-
-      case 'translate':
-        result = await translateText(body.text!, body.target_language!)
-        break
-
-      default:
-        throw new Error(`Unknown request type: ${body.type}`)
+    if (body.type === 'analyze_image') {
+      result = await analyzeImage(body)
+    } else if (body.type === 'translate') {
+      result = await translateText(body)
+    } else {
+      throw new Error('Invalid request type')
     }
 
     return new Response(
       JSON.stringify(result),
       {
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json'
-        }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
       }
     )
-
   } catch (error) {
-    console.error('AI processing error:', error)
-
+    console.error('Error processing AI request:', error)
     return new Response(
-      JSON.stringify({
-        error: error.message || 'Internal server error'
-      }),
+      JSON.stringify({ error: error.message }),
       {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json'
-        }
       }
     )
   }
 })
 
 /**
- * Analyze image with Gemini Vision
+ * Analyze image using Gemini Vision
  */
-async function analyzeImage(
-  base64Image: string,
-  prompt: string,
-  temperature: number
-): Promise<any> {
-  const requestBody = {
+async function analyzeImage(request: AnalyzeImageRequest) {
+  const { image, prompt, temperature = 0.4 } = request
+
+  // Prepare Gemini API request
+  const geminiRequest = {
     contents: [
       {
         parts: [
           {
-            text: prompt
+            text: prompt,
           },
           {
             inline_data: {
-              mime_type: "image/jpeg",
-              data: base64Image
-            }
-          }
-        ]
-      }
+              mime_type: 'image/jpeg',
+              data: image,
+            },
+          },
+        ],
+      },
     ],
     generationConfig: {
-      temperature: temperature,
-      topK: 40,
-      topP: 0.95,
-      maxOutputTokens: 8192,
-    }
+      temperature,
+      maxOutputTokens: 2048,
+    },
   }
 
+  // Call Gemini API
   const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(requestBody)
+    body: JSON.stringify(geminiRequest),
   })
 
   if (!response.ok) {
@@ -127,49 +118,50 @@ async function analyzeImage(
 
   const data = await response.json()
 
-  // Extract text from response
+  // Extract response text
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
 
-  // Try to parse as JSON if it looks like JSON
-  let parsedResult
-  try {
-    if (text.trim().startsWith('{') || text.trim().startsWith('[')) {
-      parsedResult = JSON.parse(text)
-    } else {
-      parsedResult = { text }
+  // Try to parse as JSON if response looks like JSON
+  let result: any
+  if (text.trim().startsWith('{') || text.trim().startsWith('[')) {
+    try {
+      result = JSON.parse(text)
+    } catch {
+      result = { text }
     }
-  } catch {
-    parsedResult = { text }
+  } else {
+    result = { text }
   }
 
-  return parsedResult
+  return result
 }
 
 /**
- * Translate text with Gemini
+ * Translate text using Gemini
  */
-async function translateText(
-  text: string,
-  targetLanguage: string
-): Promise<any> {
-  const prompt = `Translate the following text to ${targetLanguage}. Return only the translated text, nothing else:\n\n${text}`
+async function translateText(request: TranslateRequest) {
+  const { text, target_language } = request
 
-  const requestBody = {
+  const prompt = `Translate the following text to ${target_language}.
+Return only the translated text without any additional commentary.
+
+Text to translate:
+${text}`
+
+  const geminiRequest = {
     contents: [
       {
         parts: [
           {
-            text: prompt
-          }
-        ]
-      }
+            text: prompt,
+          },
+        ],
+      },
     ],
     generationConfig: {
       temperature: 0.3,
-      topK: 40,
-      topP: 0.95,
-      maxOutputTokens: 8192,
-    }
+      maxOutputTokens: 2048,
+    },
   }
 
   const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
@@ -177,7 +169,7 @@ async function translateText(
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(requestBody)
+    body: JSON.stringify(geminiRequest),
   })
 
   if (!response.ok) {
@@ -188,7 +180,5 @@ async function translateText(
   const data = await response.json()
   const translatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || text
 
-  return {
-    translated_text: translatedText.trim()
-  }
+  return { translated_text: translatedText.trim() }
 }
