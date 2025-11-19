@@ -154,6 +154,20 @@ class AnalysisResult {
   final String? aiSummary;
   final String? expertAdvice;
 
+  // Новые поля для расширенного управления коллекцией
+  final String? id; // Уникальный ID для БД
+  final bool isInWishlist; // В wishlist или в коллекции
+  final List<String> tags; // Пользовательские теги
+  final String? userNotes; // Заметки пользователя
+  final DateTime? addedAt; // Когда добавлено
+  final String? imagePath; // Путь к сохраненному изображению
+  final int? sheldonGrade; // Грейдинг по Sheldon Scale (1-70)
+  final String? conditionGrade; // AG, G, VG, F, VF, XF, AU, MS
+  final bool isFavorite; // Избранное
+  final double? purchasePrice; // Цена покупки (для ROI)
+  final DateTime? purchaseDate; // Дата покупки
+  final String? location; // Где хранится
+
   AnalysisResult({
     required this.isCoinOrBanknote,
     this.humorousMessage,
@@ -184,6 +198,18 @@ class AnalysisResult {
     required this.similarCoins,
     this.aiSummary,
     this.expertAdvice,
+    this.id,
+    this.isInWishlist = false,
+    this.tags = const [],
+    this.userNotes,
+    this.addedAt,
+    this.imagePath,
+    this.sheldonGrade,
+    this.conditionGrade,
+    this.isFavorite = false,
+    this.purchasePrice,
+    this.purchaseDate,
+    this.location,
   });
 
   factory AnalysisResult.fromJson(Map<String, dynamic> json) {
@@ -238,6 +264,25 @@ class AnalysisResult {
           [],
       aiSummary: json['ai_summary'] as String?,
       expertAdvice: json['expert_advice'] as String?,
+      id: json['id'] as String?,
+      isInWishlist: json['is_in_wishlist'] as bool? ?? false,
+      tags: (json['tags'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      userNotes: json['user_notes'] as String?,
+      addedAt: json['added_at'] != null
+          ? DateTime.parse(json['added_at'] as String)
+          : null,
+      imagePath: json['image_path'] as String?,
+      sheldonGrade: json['sheldon_grade'] as int?,
+      conditionGrade: json['condition_grade'] as String?,
+      isFavorite: json['is_favorite'] as bool? ?? false,
+      purchasePrice: (json['purchase_price'] as num?)?.toDouble(),
+      purchaseDate: json['purchase_date'] != null
+          ? DateTime.parse(json['purchase_date'] as String)
+          : null,
+      location: json['location'] as String?,
     );
   }
 
@@ -272,6 +317,107 @@ class AnalysisResult {
       'similar_coins': similarCoins,
       'ai_summary': aiSummary,
       'expert_advice': expertAdvice,
+      'id': id,
+      'is_in_wishlist': isInWishlist,
+      'tags': tags,
+      'user_notes': userNotes,
+      'added_at': addedAt?.toIso8601String(),
+      'image_path': imagePath,
+      'sheldon_grade': sheldonGrade,
+      'condition_grade': conditionGrade,
+      'is_favorite': isFavorite,
+      'purchase_price': purchasePrice,
+      'purchase_date': purchaseDate?.toIso8601String(),
+      'location': location,
     };
+  }
+
+  /// Создать копию с изменениями
+  AnalysisResult copyWith({
+    bool? isCoinOrBanknote,
+    String? humorousMessage,
+    String? itemType,
+    String? name,
+    String? country,
+    String? yearOfIssue,
+    String? mintMark,
+    String? denomination,
+    String? description,
+    String? obverseDescription,
+    String? reverseDescription,
+    List<CoinMaterial>? materials,
+    double? weight,
+    double? diameter,
+    String? edge,
+    String? rarityLevel,
+    int? rarityScore,
+    MarketValue? marketValue,
+    String? collectorInterest,
+    String? historicalContext,
+    String? mintageQuantity,
+    String? circulationPeriod,
+    List<MintError>? mintErrors,
+    List<String>? specialFeatures,
+    List<String>? warnings,
+    String? authenticityNotes,
+    List<String>? similarCoins,
+    String? aiSummary,
+    String? expertAdvice,
+    String? id,
+    bool? isInWishlist,
+    List<String>? tags,
+    String? userNotes,
+    DateTime? addedAt,
+    String? imagePath,
+    int? sheldonGrade,
+    String? conditionGrade,
+    bool? isFavorite,
+    double? purchasePrice,
+    DateTime? purchaseDate,
+    String? location,
+  }) {
+    return AnalysisResult(
+      isCoinOrBanknote: isCoinOrBanknote ?? this.isCoinOrBanknote,
+      humorousMessage: humorousMessage ?? this.humorousMessage,
+      itemType: itemType ?? this.itemType,
+      name: name ?? this.name,
+      country: country ?? this.country,
+      yearOfIssue: yearOfIssue ?? this.yearOfIssue,
+      mintMark: mintMark ?? this.mintMark,
+      denomination: denomination ?? this.denomination,
+      description: description ?? this.description,
+      obverseDescription: obverseDescription ?? this.obverseDescription,
+      reverseDescription: reverseDescription ?? this.reverseDescription,
+      materials: materials ?? this.materials,
+      weight: weight ?? this.weight,
+      diameter: diameter ?? this.diameter,
+      edge: edge ?? this.edge,
+      rarityLevel: rarityLevel ?? this.rarityLevel,
+      rarityScore: rarityScore ?? this.rarityScore,
+      marketValue: marketValue ?? this.marketValue,
+      collectorInterest: collectorInterest ?? this.collectorInterest,
+      historicalContext: historicalContext ?? this.historicalContext,
+      mintageQuantity: mintageQuantity ?? this.mintageQuantity,
+      circulationPeriod: circulationPeriod ?? this.circulationPeriod,
+      mintErrors: mintErrors ?? this.mintErrors,
+      specialFeatures: specialFeatures ?? this.specialFeatures,
+      warnings: warnings ?? this.warnings,
+      authenticityNotes: authenticityNotes ?? this.authenticityNotes,
+      similarCoins: similarCoins ?? this.similarCoins,
+      aiSummary: aiSummary ?? this.aiSummary,
+      expertAdvice: expertAdvice ?? this.expertAdvice,
+      id: id ?? this.id,
+      isInWishlist: isInWishlist ?? this.isInWishlist,
+      tags: tags ?? this.tags,
+      userNotes: userNotes ?? this.userNotes,
+      addedAt: addedAt ?? this.addedAt,
+      imagePath: imagePath ?? this.imagePath,
+      sheldonGrade: sheldonGrade ?? this.sheldonGrade,
+      conditionGrade: conditionGrade ?? this.conditionGrade,
+      isFavorite: isFavorite ?? this.isFavorite,
+      purchasePrice: purchasePrice ?? this.purchasePrice,
+      purchaseDate: purchaseDate ?? this.purchaseDate,
+      location: location ?? this.location,
+    );
   }
 }
