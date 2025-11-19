@@ -9,6 +9,9 @@ import 'providers/identification_provider.dart';
 import 'providers/collection_provider.dart';
 import 'providers/premium_provider.dart';
 import 'providers/fishing_spots_provider.dart';
+import 'providers/forecast_provider.dart';
+import 'providers/regulations_provider.dart';
+import 'providers/statistics_provider.dart';
 import 'navigation/app_router.dart';
 import 'flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -40,6 +43,10 @@ class FishIdentifierApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CollectionProvider()),
         ChangeNotifierProvider(create: (_) => PremiumProvider()),
         ChangeNotifierProvider(create: (_) => FishingSpotsProvider()),
+        // NEW PROVIDERS FOR ENHANCED FEATURES
+        ChangeNotifierProvider(create: (_) => ForecastProvider()),
+        ChangeNotifierProvider(create: (_) => RegulationsProvider()),
+        ChangeNotifierProvider(create: (_) => StatisticsProvider()),
       ],
       child: Consumer2<ThemeProviderV2, LocaleProvider>(
         builder: (context, themeProvider, localeProvider, child) {

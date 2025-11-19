@@ -141,7 +141,7 @@ class _ScannerCameraScreenState extends State<ScannerCameraScreen> {
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
             onPressed: () {
-              // TODO: Show settings
+              Navigator.pushNamed(context, '/settings');
             },
           ),
         ],
@@ -193,7 +193,7 @@ class _ScannerCameraScreenState extends State<ScannerCameraScreen> {
           IconButton(
             icon: const Icon(Icons.photo_library, color: Colors.white, size: 28),
             onPressed: () {
-              // TODO: Import from gallery
+              Navigator.pushNamed(context, '/scanner');
             },
           ),
 

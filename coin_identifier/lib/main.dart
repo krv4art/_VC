@@ -11,12 +11,18 @@ import 'config/app_config.dart';
 import 'config/prompts_manager.dart';
 import 'services/gemini_service.dart';
 import 'providers/analysis_provider.dart';
+import 'providers/collection_provider.dart';
+import 'providers/theme_provider.dart';
 
 import 'screens/home_screen.dart';
 import 'screens/scan_screen.dart';
 import 'screens/results_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/history_screen.dart';
+import 'screens/wishlist_screen.dart';
+import 'screens/statistics_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/coin_detail_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +53,11 @@ void main() async {
             : SupabaseConfig.prodSupabaseAnonKey),
   );
 
-  runApp(const CoinIdentifierApp());
+  // Initialize theme provider
+  final themeProvider = ThemeProvider();
+  await themeProvider.init();
+
+  runApp(CoinIdentifierApp(themeProvider: themeProvider));
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -137,17 +147,48 @@ final GoRouter _router = GoRouter(
       pageBuilder: (context, state) =>
           _buildSlideTransition(context, state, const HistoryScreen()),
     ),
+    GoRoute(
+      path: '/wishlist',
+      name: 'wishlist',
+      pageBuilder: (context, state) =>
+          _buildSlideTransition(context, state, const WishlistScreen()),
+    ),
+    GoRoute(
+      path: '/statistics',
+      name: 'statistics',
+      pageBuilder: (context, state) =>
+          _buildSlideTransition(context, state, const StatisticsScreen()),
+    ),
+    GoRoute(
+      path: '/settings',
+      name: 'settings',
+      pageBuilder: (context, state) =>
+          _buildSlideTransition(context, state, const SettingsScreen()),
+    ),
+    GoRoute(
+      path: '/coin/:id',
+      name: 'coin-detail',
+      pageBuilder: (context, state) {
+        final coinId = state.pathParameters['id']!;
+        return _buildSlideTransition(
+            context, state, CoinDetailScreen(coinId: coinId));
+      },
+    ),
   ],
 );
 
 class CoinIdentifierApp extends StatelessWidget {
-  const CoinIdentifierApp({Key? key}) : super(key: key);
+  final ThemeProvider themeProvider;
+
+  const CoinIdentifierApp({Key? key, required this.themeProvider}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AnalysisProvider()),
+        ChangeNotifierProvider(create: (_) => CollectionProvider()),
+        ChangeNotifierProvider.value(value: themeProvider),
         // Add GeminiService provider for AI analysis
         Provider<GeminiService>(
           create: (context) => GeminiService(
@@ -156,40 +197,17 @@ class CoinIdentifierApp extends StatelessWidget {
           ),
         ),
       ],
-      child: MaterialApp.router(
-        title: 'Coin Identifier',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFFD4AF37), // Gold color for coins
-            brightness: Brightness.light,
-          ),
-          useMaterial3: true,
-          fontFamily: 'Lora',
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFFD4AF37),
-            foregroundColor: Colors.white,
-            elevation: 0,
-            centerTitle: true,
-          ),
-          cardTheme: CardThemeData(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFD4AF37),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-        ),
-        routerConfig: _router,
-        debugShowCheckedModeBanner: false,
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp.router(
+            title: 'Coin Identifier',
+            theme: ThemeProvider.lightTheme,
+            darkTheme: ThemeProvider.darkTheme,
+            themeMode: themeProvider.themeMode,
+            routerConfig: _router,
+            debugShowCheckedModeBanner: false,
+          );
+        },
       ),
     );
   }

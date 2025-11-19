@@ -26,6 +26,11 @@ class _FishingMapScreenState extends State<FishingMapScreen> {
   // Default location (San Francisco)
   static const LatLng _defaultLocation = LatLng(37.7749, -122.4194);
 
+  // Filter options
+  bool _showFavoritesOnly = false;
+  String? _filterWaterType;
+  int? _minRating;
+
   @override
   void initState() {
     super.initState();
@@ -77,7 +82,18 @@ class _FishingMapScreenState extends State<FishingMapScreen> {
 
   Future<void> _loadMarkers() async {
     final spotsProvider = context.read<FishingSpotsProvider>();
-    final spots = spotsProvider.fishingSpots;
+    var spots = spotsProvider.fishingSpots;
+
+    // Apply filters
+    if (_showFavoritesOnly) {
+      spots = spots.where((spot) => spot.isFavorite).toList();
+    }
+    if (_filterWaterType != null) {
+      spots = spots.where((spot) => spot.waterType == _filterWaterType).toList();
+    }
+    if (_minRating != null) {
+      spots = spots.where((spot) => spot.rating != null && spot.rating! >= _minRating!).toList();
+    }
 
     final markers = <Marker>{};
     for (final spot in spots) {
@@ -98,7 +114,10 @@ class _FishingMapScreenState extends State<FishingMapScreen> {
       );
     }
 
-    setState(() => _markers.addAll(markers));
+    setState(() {
+      _markers.clear();
+      _markers.addAll(markers);
+    });
   }
 
   void _showSpotDetails(FishingSpot spot) {
@@ -432,23 +451,133 @@ https://www.google.com/maps?q=${spot.latitude},${spot.longitude}
   }
 
   void _showFilterDialog() {
-    // Filter dialog implementation
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Filter Fishing Spots'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Filter options coming soon!'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.close),
-          ),
-        ],
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('Filter Fishing Spots'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Favorites filter
+                  CheckboxListTile(
+                    title: const Text('Favorites Only'),
+                    value: _showFavoritesOnly,
+                    onChanged: (value) {
+                      setDialogState(() {
+                        _showFavoritesOnly = value ?? false;
+                      });
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  const SizedBox(height: AppDimensions.space8),
+
+                  // Water Type filter
+                  const Text('Water Type', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: AppDimensions.space4),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      FilterChip(
+                        label: const Text('All'),
+                        selected: _filterWaterType == null,
+                        onSelected: (selected) {
+                          setDialogState(() {
+                            _filterWaterType = null;
+                          });
+                        },
+                      ),
+                      FilterChip(
+                        label: const Text('Freshwater'),
+                        selected: _filterWaterType == 'Freshwater',
+                        onSelected: (selected) {
+                          setDialogState(() {
+                            _filterWaterType = selected ? 'Freshwater' : null;
+                          });
+                        },
+                      ),
+                      FilterChip(
+                        label: const Text('Saltwater'),
+                        selected: _filterWaterType == 'Saltwater',
+                        onSelected: (selected) {
+                          setDialogState(() {
+                            _filterWaterType = selected ? 'Saltwater' : null;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimensions.space16),
+
+                  // Rating filter
+                  const Text('Minimum Rating', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: AppDimensions.space4),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      FilterChip(
+                        label: const Text('Any'),
+                        selected: _minRating == null,
+                        onSelected: (selected) {
+                          setDialogState(() {
+                            _minRating = null;
+                          });
+                        },
+                      ),
+                      ...List.generate(5, (index) {
+                        final rating = index + 1;
+                        return FilterChip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('$rating'),
+                              const Icon(Icons.star, size: 14),
+                            ],
+                          ),
+                          selected: _minRating == rating,
+                          onSelected: (selected) {
+                            setDialogState(() {
+                              _minRating = selected ? rating : null;
+                            });
+                          },
+                        );
+                      }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _showFavoritesOnly = false;
+                    _filterWaterType = null;
+                    _minRating = null;
+                  });
+                  _loadMarkers();
+                  Navigator.pop(context);
+                },
+                child: const Text('Clear All'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(AppLocalizations.of(context)!.cancel),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {}); // Update main widget state
+                  _loadMarkers();
+                  Navigator.pop(context);
+                },
+                child: const Text('Apply'),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

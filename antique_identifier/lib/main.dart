@@ -7,7 +7,11 @@ import 'screens/scan_screen.dart';
 import 'screens/results_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/history_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/encyclopedia_screen.dart';
+import 'screens/marks_scanner_screen.dart';
 import 'providers/analysis_provider.dart';
+import 'providers/collection_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,6 +100,33 @@ final GoRouter _router = GoRouter(
       name: 'history',
       pageBuilder: (context, state) => _buildSlideTransition(context, state, const HistoryScreen()),
     ),
+    GoRoute(
+      path: '/settings',
+      name: 'settings',
+      pageBuilder: (context, state) => _buildSlideTransition(context, state, const SettingsScreen()),
+    ),
+    GoRoute(
+      path: '/encyclopedia',
+      name: 'encyclopedia',
+      pageBuilder: (context, state) => _buildSlideTransition(context, state, const EncyclopediaScreen()),
+    ),
+    GoRoute(
+      path: '/encyclopedia/:id',
+      name: 'encyclopedia-detail',
+      pageBuilder: (context, state) {
+        final entryId = state.pathParameters['id'];
+        return _buildSlideTransition(
+          context,
+          state,
+          EncyclopediaDetailScreen(entryId: entryId ?? ''),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/marks-scanner',
+      name: 'marks-scanner',
+      pageBuilder: (context, state) => _buildSlideTransition(context, state, const MarksScannerScreen()),
+    ),
   ],
 );
 
@@ -107,6 +138,7 @@ class AntiqueIdentifierApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AnalysisProvider()),
+        ChangeNotifierProvider(create: (_) => CollectionProvider()),
       ],
       child: MaterialApp.router(
         title: 'Antique Identifier',

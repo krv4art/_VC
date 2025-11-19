@@ -222,7 +222,7 @@ class _LibraryScreenState extends State<LibraryScreen> with SingleTickerProvider
           autofocus: true,
           onSubmitted: (value) {
             Navigator.pop(context);
-            // TODO: Implement search
+            showSearch(context: context, delegate: DocumentSearchDelegate(provider));
           },
         ),
         actions: [
@@ -233,7 +233,7 @@ class _LibraryScreenState extends State<LibraryScreen> with SingleTickerProvider
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: Implement search
+              showSearch(context: context, delegate: DocumentSearchDelegate(provider));
             },
             child: const Text('Search'),
           ),

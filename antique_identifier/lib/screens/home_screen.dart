@@ -47,10 +47,46 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 16),
               _buildActionButton(
                 context: context,
-                icon: Icons.history,
-                label: 'View History',
-                onPressed: () => context.push('/history'),
-                backgroundColor: Colors.grey.shade700,
+                icon: Icons.qr_code_scanner,
+                label: 'Scan Maker\'s Mark',
+                onPressed: () => context.push('/marks-scanner'),
+                backgroundColor: Colors.purple.shade700,
+              ),
+              const SizedBox(height: 24),
+
+              // Secondary features grid
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildFeatureCard(
+                      context: context,
+                      icon: Icons.book,
+                      label: 'Encyclopedia',
+                      onPressed: () => context.push('/encyclopedia'),
+                      color: Colors.green.shade700,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildFeatureCard(
+                      context: context,
+                      icon: Icons.history,
+                      label: 'History',
+                      onPressed: () => context.push('/history'),
+                      color: Colors.blue.shade700,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildFeatureCard(
+                      context: context,
+                      icon: Icons.settings,
+                      label: 'Settings',
+                      onPressed: () => context.push('/settings'),
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 48),
               Container(
@@ -109,6 +145,42 @@ class HomeScreen extends StatelessWidget {
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureCard({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+    required Color color,
+  }) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 32, color: color),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
       ),

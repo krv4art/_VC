@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:provider/provider.dart';
 import '../../constants/app_dimensions.dart';
+import '../../providers/scan_provider.dart';
 import 'scanner_camera_screen.dart';
 
 /// Scanner screen - Entry point for document scanning
@@ -60,12 +64,7 @@ class ScannerScreen extends StatelessWidget {
               title: 'Import from Gallery',
               subtitle: 'Select images from your photo library',
               color: Theme.of(context).colorScheme.secondary,
-              onTap: () {
-                // TODO: Implement gallery import
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Gallery import coming soon!')),
-                );
-              },
+              onTap: () => _importFromGallery(context),
             ),
 
             const SizedBox(height: AppDimensions.space16),
@@ -76,17 +75,121 @@ class ScannerScreen extends StatelessWidget {
               title: 'Import from Files',
               subtitle: 'Select PDF or image files',
               color: Colors.orange,
-              onTap: () {
-                // TODO: Implement file import
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('File import coming soon!')),
-                );
-              },
+              onTap: () => _importFromFiles(context),
             ),
           ],
         ),
       ),
     );
+  }
+
+  /// Import images from gallery
+  static Future<void> _importFromGallery(BuildContext context) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+
+      // Allow multiple image selection
+      final List<XFile> images = await picker.pickMultiImage();
+
+      if (images.isEmpty) return;
+
+      if (!context.mounted) return;
+
+      // Start new scan session with imported images
+      final scanProvider = context.read<ScanProvider>();
+      await scanProvider.startSession();
+
+      // Add each image to the session
+      for (final image in images) {
+        await scanProvider.addPageFromPath(image.path);
+      }
+
+      if (!context.mounted) return;
+
+      // Navigate to converter or preview
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${images.length} image(s) imported successfully'),
+          action: SnackBarAction(
+            label: 'VIEW',
+            onPressed: () {
+              context.push('/converter');
+            },
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to import images: $e')),
+      );
+    }
+  }
+
+  /// Import files (PDF or images)
+  static Future<void> _importFromFiles(BuildContext context) async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+        allowMultiple: true,
+      );
+
+      if (result == null || result.files.isEmpty) return;
+
+      if (!context.mounted) return;
+
+      final pdfFiles = result.files.where((f) => f.extension == 'pdf').toList();
+      final imageFiles = result.files.where((f) =>
+        f.extension == 'jpg' || f.extension == 'jpeg' || f.extension == 'png'
+      ).toList();
+
+      // If PDF files selected, navigate to library
+      if (pdfFiles.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${pdfFiles.length} PDF file(s) imported'),
+            action: SnackBarAction(
+              label: 'VIEW',
+              onPressed: () {
+                context.push('/library');
+              },
+            ),
+          ),
+        );
+      }
+
+      // If image files selected, add to scan session
+      if (imageFiles.isNotEmpty) {
+        final scanProvider = context.read<ScanProvider>();
+        await scanProvider.startSession();
+
+        for (final file in imageFiles) {
+          if (file.path != null) {
+            await scanProvider.addPageFromPath(file.path!);
+          }
+        }
+
+        if (!context.mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${imageFiles.length} image(s) imported'),
+            action: SnackBarAction(
+              label: 'CONVERT',
+              onPressed: () {
+                context.push('/converter');
+              },
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to import files: $e')),
+      );
+    }
   }
 }
 
