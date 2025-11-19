@@ -1,0 +1,73 @@
+{
+  "app_name": "AI PDF Scanner",
+  "app_version": "1.0.0",
+  "default_settings": {
+    "theme": "professional",
+    "dark_mode": false,
+    "language": "en",
+    "ai_enabled": true,
+    "auto_ocr": true,
+    "auto_classification": true,
+    "auto_edge_detection": true,
+    "auto_enhancement": true,
+    "default_pdf_quality": "high",
+    "compression_level": "medium",
+    "auto_save": true,
+    "cloud_sync_enabled": false
+  },
+  "pdf_quality_presets": {
+    "low": {
+      "image_quality": 60,
+      "dpi": 150,
+      "description": "Small file size, lower quality"
+    },
+    "medium": {
+      "image_quality": 80,
+      "dpi": 200,
+      "description": "Balanced quality and size"
+    },
+    "high": {
+      "image_quality": 90,
+      "dpi": 300,
+      "description": "High quality, larger file"
+    },
+    "print": {
+      "image_quality": 95,
+      "dpi": 600,
+      "description": "Print quality, largest file"
+    }
+  },
+  "compression_presets": {
+    "light": {
+      "image_quality": 85,
+      "description": "Minimal compression, best quality"
+    },
+    "medium": {
+      "image_quality": 70,
+      "description": "Balanced compression"
+    },
+    "strong": {
+      "image_quality": 55,
+      "description": "High compression, smaller file"
+    },
+    "maximum": {
+      "image_quality": 40,
+      "description": "Maximum compression, lowest quality"
+    }
+  },
+  "supported_formats": {
+    "input": ["jpg", "jpeg", "png", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"],
+    "output": ["pdf", "jpg", "png"]
+  },
+  "ai_features": {
+    "max_file_size_mb": 10,
+    "supported_languages": ["en", "ru", "es", "fr", "de", "it", "pt", "zh", "ja", "ko"],
+    "ocr_languages": ["eng", "rus", "spa", "fra", "deu", "ita", "por", "chi_sim", "jpn", "kor"]
+  },
+  "limits": {
+    "max_pages_per_scan": 50,
+    "max_file_size_mb": 100,
+    "max_merge_files": 20,
+    "max_storage_gb": 5
+  }
+}

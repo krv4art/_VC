@@ -2,8 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 /// PDF merger service
 /// Combines multiple PDF files into one
@@ -29,27 +28,30 @@ class PdfMergerService {
         return pdfPaths.first;
       }
 
-      // Create new PDF document
-      final mergedPdf = pw.Document();
+      // Create new PDF document for merging
+      final PdfDocument mergedDocument = PdfDocument();
 
       // Load and merge each PDF
       for (int i = 0; i < pdfPaths.length; i++) {
         debugPrint('   Adding PDF ${i + 1}/${pdfPaths.length}...');
 
-        // TODO: Implement actual PDF merging
-        // This requires a library that can load and manipulate existing PDFs
-        // For now, this is a placeholder
+        // Load source PDF
+        final pdfBytes = await File(pdfPaths[i]).readAsBytes();
+        final PdfDocument sourceDocument = PdfDocument(inputBytes: pdfBytes);
 
-        // In production, you would:
-        // 1. Load the PDF file
-        // 2. Extract all pages
-        // 3. Add pages to merged PDF
+        // Import all pages from source PDF
+        mergedDocument.importPages(sourceDocument, 0, sourceDocument.pages.count - 1);
+
+        // Dispose source document
+        sourceDocument.dispose();
       }
 
       // Save merged PDF
       final outputPath = await _getOutputPath(outputFileName ?? 'merged');
-      final file = File(outputPath);
-      await file.writeAsBytes(await mergedPdf.save());
+      final List<int> savedBytes = await mergedDocument.save();
+      mergedDocument.dispose();
+
+      await File(outputPath).writeAsBytes(savedBytes);
 
       debugPrint('✅ PDFs merged: $outputPath');
       return outputPath;
@@ -67,7 +69,7 @@ class PdfMergerService {
     try {
       debugPrint('🔗 Merging specific pages from ${pdfPagesMap.length} PDFs...');
 
-      final mergedPdf = pw.Document();
+      final PdfDocument mergedDocument = PdfDocument();
 
       // For each PDF and its pages
       for (final entry in pdfPagesMap.entries) {
@@ -76,13 +78,27 @@ class PdfMergerService {
 
         debugPrint('   Adding ${pageNumbers.length} pages from ${path.basename(pdfPath)}...');
 
-        // TODO: Implement page extraction and merging
+        // Load source PDF
+        final pdfBytes = await File(pdfPath).readAsBytes();
+        final PdfDocument sourceDocument = PdfDocument(inputBytes: pdfBytes);
+
+        // Import specific pages (convert to 0-based index)
+        for (final pageNum in pageNumbers) {
+          final pageIndex = pageNum - 1; // Convert to 0-based
+          if (pageIndex >= 0 && pageIndex < sourceDocument.pages.count) {
+            mergedDocument.importPages(sourceDocument, pageIndex, pageIndex);
+          }
+        }
+
+        sourceDocument.dispose();
       }
 
       // Save merged PDF
       final outputPath = await _getOutputPath(outputFileName ?? 'merged_pages');
-      final file = File(outputPath);
-      await file.writeAsBytes(await mergedPdf.save());
+      final List<int> savedBytes = await mergedDocument.save();
+      mergedDocument.dispose();
+
+      await File(outputPath).writeAsBytes(savedBytes);
 
       debugPrint('✅ Pages merged: $outputPath');
       return outputPath;
@@ -116,8 +132,40 @@ class PdfMergerService {
     try {
       debugPrint('📥 Inserting PDF at page $atPage...');
 
-      // TODO: Implement PDF insertion at specific position
+      // Load base PDF
+      final basePdfBytes = await File(basePdfPath).readAsBytes();
+      final PdfDocument baseDocument = PdfDocument(inputBytes: basePdfBytes);
+
+      // Load insert PDF
+      final insertPdfBytes = await File(insertPdfPath).readAsBytes();
+      final PdfDocument insertDocument = PdfDocument(inputBytes: insertPdfBytes);
+
+      // Create output document
+      final PdfDocument outputDocument = PdfDocument();
+
+      // Copy pages before insertion point
+      if (atPage > 1) {
+        outputDocument.importPages(baseDocument, 0, atPage - 2);
+      }
+
+      // Insert the new PDF
+      outputDocument.importPages(insertDocument, 0, insertDocument.pages.count - 1);
+
+      // Copy remaining pages from base
+      if (atPage - 1 < baseDocument.pages.count) {
+        outputDocument.importPages(baseDocument, atPage - 1, baseDocument.pages.count - 1);
+      }
+
+      // Save output PDF
       final outputPath = await _getOutputPath('inserted');
+      final List<int> savedBytes = await outputDocument.save();
+
+      // Dispose documents
+      baseDocument.dispose();
+      insertDocument.dispose();
+      outputDocument.dispose();
+
+      await File(outputPath).writeAsBytes(savedBytes);
 
       debugPrint('✅ PDF inserted: $outputPath');
       return outputPath;
