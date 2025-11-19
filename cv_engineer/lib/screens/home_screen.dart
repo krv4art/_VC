@@ -6,6 +6,7 @@ import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/animated_card.dart';
 import '../utils/demo_data.dart';
+import '../utils/time_utils.dart';
 import '../services/rating_service.dart';
 import '../widgets/rating_request_dialog.dart';
 
@@ -372,7 +373,7 @@ class _CurrentResumeCard extends StatelessWidget {
                     ),
                     const SizedBox(height: AppTheme.space4),
                     Text(
-                      'Last updated: ${_formatDate(resume.updatedAt)}',
+                      'Last updated: ${TimeUtils.formatLastEdited(resume.updatedAt)}',
                       style: theme.textTheme.bodySmall,
                     ),
                   ],
@@ -399,10 +400,6 @@ class _CurrentResumeCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 }
 

@@ -5,10 +5,18 @@ import 'package:uuid/uuid.dart';
 import '../providers/resume_provider.dart';
 import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/time_utils.dart';
 import 'package:intl/intl.dart';
 
-class ResumeListScreen extends StatelessWidget {
+class ResumeListScreen extends StatefulWidget {
   const ResumeListScreen({super.key});
+
+  @override
+  State<ResumeListScreen> createState() => _ResumeListScreenState();
+}
+
+class _ResumeListScreenState extends State<ResumeListScreen> {
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +24,42 @@ class ResumeListScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final resumeProvider = context.watch<ResumeProvider>();
 
+    // Filter resumes based on search query
+    final filteredResumes = resumeProvider.savedResumes.where((resume) {
+      if (_searchQuery.isEmpty) return true;
+      final query = _searchQuery.toLowerCase();
+      return resume.personalInfo.fullName.toLowerCase().contains(query) ||
+             resume.templateId.toLowerCase().contains(query) ||
+             resume.personalInfo.email.toLowerCase().contains(query);
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Resumes'),
+        title: _searchQuery.isEmpty
+            ? const Text('My Resumes')
+            : TextField(
+                autofocus: true,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: 'Search resumes...',
+                  hintStyle: TextStyle(color: Colors.white70),
+                  border: InputBorder.none,
+                ),
+                onChanged: (value) => setState(() => _searchQuery = value),
+              ),
         actions: [
+          if (_searchQuery.isEmpty)
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => setState(() => _searchQuery = ' '),
+              tooltip: 'Search',
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () => setState(() => _searchQuery = ''),
+              tooltip: 'Clear search',
+            ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () async {
@@ -34,9 +74,43 @@ class ResumeListScreen extends StatelessWidget {
       ),
       body: resumeProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : resumeProvider.savedResumes.isEmpty
-              ? _buildEmptyState(context, resumeProvider)
-              : _buildResumeList(context, resumeProvider),
+          : filteredResumes.isEmpty && _searchQuery.isNotEmpty
+              ? _buildNoResultsState(context, theme)
+              : resumeProvider.savedResumes.isEmpty
+                  ? _buildEmptyState(context, resumeProvider)
+                  : _buildResumeList(context, filteredResumes),
+    );
+  }
+
+  Widget _buildNoResultsState(BuildContext context, ThemeData theme) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppTheme.space32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 80,
+              color: theme.colorScheme.primary.withOpacity(0.3),
+            ),
+            const SizedBox(height: AppTheme.space16),
+            Text(
+              'No resumes found',
+              style: theme.textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppTheme.space8),
+            Text(
+              'Try a different search term',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -92,16 +166,16 @@ class ResumeListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildResumeList(BuildContext context, ResumeProvider provider) {
+  Widget _buildResumeList(BuildContext context, List<dynamic> filteredResumes) {
     final theme = Theme.of(context);
-    final resumes = provider.savedResumes;
+    final provider = context.read<ResumeProvider>();
     final currentResumeId = provider.currentResume?.id;
 
     return ListView.builder(
       padding: const EdgeInsets.all(AppTheme.space16),
-      itemCount: resumes.length,
+      itemCount: filteredResumes.length,
       itemBuilder: (context, index) {
-        final resume = resumes[index];
+        final resume = filteredResumes[index];
         final isCurrentResume = resume.id == currentResumeId;
 
         return Card(
@@ -197,7 +271,7 @@ class ResumeListScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Updated: ${_formatDate(resume.updatedAt)}',
+                          'Updated: ${TimeUtils.formatLastEdited(resume.updatedAt)}',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.grey[600],
                           ),
