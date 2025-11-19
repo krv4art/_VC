@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/collection_provider.dart';
+import '../services/export_service.dart';
 import 'package:share_plus/share_plus.dart';
 
 /// Экран настроек
@@ -165,15 +166,42 @@ class SettingsScreen extends StatelessWidget {
       const SnackBar(content: Text('Exporting as PDF...')),
     );
 
-    // TODO: Implement PDF export
-    // This will be implemented in the export service
+    try {
+      final provider = context.read<CollectionProvider>();
+      await provider.loadCollection();
 
-    await Future.delayed(const Duration(seconds: 1));
+      if (provider.collection.isEmpty) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('No coins to export'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
 
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('PDF export feature coming soon!')),
-      );
+      final exportService = ExportService();
+      await exportService.exportToPDF(provider.collection);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('PDF exported successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error exporting PDF: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -182,15 +210,42 @@ class SettingsScreen extends StatelessWidget {
       const SnackBar(content: Text('Exporting as CSV...')),
     );
 
-    // TODO: Implement CSV export
-    // This will be implemented in the export service
+    try {
+      final provider = context.read<CollectionProvider>();
+      await provider.loadCollection();
 
-    await Future.delayed(const Duration(seconds: 1));
+      if (provider.collection.isEmpty) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('No coins to export'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
 
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('CSV export feature coming soon!')),
-      );
+      final exportService = ExportService();
+      await exportService.exportToCSV(provider.collection);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('CSV exported successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error exporting CSV: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 

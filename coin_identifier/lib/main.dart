@@ -22,6 +22,7 @@ import 'screens/history_screen.dart';
 import 'screens/wishlist_screen.dart';
 import 'screens/statistics_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/coin_detail_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -163,6 +164,15 @@ final GoRouter _router = GoRouter(
       name: 'settings',
       pageBuilder: (context, state) =>
           _buildSlideTransition(context, state, const SettingsScreen()),
+    ),
+    GoRoute(
+      path: '/coin/:id',
+      name: 'coin-detail',
+      pageBuilder: (context, state) {
+        final coinId = state.pathParameters['id']!;
+        return _buildSlideTransition(
+            context, state, CoinDetailScreen(coinId: coinId));
+      },
     ),
   ],
 );

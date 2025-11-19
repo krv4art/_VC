@@ -295,7 +295,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: () {
-          // TODO: Navigate to coin detail screen
+          if (coin.id != null) {
+            context.push('/coin/${coin.id}');
+          }
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(

@@ -107,7 +107,9 @@ class _WishlistScreenState extends State<WishlistScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         onTap: () {
-          // Navigate to details
+          if (coin.id != null) {
+            context.push('/coin/${coin.id}');
+          }
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
