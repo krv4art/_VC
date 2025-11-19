@@ -8,6 +8,8 @@ import '../screens/result_screen.dart';
 import '../screens/history_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/premium_screen.dart';
+import '../screens/privacy_policy_screen.dart';
+import '../screens/terms_of_service_screen.dart';
 
 class AppRouter {
   static const String splash = '/';
@@ -19,6 +21,8 @@ class AppRouter {
   static const String history = '/history';
   static const String settings = '/settings';
   static const String premium = '/premium';
+  static const String privacyPolicy = '/privacy-policy';
+  static const String termsOfService = '/terms-of-service';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -58,6 +62,14 @@ class AppRouter {
       GoRoute(
         path: premium,
         builder: (context, state) => const PremiumScreen(),
+      ),
+      GoRoute(
+        path: privacyPolicy,
+        builder: (context, state) => const PrivacyPolicyScreen(),
+      ),
+      GoRoute(
+        path: termsOfService,
+        builder: (context, state) => const TermsOfServiceScreen(),
       ),
     ],
   );

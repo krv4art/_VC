@@ -98,9 +98,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
-              // TODO: Implement delete all
+            onPressed: () async {
               Navigator.pop(context);
+              await context.read<ImageProcessingProvider>().deleteAllHistory();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('All history deleted'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.errorColor,

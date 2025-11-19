@@ -103,19 +103,13 @@ class SettingsScreen extends StatelessWidget {
             leading: const Icon(Icons.description_outlined),
             title: const Text('Privacy Policy'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () {
-              // TODO: Add privacy policy URL
-              _launchURL('https://example.com/privacy');
-            },
+            onTap: () => context.push(AppRouter.privacyPolicy),
           ),
           ListTile(
             leading: const Icon(Icons.description_outlined),
             title: const Text('Terms of Service'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () {
-              // TODO: Add terms URL
-              _launchURL('https://example.com/terms');
-            },
+            onTap: () => context.push(AppRouter.termsOfService),
           ),
           ListTile(
             leading: const Icon(Icons.email_outlined),

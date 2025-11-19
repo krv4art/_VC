@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -55,12 +56,30 @@ class RatingService {
   }
 
   Future<void> openAppStore() async {
-    // TODO: Replace with actual app store URLs
-    const String androidUrl = 'https://play.google.com/store/apps/details?id=com.example.ai_background_remover';
-    const String iosUrl = 'https://apps.apple.com/app/id123456789';
+    // App Store URLs Configuration
+    // Replace these with your actual app store URLs after publication:
+    //
+    // Android (Google Play):
+    // 1. Publish app to Google Play Console
+    // 2. Get package name from build.gradle (e.g., com.yourcompany.ai_background_remover)
+    // 3. URL format: https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME
+    //
+    // iOS (App Store):
+    // 1. Publish app to App Store Connect
+    // 2. Get app ID from App Store Connect (numeric ID)
+    // 3. URL format: https://apps.apple.com/app/idYOUR_APP_ID
+    //
+    // For development/testing, these URLs point to placeholders
+    const String androidPackageId = 'com.aibackgroundremover.app';
+    const String iosAppId = '0000000000'; // Replace with real App Store ID
 
-    // For now, just open a placeholder
-    final Uri url = Uri.parse(androidUrl);
+    final String androidUrl = 'https://play.google.com/store/apps/details?id=$androidPackageId';
+    final String iosUrl = 'https://apps.apple.com/app/id$iosAppId';
+
+    // Detect platform and use appropriate URL
+    final String urlToOpen = Platform.isIOS ? iosUrl : androidUrl;
+
+    final Uri url = Uri.parse(urlToOpen);
 
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);

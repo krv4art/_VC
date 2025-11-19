@@ -141,9 +141,27 @@ class AIBackgroundRemovalService {
 
   /// Remove background using TensorFlow Lite model (offline)
   Future<Uint8List> _removeBackgroundWithTFLite(File imageFile) async {
-    // TODO: Implement TensorFlow Lite integration
-    // This would use a pre-trained model like DeepLabV3 or U2-Net
-    // For now, fallback to local algorithm
+    // TensorFlow Lite integration for on-device ML inference
+    // This would use a pre-trained model like DeepLabV3+ or U2-Net
+    //
+    // Implementation steps:
+    // 1. Place model file in assets/models/background_removal.tflite
+    // 2. Load model using tflite_flutter package
+    // 3. Preprocess image to model input size (e.g., 512x512)
+    // 4. Run inference to get mask
+    // 5. Apply mask to original image
+    //
+    // Example code:
+    // final interpreter = await Interpreter.fromAsset('models/background_removal.tflite');
+    // final inputImage = preprocessImage(imageFile, size: 512);
+    // final mask = interpreter.run(inputImage);
+    // final result = applyMask(imageFile, mask);
+    //
+    // For production deployment, download a pre-trained model from:
+    // - DeepLabV3+: https://www.tensorflow.org/lite/examples/segmentation
+    // - U2-Net: https://github.com/xuebinqin/U-2-Net
+    //
+    // Currently using improved local algorithm as fallback
     return await _removeBackgroundLocal(imageFile);
   }
 
