@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:cv_engineer/models/cover_letter.dart';
 import 'package:cv_engineer/providers/resume_provider.dart';
 import 'package:cv_engineer/services/cover_letter_service.dart';
+import 'package:cv_engineer/services/cover_letter_export_service.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CoverLetterGeneratorScreen extends StatefulWidget {
   const CoverLetterGeneratorScreen({super.key});
@@ -325,6 +327,95 @@ class _CoverLetterEditorScreenState extends State<CoverLetterEditorScreen> {
     Navigator.of(context).pop();
   }
 
+  void _exportCoverLetter(BuildContext context) async {
+    final resumeProvider = context.read<ResumeProvider>();
+    if (!resumeProvider.hasCurrentResume) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Resume not found')),
+      );
+      return;
+    }
+
+    final resume = resumeProvider.currentResume!;
+
+    // Show format selection dialog
+    final format = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Export Format'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf),
+              title: const Text('PDF'),
+              subtitle: const Text('Best for viewing and printing'),
+              onTap: () => Navigator.pop(context, 'pdf'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.article),
+              title: const Text('Word (DOCX)'),
+              subtitle: const Text('Best for editing'),
+              onTap: () => Navigator.pop(context, 'docx'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (format == null) return;
+
+    try {
+      final updatedCoverLetter = _currentCoverLetter.copyWith(
+        content: _contentController.text,
+      );
+
+      if (format == 'pdf') {
+        final file = await CoverLetterExportService.exportToPdf(
+          updatedCoverLetter,
+          resume,
+        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('PDF exported successfully'),
+              action: SnackBarAction(
+                label: 'Share',
+                onPressed: () async {
+                  await Share.shareXFiles([XFile(file.path)]);
+                },
+              ),
+            ),
+          );
+        }
+      } else {
+        final file = await CoverLetterExportService.exportToDocx(
+          updatedCoverLetter,
+          resume,
+        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('DOCX exported successfully'),
+              action: SnackBarAction(
+                label: 'Share',
+                onPressed: () async {
+                  await Share.shareXFiles([XFile(file.path)]);
+                },
+              ),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Export failed: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -335,12 +426,25 @@ class _CoverLetterEditorScreenState extends State<CoverLetterEditorScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.download),
-            onPressed: () {
-              // TODO: Export to PDF/DOCX
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Export feature coming soon')),
+            onPressed: () => _exportCoverLetter(context),
+            tooltip: 'Export',
+          ),
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () async {
+              final resumeProvider = context.read<ResumeProvider>();
+              if (!resumeProvider.hasCurrentResume) return;
+
+              final updatedCoverLetter = _currentCoverLetter.copyWith(
+                content: _contentController.text,
+              );
+
+              await CoverLetterExportService.sharePdf(
+                updatedCoverLetter,
+                resumeProvider.currentResume!,
               );
             },
+            tooltip: 'Share PDF',
           ),
         ],
       ),

@@ -15,25 +15,21 @@ class ResumeVersionsScreen extends StatefulWidget {
 
 class _ResumeVersionsScreenState extends State<ResumeVersionsScreen> {
   void _duplicateResume(Resume resume) {
-    final provider = context.read<ResumeProvider>();
-
-    // Create duplicate with new ID and timestamp
-    final duplicate = resume.copyWith(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-
-    // Update personal info to indicate it's a copy
-    final newPersonalInfo = duplicate.personalInfo.copyWith(
-      fullName: '${duplicate.personalInfo.fullName} (Copy)',
-    );
-
-    final finalResume = duplicate.copyWith(personalInfo: newPersonalInfo);
-
-    // TODO: Add to provider's resume list
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Resume duplicated successfully')),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Duplicate Resume'),
+        content: const Text(
+          'This feature will be available in a future update.\n\n'
+          'Currently, you can create a new resume and manually copy the content.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -42,22 +38,14 @@ class _ResumeVersionsScreenState extends State<ResumeVersionsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Resume'),
-        content: const Text('Are you sure you want to delete this resume version?'),
+        content: const Text(
+          'Cannot delete the active resume.\n\n'
+          'Create a new resume first to switch to it.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              // TODO: Delete from provider
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Resume deleted')),
-              );
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -76,6 +64,7 @@ class _ResumeVersionsScreenState extends State<ResumeVersionsScreen> {
           decoration: const InputDecoration(
             labelText: 'Resume Name',
             border: OutlineInputBorder(),
+            hintText: 'Enter your full name',
           ),
         ),
         actions: [
@@ -85,7 +74,11 @@ class _ResumeVersionsScreenState extends State<ResumeVersionsScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              // TODO: Update resume name in provider
+              final provider = context.read<ResumeProvider>();
+              final updatedInfo = resume.personalInfo.copyWith(
+                fullName: controller.text,
+              );
+              provider.updatePersonalInfo(updatedInfo);
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Resume renamed')),
@@ -179,11 +172,35 @@ class _ResumeVersionsScreenState extends State<ResumeVersionsScreen> {
             ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Create new blank resume
-          final newResume = Resume.empty();
-          // TODO: Add to provider
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('New resume created')),
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Create New Resume'),
+              content: const Text(
+                'This will replace your current resume with a blank one.\n\n'
+                'Make sure you have exported your current resume first if you want to keep it.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final provider = context.read<ResumeProvider>();
+                    await provider.createNewResume();
+                    if (context.mounted) {
+                      Navigator.of(context).pop(); // Close dialog
+                      Navigator.of(context).pop(); // Go back to editor
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('New resume created')),
+                      );
+                    }
+                  },
+                  child: const Text('Create'),
+                ),
+              ],
+            ),
           );
         },
         icon: const Icon(Icons.add),

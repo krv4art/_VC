@@ -9,6 +9,7 @@ import 'package:cv_engineer/providers/resume_provider.dart';
 import 'package:cv_engineer/services/ats_service.dart';
 import 'package:cv_engineer/screens/ats_checker_screen.dart';
 import 'package:uuid/uuid.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ATSAnalyzerScreen extends StatefulWidget {
   const ATSAnalyzerScreen({super.key});
@@ -284,6 +285,61 @@ class ATSResultsScreen extends StatelessWidget {
 
   const ATSResultsScreen({super.key, required this.analysis});
 
+  void _shareResults() {
+    final report = _generateTextReport(analysis);
+    Share.share(
+      report,
+      subject: 'ATS Analysis Report - Score: ${analysis.overallScore.toStringAsFixed(1)}%',
+    );
+  }
+
+  String _generateTextReport(ATSAnalysis analysis) {
+    final buffer = StringBuffer();
+    buffer.writeln('ATS ANALYSIS REPORT');
+    buffer.writeln('=' * 50);
+    buffer.writeln();
+    buffer.writeln('Overall Score: ${analysis.overallScore.toStringAsFixed(1)}%');
+    buffer.writeln('Keyword Match: ${analysis.keywordMatchScore.toStringAsFixed(1)}%');
+    buffer.writeln('Format Score: ${analysis.formatScore.toStringAsFixed(1)}%');
+    buffer.writeln('Content Score: ${analysis.contentScore.toStringAsFixed(1)}%');
+    buffer.writeln();
+
+    if (analysis.criticalIssues.isNotEmpty) {
+      buffer.writeln('CRITICAL ISSUES:');
+      buffer.writeln('-' * 50);
+      for (final issue in analysis.criticalIssues) {
+        buffer.writeln('• $issue');
+      }
+      buffer.writeln();
+    }
+
+    if (analysis.suggestions.isNotEmpty) {
+      buffer.writeln('SUGGESTIONS:');
+      buffer.writeln('-' * 50);
+      for (final suggestion in analysis.suggestions) {
+        buffer.writeln('• $suggestion');
+      }
+      buffer.writeln();
+    }
+
+    buffer.writeln('MATCHED KEYWORDS (${analysis.matchedKeywords.length}):');
+    buffer.writeln('-' * 50);
+    for (final kw in analysis.matchedKeywords.take(20)) {
+      buffer.writeln('• ${kw.keyword} (${kw.relevanceScore.toStringAsFixed(0)}% relevant)');
+    }
+
+    if (analysis.missingKeywords.isNotEmpty) {
+      buffer.writeln();
+      buffer.writeln('MISSING KEYWORDS (${analysis.missingKeywords.length}):');
+      buffer.writeln('-' * 50);
+      for (final kw in analysis.missingKeywords.take(15)) {
+        buffer.writeln('• $kw');
+      }
+    }
+
+    return buffer.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -294,9 +350,8 @@ class ATSResultsScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () {
-              // TODO: Implement share functionality
-            },
+            onPressed: _shareResults,
+            tooltip: 'Share Report',
           ),
         ],
       ),
