@@ -36,7 +36,7 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: (db, version) async {
         // Fish identifications table
         await db.execute('''
@@ -119,6 +119,161 @@ class DatabaseService {
             isFavorite INTEGER DEFAULT 0
           )
         ''');
+
+        // NEW TABLES FOR ENHANCED FEATURES
+
+        // Fishing regulations table
+        await db.execute('''
+          CREATE TABLE regulations(
+            id TEXT PRIMARY KEY,
+            species_name TEXT NOT NULL,
+            scientific_name TEXT,
+            region TEXT NOT NULL,
+            sub_region TEXT,
+            min_size REAL,
+            max_size REAL,
+            bag_limit INTEGER,
+            possession_limit INTEGER,
+            allowed_gear TEXT,
+            seasons TEXT,
+            license_required INTEGER DEFAULT 1,
+            license_type TEXT,
+            special_restrictions TEXT,
+            last_updated TEXT NOT NULL,
+            offline_available INTEGER DEFAULT 0,
+            source_url TEXT
+          )
+        ''');
+
+        // Fish measurements table
+        await db.execute('''
+          CREATE TABLE fish_measurements(
+            id TEXT PRIMARY KEY,
+            fish_identification_id INTEGER NOT NULL,
+            length REAL NOT NULL,
+            estimated_weight REAL,
+            weight_estimation_method TEXT,
+            method TEXT NOT NULL,
+            confidence REAL NOT NULL,
+            image_path TEXT,
+            measured_at TEXT NOT NULL,
+            meets_regulation INTEGER DEFAULT 0,
+            regulation_id TEXT,
+            FOREIGN KEY (fish_identification_id) REFERENCES fish_identifications (id) ON DELETE CASCADE
+          )
+        ''');
+
+        // Weather cache table
+        await db.execute('''
+          CREATE TABLE weather_cache(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            location TEXT NOT NULL,
+            latitude REAL NOT NULL,
+            longitude REAL NOT NULL,
+            forecast_data TEXT NOT NULL,
+            cached_at TEXT NOT NULL,
+            expires_at TEXT NOT NULL
+          )
+        ''');
+
+        // Social posts table
+        await db.execute('''
+          CREATE TABLE social_posts(
+            id TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL,
+            fish_identification_id INTEGER,
+            caption TEXT NOT NULL,
+            location TEXT,
+            latitude REAL,
+            longitude REAL,
+            fish_length REAL,
+            fish_weight REAL,
+            hashtags TEXT,
+            likes_count INTEGER DEFAULT 0,
+            comments_count INTEGER DEFAULT 0,
+            shares_count INTEGER DEFAULT 0,
+            is_public INTEGER DEFAULT 1,
+            is_liked_by_current_user INTEGER DEFAULT 0,
+            created_at TEXT NOT NULL,
+            updated_at TEXT,
+            FOREIGN KEY (fish_identification_id) REFERENCES fish_identifications (id) ON DELETE SET NULL
+          )
+        ''');
+
+        // Comments table
+        await db.execute('''
+          CREATE TABLE comments(
+            id TEXT PRIMARY KEY,
+            post_id TEXT NOT NULL,
+            user_id TEXT NOT NULL,
+            comment TEXT NOT NULL,
+            likes_count INTEGER DEFAULT 0,
+            is_liked_by_current_user INTEGER DEFAULT 0,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (post_id) REFERENCES social_posts (id) ON DELETE CASCADE
+          )
+        ''');
+
+        // User achievements table
+        await db.execute('''
+          CREATE TABLE user_achievements(
+            id TEXT PRIMARY KEY,
+            achievement_id TEXT NOT NULL,
+            unlocked_at TEXT,
+            current_progress INTEGER DEFAULT 0,
+            total_required INTEGER NOT NULL,
+            UNIQUE(achievement_id)
+          )
+        ''');
+
+        // Fish encyclopedia table
+        await db.execute('''
+          CREATE TABLE fish_encyclopedia(
+            id TEXT PRIMARY KEY,
+            common_name TEXT NOT NULL,
+            scientific_name TEXT NOT NULL,
+            alternative_names TEXT,
+            taxonomy TEXT NOT NULL,
+            description TEXT NOT NULL,
+            habitat TEXT NOT NULL,
+            diet TEXT NOT NULL,
+            size_data TEXT NOT NULL,
+            lifespan TEXT NOT NULL,
+            behavior TEXT NOT NULL,
+            conservation_status TEXT NOT NULL,
+            fishing_info TEXT NOT NULL,
+            cooking_info TEXT NOT NULL,
+            image_urls TEXT,
+            distribution TEXT NOT NULL,
+            is_premium INTEGER DEFAULT 0,
+            last_updated TEXT NOT NULL
+          )
+        ''');
+
+        // Solunar cache table
+        await db.execute('''
+          CREATE TABLE solunar_cache(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT NOT NULL,
+            latitude REAL NOT NULL,
+            longitude REAL NOT NULL,
+            solunar_data TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            UNIQUE(date, latitude, longitude)
+          )
+        ''');
+
+        // User statistics cache table
+        await db.execute('''
+          CREATE TABLE statistics_cache(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL,
+            period_start TEXT NOT NULL,
+            period_end TEXT NOT NULL,
+            statistics_data TEXT NOT NULL,
+            generated_at TEXT NOT NULL
+          )
+        ''');
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
@@ -140,6 +295,153 @@ class DatabaseService {
               accessInfo TEXT,
               bestTimeToFish TEXT,
               isFavorite INTEGER DEFAULT 0
+            )
+          ''');
+        }
+
+        if (oldVersion < 3) {
+          // Add new tables for version 3 (enhanced features)
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS regulations(
+              id TEXT PRIMARY KEY,
+              species_name TEXT NOT NULL,
+              scientific_name TEXT,
+              region TEXT NOT NULL,
+              sub_region TEXT,
+              min_size REAL,
+              max_size REAL,
+              bag_limit INTEGER,
+              possession_limit INTEGER,
+              allowed_gear TEXT,
+              seasons TEXT,
+              license_required INTEGER DEFAULT 1,
+              license_type TEXT,
+              special_restrictions TEXT,
+              last_updated TEXT NOT NULL,
+              offline_available INTEGER DEFAULT 0,
+              source_url TEXT
+            )
+          ''');
+
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS fish_measurements(
+              id TEXT PRIMARY KEY,
+              fish_identification_id INTEGER NOT NULL,
+              length REAL NOT NULL,
+              estimated_weight REAL,
+              weight_estimation_method TEXT,
+              method TEXT NOT NULL,
+              confidence REAL NOT NULL,
+              image_path TEXT,
+              measured_at TEXT NOT NULL,
+              meets_regulation INTEGER DEFAULT 0,
+              regulation_id TEXT,
+              FOREIGN KEY (fish_identification_id) REFERENCES fish_identifications (id) ON DELETE CASCADE
+            )
+          ''');
+
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS weather_cache(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              location TEXT NOT NULL,
+              latitude REAL NOT NULL,
+              longitude REAL NOT NULL,
+              forecast_data TEXT NOT NULL,
+              cached_at TEXT NOT NULL,
+              expires_at TEXT NOT NULL
+            )
+          ''');
+
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS social_posts(
+              id TEXT PRIMARY KEY,
+              user_id TEXT NOT NULL,
+              fish_identification_id INTEGER,
+              caption TEXT NOT NULL,
+              location TEXT,
+              latitude REAL,
+              longitude REAL,
+              fish_length REAL,
+              fish_weight REAL,
+              hashtags TEXT,
+              likes_count INTEGER DEFAULT 0,
+              comments_count INTEGER DEFAULT 0,
+              shares_count INTEGER DEFAULT 0,
+              is_public INTEGER DEFAULT 1,
+              is_liked_by_current_user INTEGER DEFAULT 0,
+              created_at TEXT NOT NULL,
+              updated_at TEXT,
+              FOREIGN KEY (fish_identification_id) REFERENCES fish_identifications (id) ON DELETE SET NULL
+            )
+          ''');
+
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS comments(
+              id TEXT PRIMARY KEY,
+              post_id TEXT NOT NULL,
+              user_id TEXT NOT NULL,
+              comment TEXT NOT NULL,
+              likes_count INTEGER DEFAULT 0,
+              is_liked_by_current_user INTEGER DEFAULT 0,
+              created_at TEXT NOT NULL,
+              FOREIGN KEY (post_id) REFERENCES social_posts (id) ON DELETE CASCADE
+            )
+          ''');
+
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS user_achievements(
+              id TEXT PRIMARY KEY,
+              achievement_id TEXT NOT NULL,
+              unlocked_at TEXT,
+              current_progress INTEGER DEFAULT 0,
+              total_required INTEGER NOT NULL,
+              UNIQUE(achievement_id)
+            )
+          ''');
+
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS fish_encyclopedia(
+              id TEXT PRIMARY KEY,
+              common_name TEXT NOT NULL,
+              scientific_name TEXT NOT NULL,
+              alternative_names TEXT,
+              taxonomy TEXT NOT NULL,
+              description TEXT NOT NULL,
+              habitat TEXT NOT NULL,
+              diet TEXT NOT NULL,
+              size_data TEXT NOT NULL,
+              lifespan TEXT NOT NULL,
+              behavior TEXT NOT NULL,
+              conservation_status TEXT NOT NULL,
+              fishing_info TEXT NOT NULL,
+              cooking_info TEXT NOT NULL,
+              image_urls TEXT,
+              distribution TEXT NOT NULL,
+              is_premium INTEGER DEFAULT 0,
+              last_updated TEXT NOT NULL
+            )
+          ''');
+
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS solunar_cache(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              date TEXT NOT NULL,
+              latitude REAL NOT NULL,
+              longitude REAL NOT NULL,
+              solunar_data TEXT NOT NULL,
+              created_at TEXT NOT NULL,
+              UNIQUE(date, latitude, longitude)
+            )
+          ''');
+
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS statistics_cache(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              user_id TEXT NOT NULL,
+              period_start TEXT NOT NULL,
+              period_end TEXT NOT NULL,
+              statistics_data TEXT NOT NULL,
+              generated_at TEXT NOT NULL
             )
           ''');
         }
