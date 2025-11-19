@@ -250,19 +250,43 @@ class _TutorialScreenState extends State<TutorialScreen> {
   }
 
   void _handleAction(TutorialAction action) {
-    // Handle tutorial actions
+    // Handle tutorial actions - show informative messages
     switch (action) {
       case TutorialAction.openCamera:
-        // Navigate to camera or show demo
+        // In tutorial mode, just show a message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Camera will open when you complete the tutorial 📸'),
+            duration: Duration(seconds: 2),
+          ),
+        );
         break;
       case TutorialAction.openStyles:
-        // Navigate to styles or show demo
+        // In tutorial mode, just show a message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Styles will be available after tutorial 🎨'),
+            duration: Duration(seconds: 2),
+          ),
+        );
         break;
       case TutorialAction.openGallery:
-        // Navigate to gallery or show demo
+        // In tutorial mode, just show a message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gallery will be available after tutorial 🖼️'),
+            duration: Duration(seconds: 2),
+          ),
+        );
         break;
       case TutorialAction.openPremium:
-        // Navigate to premium or show demo
+        // In tutorial mode, just show a message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Premium features available after tutorial ⭐'),
+            duration: Duration(seconds: 2),
+          ),
+        );
         break;
     }
   }

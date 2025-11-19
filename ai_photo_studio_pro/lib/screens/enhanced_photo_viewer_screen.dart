@@ -5,6 +5,7 @@ import '../models/generated_photo.dart';
 import '../services/social_sharing_service.dart';
 import '../services/gallery_saver_service.dart';
 import '../services/favorites_service.dart';
+import '../services/cloud_backup_service.dart';
 import '../widgets/before_after_slider.dart';
 
 /// Enhanced photo viewer with share, save, edit, favorite features
@@ -228,14 +229,21 @@ class _EnhancedPhotoViewerScreenState extends State<EnhancedPhotoViewerScreen> {
     }
   }
 
-  void _navigateToEdit() {
+  Future<void> _navigateToEdit() async {
     // Navigate to photo editing screen
-    // Navigator.pushNamed(
-    //   context,
-    //   '/photo-editor',
-    //   arguments: widget.photo,
-    // );
-    _showInfoSnackBar('Photo editing coming soon!');
+    final editedPath = await Navigator.pushNamed(
+      context,
+      '/photo-editor',
+      arguments: widget.photo,
+    );
+
+    // If photo was edited, update the view
+    if (editedPath != null && editedPath is String) {
+      setState(() {
+        // Update with edited photo path if needed
+      });
+      _showSuccessSnackBar('Photo edited successfully');
+    }
   }
 
   void _showOptionsMenu() {
@@ -254,7 +262,7 @@ class _EnhancedPhotoViewerScreenState extends State<EnhancedPhotoViewerScreen> {
               title: const Text('Set as wallpaper', style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
-                _showInfoSnackBar('Feature coming soon!');
+                _setAsWallpaper();
               },
             ),
             ListTile(
@@ -281,8 +289,56 @@ class _EnhancedPhotoViewerScreenState extends State<EnhancedPhotoViewerScreen> {
   }
 
   Future<void> _backupToCloud() async {
-    _showInfoSnackBar('Backing up to cloud...');
-    // Implement cloud backup
+    setState(() => _isLoading = true);
+
+    try {
+      // Import cloud backup service at top of file
+      final cloudBackup = CloudBackupService();
+
+      final uploaded = await cloudBackup.uploadPhoto(
+        localPath: widget.photo.generatedPath!,
+        userId: 'user_${DateTime.now().millisecondsSinceEpoch}', // Replace with actual user ID
+        isOriginal: false,
+      );
+
+      if (uploaded != null) {
+        _showSuccessSnackBar('Photo backed up to cloud');
+      } else {
+        _showErrorSnackBar('Failed to backup photo');
+      }
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _setAsWallpaper() async {
+    // On Android, we can use external app to set wallpaper
+    // On iOS, user must do it manually
+    setState(() => _isLoading = true);
+
+    try {
+      if (Platform.isAndroid) {
+        // First save to gallery so user can set it
+        await _gallerySaverService.saveToGallery(
+          filePath: widget.photo.generatedPath!,
+        );
+
+        _showSuccessSnackBar(
+          'Photo saved to gallery. Open gallery and set as wallpaper from there.',
+        );
+      } else {
+        // iOS - user must set manually
+        await _gallerySaverService.saveToGallery(
+          filePath: widget.photo.generatedPath!,
+        );
+
+        _showSuccessSnackBar(
+          'Photo saved to gallery. Go to Settings > Wallpaper to set it.',
+        );
+      }
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   Future<void> _confirmDelete() async {

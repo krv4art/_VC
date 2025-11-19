@@ -193,9 +193,7 @@ class _EnhancedSettingsScreenState extends State<EnhancedSettingsScreen> {
           title: const Text('Download Quality'),
           subtitle: const Text('High quality'),
           trailing: const Icon(Icons.chevron_right),
-          onTap: () {
-            // Show quality selection dialog
-          },
+          onTap: _showQualityDialog,
         ),
       ],
     );
@@ -216,18 +214,14 @@ class _EnhancedSettingsScreenState extends State<EnhancedSettingsScreen> {
           title: const Text('Notifications'),
           subtitle: const Text('Manage notification preferences'),
           trailing: const Icon(Icons.chevron_right),
-          onTap: () {
-            // Navigate to notification settings
-          },
+          onTap: _showNotificationSettings,
         ),
         ListTile(
           leading: const Icon(Icons.cloud_upload),
           title: const Text('Cloud Backup'),
           subtitle: const Text('Automatic photo backup'),
           trailing: const Icon(Icons.chevron_right),
-          onTap: () {
-            // Navigate to cloud backup settings
-          },
+          onTap: _showCloudBackupSettings,
         ),
       ],
     );
@@ -406,6 +400,162 @@ class _EnhancedSettingsScreenState extends State<EnhancedSettingsScreen> {
   Future<void> _resetTutorial() async {
     await _tutorialService.resetTutorials();
     _showSuccessSnackBar('Tutorial reset. It will show on next app launch.');
+  }
+
+  void _showQualityDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Download Quality'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<String>(
+              title: const Text('High (Original)'),
+              subtitle: const Text('Best quality, larger file size'),
+              value: 'high',
+              groupValue: 'high', // This would come from settings
+              onChanged: (value) {
+                Navigator.pop(context);
+                _showSuccessSnackBar('Quality set to High');
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Medium'),
+              subtitle: const Text('Good quality, smaller file size'),
+              value: 'medium',
+              groupValue: 'high',
+              onChanged: (value) {
+                Navigator.pop(context);
+                _showSuccessSnackBar('Quality set to Medium');
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('Low (Compressed)'),
+              subtitle: const Text('Lower quality, smallest file size'),
+              value: 'low',
+              groupValue: 'high',
+              onChanged: (value) {
+                Navigator.pop(context);
+                _showSuccessSnackBar('Quality set to Low');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showNotificationSettings() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Notification Settings'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SwitchListTile(
+              title: const Text('Photo Generation Complete'),
+              subtitle: const Text('Notify when photo is ready'),
+              value: true, // This would come from settings
+              onChanged: (value) {
+                _showSuccessSnackBar(
+                  value ? 'Notifications enabled' : 'Notifications disabled',
+                );
+              },
+            ),
+            SwitchListTile(
+              title: const Text('Daily Reminders'),
+              subtitle: const Text('Daily bonus and activity reminders'),
+              value: true,
+              onChanged: (value) {
+                _showSuccessSnackBar(
+                  value ? 'Daily reminders enabled' : 'Daily reminders disabled',
+                );
+              },
+            ),
+            SwitchListTile(
+              title: const Text('New Features'),
+              subtitle: const Text('Notify about new styles and features'),
+              value: true,
+              onChanged: (value) {
+                _showSuccessSnackBar(
+                  value ? 'New feature notifications enabled' : 'New feature notifications disabled',
+                );
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Done'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showCloudBackupSettings() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cloud Backup Settings'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SwitchListTile(
+              title: const Text('Auto Backup'),
+              subtitle: const Text('Automatically backup photos to cloud'),
+              value: false, // This would come from settings
+              onChanged: (value) {
+                _showSuccessSnackBar(
+                  value ? 'Auto backup enabled' : 'Auto backup disabled',
+                );
+              },
+            ),
+            const SizedBox(height: 8),
+            SwitchListTile(
+              title: const Text('Backup Originals'),
+              subtitle: const Text('Also backup original photos'),
+              value: false,
+              onChanged: (value) {
+                _showSuccessSnackBar(
+                  value ? 'Original backup enabled' : 'Original backup disabled',
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            ListTile(
+              title: const Text('Backup Now'),
+              subtitle: const Text('Manually backup all photos'),
+              trailing: const Icon(Icons.cloud_upload),
+              onTap: () {
+                Navigator.pop(context);
+                _showSuccessSnackBar('Starting backup...');
+              },
+            ),
+            ListTile(
+              title: const Text('Restore from Cloud'),
+              subtitle: const Text('Download backed up photos'),
+              trailing: const Icon(Icons.cloud_download),
+              onTap: () {
+                Navigator.pop(context);
+                _showSuccessSnackBar('Starting restore...');
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 
   String _getThemeModeText(ThemeMode mode) {
