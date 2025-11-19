@@ -445,7 +445,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           }
                           break;
                         case 'edit':
-                          // TODO: Open edit dialog
+                          if (coin.id != null) {
+                            context.push('/coin/${coin.id}');
+                          }
                           break;
                         case 'delete':
                           _showDeleteDialog(coin, provider);

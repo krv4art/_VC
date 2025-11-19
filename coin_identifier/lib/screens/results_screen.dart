@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../models/analysis_result.dart';
 import '../providers/analysis_provider.dart';
 import '../providers/collection_provider.dart';
@@ -1255,11 +1256,52 @@ class ResultsScreen extends StatelessWidget {
 
   // Actions
   void _shareResults(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Share functionality coming soon!'),
-        duration: Duration(seconds: 2),
-      ),
+    final provider = context.read<AnalysisProvider>();
+    final result = provider.currentAnalysis;
+
+    if (result == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No results to share')),
+      );
+      return;
+    }
+
+    // Build share text
+    final shareText = StringBuffer();
+    shareText.writeln('🪙 ${result.name}');
+    shareText.writeln();
+
+    if (result.country != null) {
+      shareText.writeln('📍 Country: ${result.country}');
+    }
+    if (result.yearOfIssue != null) {
+      shareText.writeln('📅 Year: ${result.yearOfIssue}');
+    }
+
+    shareText.writeln('⭐ Rarity: ${result.rarityLevel} (${result.rarityScore}/10)');
+
+    if (result.marketValue != null) {
+      shareText.writeln('💰 Value: ${result.marketValue!.getFormattedRange()}');
+    }
+
+    shareText.writeln();
+    shareText.writeln('Description:');
+    shareText.writeln(result.description);
+
+    if (result.mintErrors.isNotEmpty) {
+      shareText.writeln();
+      shareText.writeln('⚠️ Mint Errors:');
+      for (var error in result.mintErrors) {
+        shareText.writeln('  • ${error.errorType}');
+      }
+    }
+
+    shareText.writeln();
+    shareText.writeln('Analyzed with Coin Identifier App');
+
+    Share.share(
+      shareText.toString(),
+      subject: result.name,
     );
   }
 
