@@ -161,7 +161,7 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen>
                                 '=== HISTORY DEBUG: Card tapped! Scan ID: ${scan.id} ===',
                               );
                               debugPrint(
-                                '=== HISTORY DEBUG: Image path: ${scan.imagePath} ===',
+                                '=== HISTORY DEBUG: Images: ${scan.images.length} ===',
                               );
                               debugPrint(
                                 '=== HISTORY DEBUG: Navigating to /analysis ===',
@@ -170,7 +170,7 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen>
                                 '/analysis',
                                 extra: {
                                   'result': analysisResult,
-                                  'imagePath': scan.imagePath,
+                                  'images': scan.images.map((img) => img.toMap()).toList(),
                                   'source': 'history',
                                 },
                               );
@@ -198,9 +198,9 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen>
                                 borderRadius: BorderRadius.circular(
                                   AppDimensions.radius12,
                                 ),
-                                child: scan.imagePath.isNotEmpty
+                                child: (scan.frontLabelPath ?? scan.firstImagePath)?.isNotEmpty == true
                                     ? Image.file(
-                                        File(scan.imagePath),
+                                        File(scan.frontLabelPath ?? scan.firstImagePath!),
                                         width: AppDimensions.space64,
                                         height: AppDimensions.space64,
                                         fit: BoxFit.cover,

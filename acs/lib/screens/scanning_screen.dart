@@ -15,10 +15,12 @@ import '../widgets/camera/camera_permission_denied.dart';
 import '../widgets/camera/focus_indicator.dart';
 import '../widgets/scanning/joke_bubble_widget.dart';
 import '../widgets/scanning/processing_overlay.dart';
+import '../widgets/scanning/scan_images_grid.dart';
 import '../widgets/dialogs/scanning_hint_dialog.dart';
 import '../services/camera/camera_manager.dart';
 import '../services/scanning/image_analysis_service.dart';
 import '../services/scanning/scanning_animation_controller.dart';
+import '../models/scan_image.dart';
 import 'photo_confirmation_screen.dart';
 
 class ScanningScreen extends StatefulWidget {
@@ -38,6 +40,10 @@ class _ScanningScreenState extends State<ScanningScreen>
   Offset? _focusPoint;
   Timer? _focusTimer;
   bool _isFlashlightOn = false;
+
+  // Multi-photo scanning state
+  final List<ScanImage> _capturedImages = [];
+  ImageType? _nextImageType;
 
   // Joke bubble state
   String? _jokeText;
@@ -92,11 +98,16 @@ class _ScanningScreenState extends State<ScanningScreen>
       // Stop camera before navigating to confirmation screen
       await _cameraManager.stopCamera();
 
+      // Determine suggested type based on what's already captured
+      final hasFrontLabel = _capturedImages.any((img) => img.type == ImageType.frontLabel);
+      final suggestedType = hasFrontLabel ? ImageType.ingredients : ImageType.frontLabel;
+
       // Show photo confirmation screen
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => PhotoConfirmationScreen(
             photo: picture,
+            suggestedType: suggestedType,
             onRetake: () async {
               Navigator.of(context).pop();
               // Reinitialize camera when returning from confirmation screen
@@ -104,15 +115,13 @@ class _ScanningScreenState extends State<ScanningScreen>
                 await _initializeCamera();
               }
             },
-            onConfirm: () async {
+            onConfirm: (ImageType type) async {
               Navigator.of(context).pop();
 
-              // Даём UI время на один фрейм, чтобы завершить закрытие PhotoConfirmationScreen
-              // и подготовиться к показу ProcessingOverlay
-              await Future.delayed(Duration.zero);
-
               if (mounted) {
-                _processImage(picture);
+                _addCapturedImage(picture, type);
+                // Reinitialize camera to continue scanning
+                await _initializeCamera();
               }
             },
           ),
@@ -131,16 +140,48 @@ class _ScanningScreenState extends State<ScanningScreen>
     }
   }
 
-  Future<void> _processImage(XFile imageFile) async {
+  void _addCapturedImage(XFile imageFile, ImageType type) {
+    setState(() {
+      final order = _capturedImages.where((img) => img.type == type).length;
+      _capturedImages.add(
+        ScanImage(
+          imagePath: imageFile.path,
+          type: type,
+          order: order,
+        ),
+      );
+    });
+  }
+
+  void _removeCapturedImage(int index) {
+    setState(() {
+      if (index >= 0 && index < _capturedImages.length) {
+        _capturedImages.removeAt(index);
+      }
+    });
+  }
+
+  void _clearCapturedImages() {
+    setState(() {
+      _capturedImages.clear();
+    });
+  }
+
+  Future<void> _analyzeImages() async {
+    if (_capturedImages.isEmpty) return;
+
     setState(() {
       _isProcessing = true;
       _showSlowInternetMessage = false;
     });
 
+    // Stop camera before processing
+    await _cameraManager.stopCamera();
+
     final analysisService = const ImageAnalysisService();
 
-    final result = await analysisService.processImage(
-      imageFile,
+    final result = await analysisService.processImages(
+      _capturedImages,
       context: context,
       showSlowInternetMessage: false,
       onSlowInternetMessage: () {
@@ -161,19 +202,80 @@ class _ScanningScreenState extends State<ScanningScreen>
         _showJokeBubble(result.jokeText!);
         // Reinitialize camera after showing joke
         await _initializeCamera();
-      } else if (result.analysisResult != null && result.imagePath != null) {
+      } else if (result.analysisResult != null && result.images.isNotEmpty) {
         // Полностью останавливаем камеру перед навигацией
         await _cameraManager.stopCamera();
 
-        // Не скрываем диалог перед навигацией - пусть остаётся видимым пока меняется экран
-        // Используем go чтобы заменить весь стек навигации и убедиться что
-        // экран подтверждения фото не останется в стеке при возврате
+        // Используем go чтобы заменить весь стек навигации
         if (mounted) {
           context.go(
             '/analysis',
             extra: {
               'result': result.analysisResult,
-              'imagePath': result.imagePath,
+              'images': result.images.map((img) => img.toMap()).toList(),
+              'source': 'scanning',
+            },
+          );
+        }
+      } else {
+        setState(() {
+          _isProcessing = false;
+          _showSlowInternetMessage = false;
+        });
+        // Reinitialize camera on error
+        await _initializeCamera();
+      }
+    }
+  }
+
+  Future<void> _processImage(XFile imageFile) async {
+    setState(() {
+      _isProcessing = true;
+      _showSlowInternetMessage = false;
+    });
+
+    final analysisService = const ImageAnalysisService();
+
+    // Создаем список с одним изображением для обратной совместимости
+    final scanImage = ScanImage(
+      imagePath: imageFile.path,
+      type: ImageType.ingredients,
+      order: 0,
+    );
+
+    final result = await analysisService.processImages(
+      [scanImage],
+      context: context,
+      showSlowInternetMessage: false,
+      onSlowInternetMessage: () {
+        if (mounted) {
+          setState(() {
+            _showSlowInternetMessage = true;
+          });
+        }
+      },
+    );
+
+    if (mounted) {
+      if (result.shouldShowJoke && result.jokeText != null) {
+        setState(() {
+          _isProcessing = false;
+          _showSlowInternetMessage = false;
+        });
+        _showJokeBubble(result.jokeText!);
+        // Reinitialize camera after showing joke
+        await _initializeCamera();
+      } else if (result.analysisResult != null && result.images.isNotEmpty) {
+        // Полностью останавливаем камеру перед навигацией
+        await _cameraManager.stopCamera();
+
+        // Используем go чтобы заменить весь стек навигации
+        if (mounted) {
+          context.go(
+            '/analysis',
+            extra: {
+              'result': result.analysisResult,
+              'images': result.images.map((img) => img.toMap()).toList(),
               'source': 'scanning',
             },
           );
@@ -418,6 +520,67 @@ class _ScanningScreenState extends State<ScanningScreen>
 
             // Индикатор фокусировки
             if (_focusPoint != null) FocusIndicator(position: _focusPoint!),
+
+            // Multi-photo grid (показываем когда есть захваченные изображения)
+            if (_capturedImages.isNotEmpty && !_isProcessing)
+              Positioned(
+                top: kToolbarHeight + 16,
+                left: 0,
+                right: 0,
+                child: Column(
+                  children: [
+                    ScanImagesGrid(
+                      images: _capturedImages,
+                      onAddImage: (type) {
+                        _nextImageType = type;
+                        // Trigger camera or gallery based on user choice
+                        // For now, just show a hint
+                      },
+                      onRemoveImage: _removeCapturedImage,
+                    ),
+                    const SizedBox(height: 16),
+                    // Analyze button
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: _analyzeImages,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: context.colors.primary,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                'Анализировать',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          // Clear button
+                          IconButton(
+                            onPressed: _clearCapturedImages,
+                            icon: const Icon(Icons.delete_outline),
+                            color: Colors.white,
+                            style: IconButton.styleFrom(
+                              backgroundColor: Colors.red.withOpacity(0.8),
+                              padding: const EdgeInsets.all(16),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
             // Пузырь с шуткой
             if (_isJokeBubbleVisible &&
