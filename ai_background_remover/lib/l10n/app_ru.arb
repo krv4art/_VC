@@ -1,0 +1,143 @@
+{
+  "@@locale": "ru",
+
+  "appTitle": "Удаление Фона с AI",
+
+  "home": "Главная",
+  "history": "История",
+  "settings": "Настройки",
+  "premium": "Премиум",
+
+  "removeBackground": "Удалить Фон",
+  "removeObject": "Удалить Объект",
+  "autoEnhance": "Авто Улучшение",
+  "smartErase": "Умное Стирание",
+
+  "selectImage": "Выбрать Изображение",
+  "takePhoto": "Сделать Фото",
+  "fromGallery": "Из Галереи",
+
+  "processing": "Обработка...",
+  "processingImage": "Обработка изображения",
+  "pleaseWait": "Пожалуйста, подождите",
+
+  "save": "Сохранить",
+  "share": "Поделиться",
+  "download": "Скачать",
+  "cancel": "Отмена",
+  "done": "Готово",
+  "apply": "Применить",
+  "reset": "Сбросить",
+
+  "background": "Фон",
+  "transparent": "Прозрачный",
+  "solidColor": "Однотонный",
+  "gradient": "Градиент",
+  "customImage": "Своё Изображение",
+  "blur": "Размытие",
+
+  "filters": "Фильтры",
+  "adjustments": "Настройки",
+  "brightness": "Яркость",
+  "contrast": "Контраст",
+  "saturation": "Насыщенность",
+  "hue": "Оттенок",
+
+  "crop": "Обрезать",
+  "rotate": "Повернуть",
+  "resize": "Изменить Размер",
+  "flip": "Отразить",
+
+  "quality": "Качество",
+  "high": "Высокое",
+  "medium": "Среднее",
+  "low": "Низкое",
+
+  "outputFormat": "Формат Вывода",
+
+  "historyTitle": "История Обработки",
+  "historyEmpty": "Нет обработанных изображений",
+  "deleteItem": "Удалить",
+  "deleteConfirm": "Вы уверены, что хотите удалить этот элемент?",
+
+  "premiumTitle": "Стать Премиум",
+  "premiumFeatures": "Премиум Функции",
+  "unlimitedProcessing": "Безлимитная Обработка",
+  "highQualityExports": "Высокое Качество",
+  "priorityProcessing": "Приоритетная Обработка",
+  "cloudStorage": "Облачное Хранилище",
+  "adFree": "Без Рекламы",
+  "subscribe": "Подписаться",
+  "restorePurchases": "Восстановить Покупки",
+
+  "monthlyPlan": "Месячная Подписка",
+  "yearlyPlan": "Годовая Подписка",
+  "lifetime": "Навсегда",
+
+  "settingsTitle": "Настройки",
+  "language": "Язык",
+  "theme": "Тема",
+  "lightMode": "Светлая",
+  "darkMode": "Тёмная",
+  "systemDefault": "Системная",
+
+  "about": "О Приложении",
+  "version": "Версия",
+  "privacyPolicy": "Политика Конфиденциальности",
+  "termsOfService": "Условия Использования",
+  "rateApp": "Оценить Приложение",
+  "shareApp": "Поделиться Приложением",
+
+  "error": "Ошибка",
+  "errorOccurred": "Произошла ошибка",
+  "tryAgain": "Попробовать Снова",
+  "networkError": "Ошибка сети. Проверьте подключение.",
+  "permissionDenied": "Доступ запрещён",
+  "cameraPermission": "Требуется доступ к камере",
+  "storagePermission": "Требуется доступ к хранилищу",
+
+  "success": "Успешно",
+  "imageSaved": "Изображение сохранено в галерею",
+  "imageShared": "Изображение успешно отправлено",
+
+  "limitReached": "Лимит Достигнут",
+  "freeLimitMessage": "Вы достигли лимита бесплатной обработки. Перейдите на премиум для безлимитного доступа.",
+  "upgrade": "Улучшить",
+
+  "batchProcessing": "Пакетная Обработка",
+  "selectMultiple": "Выбрать Несколько",
+  "processAll": "Обработать Все",
+  "processingBatch": "Обработка {current} из {total}",
+
+  "compareBeforeAfter": "Сравнить До/После",
+  "before": "До",
+  "after": "После",
+
+  "onboardingTitle1": "Мгновенное Удаление Фона",
+  "onboardingDesc1": "Используйте AI-технологию для удаления фона с любого изображения за секунды",
+
+  "onboardingTitle2": "Профессиональный Результат",
+  "onboardingDesc2": "Получайте студийное качество с нашим продвинутым обнаружением краёв",
+
+  "onboardingTitle3": "Креативные Фоны",
+  "onboardingDesc3": "Выбирайте из сотен фонов или создавайте свои собственные дизайны",
+
+  "skip": "Пропустить",
+  "next": "Далее",
+  "getStarted": "Начать",
+
+  "search": "Поиск",
+  "searchHistory": "Поиск в истории...",
+  "filter": "Фильтр",
+  "sortBy": "Сортировка",
+  "date": "Дата",
+  "name": "Название",
+  "size": "Размер",
+
+  "recent": "Недавние",
+  "today": "Сегодня",
+  "yesterday": "Вчера",
+  "thisWeek": "На Этой Неделе",
+  "thisMonth": "В Этом Месяце",
+  "older": "Старые"
+}

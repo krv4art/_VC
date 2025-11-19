@@ -42,6 +42,7 @@ dependencies:
   url_launcher: ^6.3.1
   share_plus: ^10.1.2
   flutter_dotenv: ^5.2.1
+  crypto: ^3.0.3
 
   # Storage
   shared_preferences: ^2.3.3
@@ -59,6 +60,17 @@ dependencies:
   # Image editing
   # photofilters: ^3.0.3  # Package not available
   screenshot: ^3.0.0
+  image_gallery_saver: ^2.0.3
+
+  # AI/ML
+  tflite_flutter: ^0.11.0
+  tflite_flutter_helper: ^0.3.1
+
+  # Analytics & Monetization
+  firebase_core: ^3.8.1
+  firebase_analytics: ^11.3.5
+  firebase_crashlytics: ^4.2.0
+  google_mobile_ads: ^5.2.0
 
 dev_dependencies:
   flutter_test:

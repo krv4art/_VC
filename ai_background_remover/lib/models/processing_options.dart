@@ -7,6 +7,7 @@ class ProcessingOptions {
   final String? backgroundImagePath;
   final bool autoEnhance;
   final int quality;
+  final bool? isPremium;
 
   ProcessingOptions({
     required this.mode,
@@ -15,6 +16,7 @@ class ProcessingOptions {
     this.backgroundImagePath,
     this.autoEnhance = true,
     this.quality = 95,
+    this.isPremium,
   });
 
   ProcessingOptions copyWith({
@@ -24,6 +26,7 @@ class ProcessingOptions {
     String? backgroundImagePath,
     bool? autoEnhance,
     int? quality,
+    bool? isPremium,
   }) {
     return ProcessingOptions(
       mode: mode ?? this.mode,
@@ -32,6 +35,7 @@ class ProcessingOptions {
       backgroundImagePath: backgroundImagePath ?? this.backgroundImagePath,
       autoEnhance: autoEnhance ?? this.autoEnhance,
       quality: quality ?? this.quality,
+      isPremium: isPremium ?? this.isPremium,
     );
   }
 
@@ -43,6 +47,7 @@ class ProcessingOptions {
       'backgroundImagePath': backgroundImagePath,
       'autoEnhance': autoEnhance,
       'quality': quality,
+      'isPremium': isPremium,
     };
   }
 }

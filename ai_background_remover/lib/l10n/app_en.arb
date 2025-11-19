@@ -1,0 +1,156 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "AI Background Remover",
+  "@appTitle": {
+    "description": "Application title"
+  },
+
+  "home": "Home",
+  "history": "History",
+  "settings": "Settings",
+  "premium": "Premium",
+
+  "removeBackground": "Remove Background",
+  "removeObject": "Remove Object",
+  "autoEnhance": "Auto Enhance",
+  "smartErase": "Smart Erase",
+
+  "selectImage": "Select Image",
+  "takePhoto": "Take Photo",
+  "fromGallery": "From Gallery",
+
+  "processing": "Processing...",
+  "processingImage": "Processing image",
+  "pleaseWait": "Please wait",
+
+  "save": "Save",
+  "share": "Share",
+  "download": "Download",
+  "cancel": "Cancel",
+  "done": "Done",
+  "apply": "Apply",
+  "reset": "Reset",
+
+  "background": "Background",
+  "transparent": "Transparent",
+  "solidColor": "Solid Color",
+  "gradient": "Gradient",
+  "customImage": "Custom Image",
+  "blur": "Blur",
+
+  "filters": "Filters",
+  "adjustments": "Adjustments",
+  "brightness": "Brightness",
+  "contrast": "Contrast",
+  "saturation": "Saturation",
+  "hue": "Hue",
+
+  "crop": "Crop",
+  "rotate": "Rotate",
+  "resize": "Resize",
+  "flip": "Flip",
+
+  "quality": "Quality",
+  "high": "High",
+  "medium": "Medium",
+  "low": "Low",
+
+  "outputFormat": "Output Format",
+
+  "historyTitle": "Processing History",
+  "historyEmpty": "No processed images yet",
+  "deleteItem": "Delete",
+  "deleteConfirm": "Are you sure you want to delete this item?",
+
+  "premiumTitle": "Go Premium",
+  "premiumFeatures": "Premium Features",
+  "unlimitedProcessing": "Unlimited Processing",
+  "highQualityExports": "High Quality Exports",
+  "priorityProcessing": "Priority Processing",
+  "cloudStorage": "Cloud Storage",
+  "adFree": "Ad-Free Experience",
+  "subscribe": "Subscribe Now",
+  "restorePurchases": "Restore Purchases",
+
+  "monthlyPlan": "Monthly Plan",
+  "yearlyPlan": "Yearly Plan",
+  "lifetime": "Lifetime Access",
+
+  "settingsTitle": "Settings",
+  "language": "Language",
+  "theme": "Theme",
+  "lightMode": "Light Mode",
+  "darkMode": "Dark Mode",
+  "systemDefault": "System Default",
+
+  "about": "About",
+  "version": "Version",
+  "privacyPolicy": "Privacy Policy",
+  "termsOfService": "Terms of Service",
+  "rateApp": "Rate App",
+  "shareApp": "Share App",
+
+  "error": "Error",
+  "errorOccurred": "An error occurred",
+  "tryAgain": "Try Again",
+  "networkError": "Network error. Please check your connection.",
+  "permissionDenied": "Permission denied",
+  "cameraPermission": "Camera permission is required",
+  "storagePermission": "Storage permission is required",
+
+  "success": "Success",
+  "imageSaved": "Image saved to gallery",
+  "imageShared": "Image shared successfully",
+
+  "limitReached": "Limit Reached",
+  "freeLimitMessage": "You have reached the free processing limit. Upgrade to premium for unlimited access.",
+  "upgrade": "Upgrade",
+
+  "batchProcessing": "Batch Processing",
+  "selectMultiple": "Select Multiple Images",
+  "processAll": "Process All",
+  "processingBatch": "Processing {current} of {total}",
+  "@processingBatch": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "compareBeforeAfter": "Compare Before/After",
+  "before": "Before",
+  "after": "After",
+
+  "onboardingTitle1": "Remove Backgrounds Instantly",
+  "onboardingDesc1": "Use AI-powered technology to remove backgrounds from any image in seconds",
+
+  "onboardingTitle2": "Professional Results",
+  "onboardingDesc2": "Get studio-quality results with our advanced edge detection and refinement",
+
+  "onboardingTitle3": "Creative Backgrounds",
+  "onboardingDesc3": "Choose from hundreds of backgrounds or create your own custom designs",
+
+  "skip": "Skip",
+  "next": "Next",
+  "getStarted": "Get Started",
+
+  "search": "Search",
+  "searchHistory": "Search history...",
+  "filter": "Filter",
+  "sortBy": "Sort By",
+  "date": "Date",
+  "name": "Name",
+  "size": "Size",
+
+  "recent": "Recent",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "thisWeek": "This Week",
+  "thisMonth": "This Month",
+  "older": "Older"
+}
