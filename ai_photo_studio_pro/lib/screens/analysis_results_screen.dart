@@ -15,6 +15,9 @@ import '../theme/theme_extensions_v2.dart';
 import '../widgets/animated/animated_card.dart';
 import '../constants/app_dimensions.dart';
 import '../widgets/common/app_spacer.dart';
+import 'package:share_plus/share_plus.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class AnalysisResultsScreen extends StatefulWidget {
   final AnalysisResult result;
@@ -1236,60 +1239,19 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
       child: Row(
         children: [
           _buildActionButton(
-            icon: Icons.favorite_border,
-            label: l10n.saveToFavorites,
-            onTap: () {
-              // TODO: Implement save to favorites
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${l10n.saveToFavorites} - Coming soon'),
-                ),
-              );
-            },
-          ),
-          AppSpacer.h8(),
-          _buildActionButton(
             icon: Icons.share,
             label: l10n.shareResults,
-            onTap: () {
-              // TODO: Implement share
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${l10n.shareResults} - Coming soon')),
-              );
-            },
+            onTap: () => _shareResults(),
           ),
           AppSpacer.h8(),
           _buildActionButton(
-            icon: Icons.compare_arrows,
-            label: l10n.compareProducts,
+            icon: Icons.chat,
+            label: l10n.askAI,
             onTap: () {
-              // TODO: Implement compare
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${l10n.compareProducts} - Coming soon'),
-                ),
-              );
-            },
-          ),
-          AppSpacer.h8(),
-          Consumer<SubscriptionProvider>(
-            builder: (context, subscriptionProvider, _) {
-              final isPremium = subscriptionProvider.isPremium;
-              return _buildActionButton(
-                icon: isPremium ? Icons.picture_as_pdf : Icons.lock,
-                label: l10n.exportPDF,
-                onTap: isPremium
-                    ? () {
-                        // TODO: Implement PDF export
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${l10n.exportPDF} - Coming soon'),
-                          ),
-                        );
-                      }
-                    : () => context.push('/modern-paywall'),
-                isPremium: !isPremium,
-              );
+              // Navigate to AI chat with analysis context
+              final chatService = context.read<ChatContextService>();
+              chatService.setAnalysisContext(widget.result, widget.imagePath);
+              context.push('/chat-ai');
             },
           ),
           AppSpacer.h8(),
@@ -1525,5 +1487,62 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
         ),
       ],
     );
+  }
+
+  /// Share analysis results
+  Future<void> _shareResults() async {
+    try {
+      final l10n = AppLocalizations.of(context)!;
+      final result = widget.result;
+
+      // Build share text
+      final StringBuffer shareText = StringBuffer();
+      shareText.writeln('📊 ${l10n.analysisResults}');
+      shareText.writeln('');
+      shareText.writeln('🏷️ ${l10n.productName}: ${result.productName ?? l10n.unknown}');
+      shareText.writeln('🏢 ${l10n.brand}: ${result.brand ?? l10n.unknown}');
+      shareText.writeln('');
+
+      if (result.ingredients.isNotEmpty) {
+        shareText.writeln('📝 ${l10n.ingredients}:');
+        for (var ingredient in result.ingredients.take(5)) {
+          shareText.writeln('  • $ingredient');
+        }
+        if (result.ingredients.length > 5) {
+          shareText.writeln('  ... ${l10n.andMore} (${result.ingredients.length - 5})');
+        }
+        shareText.writeln('');
+      }
+
+      if (result.overallScore != null) {
+        shareText.writeln('⭐ ${l10n.overallScore}: ${result.overallScore}/100');
+      }
+
+      shareText.writeln('');
+      shareText.writeln('📱 ${l10n.generatedBy} ${l10n.appName}');
+
+      // Share with image if available
+      if (File(widget.imagePath).existsSync()) {
+        await Share.shareXFiles(
+          [XFile(widget.imagePath)],
+          text: shareText.toString(),
+          subject: l10n.analysisResults,
+        );
+      } else {
+        await Share.share(
+          shareText.toString(),
+          subject: l10n.analysisResults,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${AppLocalizations.of(context)!.error}: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

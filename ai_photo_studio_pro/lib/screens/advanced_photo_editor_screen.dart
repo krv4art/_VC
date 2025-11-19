@@ -7,6 +7,9 @@ import '../providers/enhanced_photo_provider.dart';
 import '../services/ai_outfit_change_service.dart';
 import '../services/ai_image_expansion_service.dart';
 import '../l10n/app_localizations.dart';
+import '../services/local_photo_database_service.dart';
+import '../models/generated_photo.dart';
+import 'package:path/path.dart' as path;
 
 class AdvancedPhotoEditorScreen extends StatefulWidget {
   final String imagePath;
@@ -470,11 +473,47 @@ class _AdvancedPhotoEditorScreenState extends State<AdvancedPhotoEditorScreen>
     }
   }
 
-  void _savePhoto() {
-    // TODO: Implement save functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Photo saved successfully!')),
-    );
+  Future<void> _savePhoto() async {
+    try {
+      final l10n = AppLocalizations.of(context)!;
+      final photoDb = context.read<LocalPhotoDatabase>();
+
+      // Get the current processed image path
+      final imagePath = _processedImagePath ?? widget.imagePath;
+      final file = File(imagePath);
+
+      if (!await file.exists()) {
+        _showError(l10n.errorPhotoUpload);
+        return;
+      }
+
+      // Create a GeneratedPhoto object
+      final photo = GeneratedPhoto(
+        imagePath: imagePath,
+        styleId: 'enhanced', // Mark as enhanced photo
+        styleName: l10n.aiEditor,
+        createdAt: DateTime.now(),
+      );
+
+      // Save to database
+      await photoDb.insertPhoto(photo);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${l10n.save} ✓'),
+            backgroundColor: Colors.green,
+            action: SnackBarAction(
+              label: l10n.done,
+              onPressed: () {},
+              textColor: Colors.white,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      _showError(e.toString());
+    }
   }
 
   void _showError(String message) {

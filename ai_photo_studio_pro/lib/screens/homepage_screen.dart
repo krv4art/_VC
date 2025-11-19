@@ -201,9 +201,10 @@ class _HomepageScreenState extends State<HomepageScreen>
     );
 
     if (image != null && mounted) {
-      // TODO: Navigate to style selection with the selected image
-      // For now, just navigate to styles catalog
-      context.push('/styles');
+      // Navigate to style selection with the selected image
+      context.push('/styles', extra: {
+        'imagePath': image.path,
+      });
     }
   }
 

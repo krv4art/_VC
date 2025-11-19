@@ -88,9 +88,10 @@ class _CameraScreenState extends State<CameraScreen>
               Navigator.of(context).pop();
 
               if (mounted) {
-                // TODO: Navigate to style selection screen with photo path
-                // For now, just go back to home
-                context.go('/home');
+                // Navigate to style selection with photo
+                context.push('/styles', extra: {
+                  'imagePath': _cameraManager.capturedImagePath,
+                });
               }
             },
           ),
@@ -126,9 +127,10 @@ class _CameraScreenState extends State<CameraScreen>
       );
 
       if (image != null && mounted) {
-        // TODO: Navigate to style selection screen with photo path
-        // For now, just go back to home
-        context.go('/home');
+        // Navigate to style selection with photo
+        context.push('/styles', extra: {
+          'imagePath': image.path,
+        });
       } else {
         setState(() {
           _isProcessing = false;

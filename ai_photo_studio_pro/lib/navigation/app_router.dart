@@ -63,10 +63,14 @@ final GoRouter appRouter = GoRouter(
       pageBuilder: (context, state) {
         final extra = state.extra as Map<String, dynamic>?;
         final callback = extra?['onStyleSelected'] as Function(StyleModel)?;
+        final imagePath = extra?['imagePath'] as String?;
         return _buildPageWithNoTransition(
           context,
           state,
-          StylesCatalogScreen(onStyleSelected: callback),
+          StylesCatalogScreen(
+            onStyleSelected: callback,
+            preselectedImagePath: imagePath,
+          ),
         );
       },
     ),
