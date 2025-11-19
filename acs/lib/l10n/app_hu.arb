@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "Egyéni funkciófejlesztés igénylése",
   "requestFeatureDescription": "Szüksége van egy konkrét funkcióra? Lépjen kapcsolatba velünk, hogy megbeszéljük az egyéni fejlesztést üzleti igényeihez.",
   "pollHelpTitle": "Hogyan szavazzunk",
-  "pollHelpDescription": "• Érintsen meg egy lehetőséget a kiválasztáshoz\n• Érintse meg újra a kijelölés törléshez\n• Válasszon annyi lehetőséget, amennyit szeretne\n• Kattintson a 'Szavazat' gombra a szavazatok beküldéséhez\n• Adja hozzá saját lehetőségét, ha nem látja, amit keres"
+  "pollHelpDescription": "• Érintsen meg egy lehetőséget a kiválasztáshoz\n• Érintse meg újra a kijelölés törléshez\n• Válasszon annyi lehetőséget, amennyit szeretne\n• Kattintson a 'Szavazat' gombra a szavazatok beküldéséhez\n• Adja hozzá saját lehetőségét, ha nem látja, amit keres",
+  "remainingScans": "Hátralévő vizsgálatok",
+  "remainingMessages": "Hátralévő üzenetek",
+  "usageLimitsBadge": "5 vizsgálat/hét • 5 üzenet/nap",
+  "subscriptionBenefitsTitle": "Premium funkciók feloldása",
+  "subscriptionBenefitsDescription": "Frissítsen Premiumra, és kapjon korlátlan hozzáférést az összes funkcióhoz",
+  "getSubscription": "Szerezze be a Premiumot"
 }

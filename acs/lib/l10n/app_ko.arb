@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "맞춤 기능 개발 요청",
   "requestFeatureDescription": "특정 기능이 필요하신가요? 비즈니스 요구에 맞는 맞춤 개발에 대해 문의하세요.",
   "pollHelpTitle": "투표 방법",
-  "pollHelpDescription": "• 옵션을 탭하여 선택\n• 다시 탭하여 선택 취소\n• 원하는 만큼 선택\n• '투표' 버튼을 클릭하여 투표 제출\n• 필요한 것이 없으면 직접 옵션을 추가"
+  "pollHelpDescription": "• 옵션을 탭하여 선택\n• 다시 탭하여 선택 취소\n• 원하는 만큼 선택\n• '투표' 버튼을 클릭하여 투표 제출\n• 필요한 것이 없으면 직접 옵션을 추가",
+  "remainingScans": "남은 스캔",
+  "remainingMessages": "남은 메시지",
+  "usageLimitsBadge": "주 5회 스캔 • 일 5개 메시지",
+  "subscriptionBenefitsTitle": "프리미엄 기능 잠금 해제",
+  "subscriptionBenefitsDescription": "프리미엄으로 업그레이드하고 모든 기능에 무제한으로 액세스하세요",
+  "getSubscription": "프리미엄 받기"
 }

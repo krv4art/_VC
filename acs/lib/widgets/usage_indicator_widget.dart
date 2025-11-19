@@ -76,44 +76,47 @@ class UsageIndicatorWidget extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final hasReachedLimit = remainingScans <= 0 && remainingMessages <= 0;
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: AppDimensions.radius12, vertical: AppDimensions.space4 + AppDimensions.space4),
-      decoration: BoxDecoration(
-        color: hasReachedLimit
-            ? context.colors.warning.withValues(alpha: 0.1)
-            : context.colors.surface.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(AppDimensions.radius16),
-        border: Border.all(
+    return GestureDetector(
+      onTap: () => _showSubscriptionBenefitsModal(context),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: AppDimensions.radius12, vertical: AppDimensions.space4 + AppDimensions.space4),
+        decoration: BoxDecoration(
           color: hasReachedLimit
-              ? context.colors.warning
-              : context.colors.onSecondary.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            hasReachedLimit ? Icons.lock_outline : Icons.info_outline,
-            size: 14,
+              ? context.colors.warning.withValues(alpha: 0.1)
+              : context.colors.surface.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(AppDimensions.radius16),
+          border: Border.all(
             color: hasReachedLimit
                 ? context.colors.warning
-                : context.colors.onBackground.withValues(alpha: 0.7),
+                : context.colors.onSecondary.withValues(alpha: 0.3),
+            width: 1,
           ),
-          AppSpacer.h4(),
-          Text(
-            hasReachedLimit
-                ? l10n.limitsReached
-                : '$remainingScans ${l10n.remainingScans.toLowerCase()}, $remainingMessages ${l10n.remainingMessages.toLowerCase()}',
-            style: TextStyle(
-              fontSize: 11,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              hasReachedLimit ? Icons.lock_outline : Icons.info_outline,
+              size: 14,
               color: hasReachedLimit
                   ? context.colors.warning
                   : context.colors.onBackground.withValues(alpha: 0.7),
-              fontWeight: FontWeight.w500,
             ),
-          ),
-        ],
+            AppSpacer.h4(),
+            Text(
+              hasReachedLimit
+                  ? l10n.limitsReached
+                  : l10n.usageLimitsBadge,
+              style: TextStyle(
+                fontSize: 11,
+                color: hasReachedLimit
+                    ? context.colors.warning
+                    : context.colors.onBackground.withValues(alpha: 0.7),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -316,6 +319,151 @@ class UsageIndicatorWidget extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showSubscriptionBenefitsModal(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext sheetContext) => Container(
+        decoration: BoxDecoration(
+          color: context.colors.surface,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(24),
+          ),
+        ),
+        padding: EdgeInsets.only(
+          top: AppDimensions.space24,
+          left: AppDimensions.space24,
+          right: AppDimensions.space24,
+          bottom: MediaQuery.of(sheetContext).viewInsets.bottom + AppDimensions.space24,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title
+            Text(
+              l10n.subscriptionBenefitsTitle,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: context.colors.onBackground,
+              ),
+            ),
+            AppSpacer.v8(),
+
+            // Description
+            Text(
+              l10n.subscriptionBenefitsDescription,
+              style: TextStyle(
+                fontSize: 14,
+                color: context.colors.onBackground.withValues(alpha: 0.7),
+              ),
+            ),
+            AppSpacer.v24(),
+
+            // Benefits list
+            _buildBenefitItem(context, Icons.camera_alt, l10n.unlimitedScans, l10n.unlimitedScansDesc),
+            AppSpacer.v16(),
+            _buildBenefitItem(context, Icons.chat_bubble, l10n.unlimitedChats, l10n.unlimitedChatsDesc),
+            AppSpacer.v16(),
+            _buildBenefitItem(context, Icons.history, l10n.fullHistory, l10n.fullHistoryDesc),
+            AppSpacer.v16(),
+            _buildBenefitItem(context, Icons.memory, l10n.rememberContext, l10n.rememberContextDesc),
+            AppSpacer.v16(),
+            _buildBenefitItem(context, Icons.info_outline, l10n.allIngredientsInfo, l10n.allIngredientsInfoDesc),
+            AppSpacer.v16(),
+            _buildBenefitItem(context, Icons.block, l10n.noAds, l10n.noAdsDesc),
+            AppSpacer.v24(),
+
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () => Navigator.of(sheetContext).pop(),
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: AppDimensions.space16),
+                    ),
+                    child: Text(l10n.maybeLater),
+                  ),
+                ),
+                AppSpacer.h16(),
+                Expanded(
+                  flex: 2,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(sheetContext).pop();
+                      GoRouter.of(context).push('/modern-paywall');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: context.colors.primary,
+                      padding: EdgeInsets.symmetric(vertical: AppDimensions.space16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppDimensions.radius12),
+                      ),
+                    ),
+                    child: Text(
+                      l10n.getSubscription,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBenefitItem(BuildContext context, IconData icon, String title, String description) {
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.all(AppDimensions.space12),
+          decoration: BoxDecoration(
+            color: context.colors.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(AppDimensions.radius12),
+          ),
+          child: Icon(
+            icon,
+            color: context.colors.primary,
+            size: AppDimensions.iconMedium,
+          ),
+        ),
+        AppSpacer.h16(),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: context.colors.onBackground,
+                ),
+              ),
+              AppSpacer.v4(),
+              Text(
+                description,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: context.colors.onBackground.withValues(alpha: 0.6),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

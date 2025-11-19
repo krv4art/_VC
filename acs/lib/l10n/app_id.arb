@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "Minta Pengembangan Fitur Kustom",
   "requestFeatureDescription": "Perlu fitur tertentu? Hubungi kami untuk membahas pengembangan kustom untuk kebutuhan bisnis Anda.",
   "pollHelpTitle": "Cara memilih",
-  "pollHelpDescription": "• Ketuk opsi untuk memilihnya\n• Ketuk lagi untuk membatalkan pilihan\n• Pilih sebanyak yang Anda suka\n• Klik tombol 'Pilih' untuk mengirim pilihan Anda\n• Tambahkan opsi Anda sendiri jika tidak melihat yang Anda butuhkan"
+  "pollHelpDescription": "• Ketuk opsi untuk memilihnya\n• Ketuk lagi untuk membatalkan pilihan\n• Pilih sebanyak yang Anda suka\n• Klik tombol 'Pilih' untuk mengirim pilihan Anda\n• Tambahkan opsi Anda sendiri jika tidak melihat yang Anda butuhkan",
+  "remainingScans": "Pemindaian tersisa",
+  "remainingMessages": "Pesan tersisa",
+  "usageLimitsBadge": "5 pemindaian/minggu • 5 pesan/hari",
+  "subscriptionBenefitsTitle": "Buka fitur Premium",
+  "subscriptionBenefitsDescription": "Tingkatkan ke Premium dan dapatkan akses tak terbatas ke semua fitur",
+  "getSubscription": "Dapatkan Premium"
 }
