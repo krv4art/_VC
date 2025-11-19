@@ -1,0 +1,42 @@
+{
+  "document_classification": {
+    "prompt": "Analyze this document image and classify it into one of these categories: passport, id_card, receipt, invoice, contract, letter, form, business_card, certificate, other. Respond with a JSON object containing: {\"type\": \"category\", \"confidence\": 0.0-1.0, \"description\": \"brief description\"}",
+    "temperature": 0.3
+  },
+  "ocr_extraction": {
+    "prompt": "Extract all text from this document image. Preserve the layout and structure as much as possible. Return the extracted text in a clean, readable format.",
+    "temperature": 0.2
+  },
+  "form_detection": {
+    "prompt": "Analyze this document and identify all form fields. For each field, provide: {\"fields\": [{\"name\": \"field name\", \"type\": \"text|number|date|checkbox\", \"value\": \"current value if visible\", \"position\": \"approximate position\"}]}",
+    "temperature": 0.3
+  },
+  "content_summarization": {
+    "prompt": "Provide a concise summary of this document in 2-3 sentences. Focus on the main topic, key points, and any important dates or numbers.",
+    "temperature": 0.4
+  },
+  "privacy_scan": {
+    "prompt": "Scan this document for sensitive information including: personal names, addresses, phone numbers, email addresses, social security numbers, credit card numbers, passport numbers, dates of birth. Return as JSON: {\"has_sensitive_data\": true/false, \"types\": [\"list of types found\"], \"warning\": \"recommendation\"}",
+    "temperature": 0.2
+  },
+  "smart_file_naming": {
+    "prompt": "Based on the content of this document, suggest a descriptive filename (max 50 characters, use underscores, no special characters). Return as JSON: {\"suggested_name\": \"filename\", \"reason\": \"why this name\"}",
+    "temperature": 0.4
+  },
+  "table_extraction": {
+    "prompt": "If this document contains tables, extract them and return as JSON arrays. Format: {\"tables\": [{\"headers\": [], \"rows\": [[]]}]}. If no tables, return empty array.",
+    "temperature": 0.2
+  },
+  "key_info_extraction": {
+    "prompt": "Extract key information from this document: dates, amounts (monetary values), names of people/organizations, addresses, phone numbers, email addresses. Return as JSON: {\"dates\": [], \"amounts\": [], \"names\": [], \"addresses\": [], \"contacts\": []}",
+    "temperature": 0.3
+  },
+  "smart_annotation": {
+    "prompt": "Analyze this document page and suggest areas that might need highlighting or annotation (important clauses, key figures, dates, warnings). Return as JSON: {\"suggestions\": [{\"text\": \"what to highlight\", \"reason\": \"why\", \"priority\": \"high|medium|low\"}]}",
+    "temperature": 0.4
+  },
+  "document_quality": {
+    "prompt": "Assess the quality of this document scan. Check for: readability, blur, skew, lighting, completeness. Return as JSON: {\"quality_score\": 0-100, \"issues\": [\"list of issues\"], \"suggestions\": [\"improvement suggestions\"]}",
+    "temperature": 0.3
+  }
+}

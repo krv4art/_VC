@@ -31,9 +31,10 @@ dependencies:
 
   # PDF Processing (Core)
   pdf: ^3.11.1
-  # syncfusion_flutter_pdf: ^27.1.58  # Incompatible with intl 0.20
-  # syncfusion_flutter_pdfviewer: ^27.1.58  # Incompatible with intl 0.20
+  syncfusion_flutter_pdf: ^28.1.33  # Updated for intl 0.20+ compatibility
+  syncfusion_flutter_pdfviewer: ^28.1.33  # Updated for intl 0.20+ compatibility
   printing: ^5.13.4
+  archive: ^3.6.1  # For PDF compression
 
   # Document Processing
   file_picker: ^8.1.6
