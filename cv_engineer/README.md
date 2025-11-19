@@ -4,6 +4,19 @@ A comprehensive Flutter application for creating professional resumes with AI as
 
 ## Features
 
+### NEW: Advanced Features (2025)
+- **ATS Optimization**: Analyze resume compatibility with Applicant Tracking Systems
+  - Job description matching with keyword analysis
+  - Match score calculation (0-100%)
+  - Missing keyword identification
+  - Format and content quality checks
+  - Actionable improvement recommendations
+- **DOCX Export**: Export resumes in Microsoft Word format (.docx)
+- **Social Media Links**: Add LinkedIn, GitHub, Portfolio, and other professional links
+- **QR Code Generator**: Generate vCard QR codes with contact information
+- **Multiple Export Formats**: PDF, DOCX, and more
+- **Enhanced Resume Models**: Support for job applications and cover letters
+
 ### Core Functionality
 - **Onboarding Experience**: Beautiful 4-page introduction for first-time users with smooth animations
 - **Professional Templates**: Three beautifully designed resume templates (Professional, Creative, Modern)
