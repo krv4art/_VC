@@ -1,8 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:path/path.dart' as path;
 import '../../constants/app_dimensions.dart';
 import '../../providers/tools_provider.dart';
+import '../../services/pdf/pdf_editor_service.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../widgets/common/error_dialog.dart';
@@ -358,9 +362,14 @@ class _RotateScreenState extends State<RotateScreen> {
       );
 
       if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+
+        // Get actual page count
+        final pageCount = await _getPageCount(filePath);
+
         setState(() {
-          _selectedFilePath = result.files.single.path!;
-          _totalPages = 10; // TODO: Get actual page count
+          _selectedFilePath = filePath;
+          _totalPages = pageCount;
           _selectedPages.clear();
         });
       }
@@ -387,22 +396,36 @@ class _RotateScreenState extends State<RotateScreen> {
     }
 
     try {
-      // TODO: Implement actual rotation
+      // Determine which pages to rotate
+      final List<int> pagesToRotate = _getPageNumbersToRotate();
+
+      if (pagesToRotate.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No pages selected for rotation')),
+        );
+        return;
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Rotating pages by $_rotationAngle°...'),
-          backgroundColor: Colors.green,
+          content: Text('Rotating ${pagesToRotate.length} pages by $_rotationAngle°...'),
         ),
       );
 
-      // Simulate processing
-      await Future.delayed(const Duration(seconds: 2));
+      // Perform actual rotation using PDF Editor Service
+      final editorService = PdfEditorService();
+      final outputPath = await editorService.rotatePages(
+        _selectedFilePath!,
+        pageNumbers: pagesToRotate,
+        degrees: _rotationAngle,
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('PDF rotated successfully!'),
+          SnackBar(
+            content: Text('PDF rotated successfully!\nSaved to: ${path.basename(outputPath)}'),
             backgroundColor: Colors.green,
+            duration: const Duration(seconds: 4),
           ),
         );
 
@@ -420,6 +443,42 @@ class _RotateScreenState extends State<RotateScreen> {
           message: e.toString(),
         );
       }
+    }
+  }
+
+  /// Get actual page count from PDF
+  Future<int> _getPageCount(String pdfPath) async {
+    try {
+      final bytes = await File(pdfPath).readAsBytes();
+      final PdfDocument document = PdfDocument(inputBytes: bytes);
+      final pageCount = document.pages.count;
+      document.dispose();
+      return pageCount;
+    } catch (e) {
+      return 10; // Fallback to default
+    }
+  }
+
+  /// Get list of page numbers to rotate based on mode
+  List<int> _getPageNumbersToRotate() {
+    switch (_rotateMode) {
+      case RotateMode.allPages:
+        return List.generate(_totalPages, (index) => index + 1);
+
+      case RotateMode.evenPages:
+        return List.generate(
+          _totalPages ~/ 2,
+          (index) => (index + 1) * 2,
+        );
+
+      case RotateMode.oddPages:
+        return List.generate(
+          (_totalPages + 1) ~/ 2,
+          (index) => index * 2 + 1,
+        );
+
+      case RotateMode.customPages:
+        return _selectedPages.toList()..sort();
     }
   }
 }

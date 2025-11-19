@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../constants/app_dimensions.dart';
 import '../../providers/tools_provider.dart';
 import '../../widgets/common/custom_button.dart';
+import '../../services/pdf/pdf_editor_service.dart';
 import '../../widgets/common/custom_text_field.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../widgets/common/error_dialog.dart';
@@ -507,22 +509,39 @@ class _WatermarkScreenState extends State<WatermarkScreen> {
     if (!_canApplyWatermark()) return;
 
     try {
-      // TODO: Implement actual watermark application
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Applying watermark...'),
-          backgroundColor: Colors.green,
-        ),
+        const SnackBar(content: Text('Applying watermark...')),
       );
 
-      // Simulate processing
-      await Future.delayed(const Duration(seconds: 2));
+      final editorService = PdfEditorService();
+      final String outputPath;
+
+      if (_watermarkType == WatermarkType.text) {
+        // Apply text watermark
+        outputPath = await editorService.addWatermark(
+          _selectedFilePath!,
+          watermarkText: _watermarkText,
+          opacity: _opacity / 100,
+          fontSize: _fontSize,
+          color: _watermarkColor,
+        );
+      } else {
+        // For image watermark, use addImage method
+        if (_imageWatermarkPath == null) {
+          throw Exception('No watermark image selected');
+        }
+        // Note: Image watermark would need position calculation based on _watermarkPosition
+        // For now, we'll use a center position
+        outputPath = _selectedFilePath!; // Simplified for now
+        throw Exception('Image watermark not yet fully implemented');
+      }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Watermark applied successfully!'),
+          SnackBar(
+            content: Text('Watermark applied!\nSaved to: ${path.basename(outputPath)}'),
             backgroundColor: Colors.green,
+            duration: const Duration(seconds: 4),
           ),
         );
 

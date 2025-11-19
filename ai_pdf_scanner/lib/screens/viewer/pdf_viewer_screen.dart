@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:printing/printing.dart';
 import '../../models/pdf_document.dart';
 import '../../constants/app_dimensions.dart';
 import '../../widgets/common/loading_overlay.dart';
+import 'package:provider/provider.dart';
+import '../../providers/document_provider.dart';
 import 'dart:io';
 
 /// PDF Viewer Screen for viewing PDF documents
@@ -186,11 +190,33 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     );
   }
 
-  void _sharePDF() {
-    // TODO: Implement share functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Share functionality coming soon!')),
-    );
+  void _sharePDF() async {
+    try {
+      final file = File(widget.document.filePath);
+      if (await file.exists()) {
+        final result = await Share.shareXFiles(
+          [XFile(widget.document.filePath)],
+          subject: widget.document.title,
+          text: 'Sharing PDF document: ${widget.document.title}',
+        );
+
+        if (result.status == ShareResultStatus.success) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('PDF shared successfully!')),
+            );
+          }
+        }
+      } else {
+        throw Exception('PDF file not found');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to share PDF: $e')),
+        );
+      }
+    }
   }
 
   void _editPDF() {
@@ -277,23 +303,47 @@ class _PDFViewerScreenState extends State<PDFViewerScreen> {
     return '${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
   }
 
-  void _printPDF() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Print functionality coming soon!')),
-    );
+  void _printPDF() async {
+    try {
+      final file = File(widget.document.filePath);
+      final bytes = await file.readAsBytes();
+
+      await Printing.layoutPdf(
+        onLayout: (format) async => bytes,
+        name: widget.document.title,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to print PDF: $e')),
+        );
+      }
+    }
   }
 
-  void _toggleFavorite() {
-    // TODO: Implement favorite toggle
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          widget.document.isFavorite
-              ? 'Removed from favorites'
-              : 'Added to favorites',
-        ),
-      ),
-    );
+  void _toggleFavorite() async {
+    try {
+      final docProvider = context.read<DocumentProvider>();
+      await docProvider.toggleFavorite(widget.document.id);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              !widget.document.isFavorite
+                  ? 'Added to favorites'
+                  : 'Removed from favorites',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to toggle favorite: $e')),
+        );
+      }
+    }
   }
 
   @override
