@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../services/encyclopedia_service.dart';
 import '../models/encyclopedia_entry.dart';
@@ -431,6 +432,39 @@ class EncyclopediaDetailScreen extends StatelessWidget {
     }
   }
 
+  void _shareEntry(BuildContext context, EncyclopediaEntry entry) {
+    // Create text to copy to clipboard
+    final text = '''
+${entry.title}
+
+${entry.definition}
+
+${entry.detailedDescription ?? ''}
+
+Category: ${EncyclopediaService().getCategoryName(entry.category)}
+${entry.period != null ? 'Period: ${entry.period}' : ''}
+
+Learn more in Antique Identifier app.
+''';
+
+    // Copy to clipboard
+    final data = ClipboardData(text: text);
+    Clipboard.setData(data);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white),
+            SizedBox(width: 8),
+            Text('Copied to clipboard!'),
+          ],
+        ),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final service = EncyclopediaService();
@@ -452,12 +486,7 @@ class EncyclopediaDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () {
-              // TODO: Implement share
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Share feature coming soon')),
-              );
-            },
+            onPressed: () => _shareEntry(context, entry),
           ),
         ],
       ),

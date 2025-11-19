@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
 import '../services/subscription_service.dart';
 import '../services/sync_service.dart';
@@ -19,6 +20,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   bool _isLoading = false;
   int _remainingAnalyses = 0;
+  String _selectedLanguage = 'English';
+  String _selectedCurrency = 'USD';
+  bool _priceAlertsEnabled = true;
+
+  static const _availableLanguages = [
+    'English',
+    'Русский',
+    'Español',
+    'Français',
+    'Deutsch',
+    'Italiano',
+    'Português',
+    '中文',
+    '日本語',
+  ];
+
+  static const _availableCurrencies = [
+    'USD',
+    'EUR',
+    'GBP',
+    'JPY',
+    'CNY',
+    'RUB',
+    'AUD',
+    'CAD',
+  ];
 
   @override
   void initState() {
@@ -31,7 +58,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     _remainingAnalyses = await _subscriptionService.getRemainingFreeAnalyses();
 
+    // Load preferences
+    final prefs = await SharedPreferences.getInstance();
+    _selectedLanguage = prefs.getString('language') ?? 'English';
+    _selectedCurrency = prefs.getString('currency') ?? 'USD';
+    _priceAlertsEnabled = prefs.getBool('price_alerts') ?? true;
+
     setState(() => _isLoading = false);
+  }
+
+  Future<void> _savePreference(String key, dynamic value) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (value is String) {
+      await prefs.setString(key, value);
+    } else if (value is bool) {
+      await prefs.setBool(key, value);
+    }
   }
 
   @override
@@ -158,28 +200,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ListTile(
           leading: const Icon(Icons.language),
           title: const Text('Language'),
-          subtitle: const Text('English'),
+          subtitle: Text(_selectedLanguage),
           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-          onTap: () {
-            // TODO: Open language picker
-          },
+          onTap: _showLanguagePicker,
         ),
         ListTile(
           leading: const Icon(Icons.attach_money),
           title: const Text('Currency'),
-          subtitle: const Text('USD'),
+          subtitle: Text(_selectedCurrency),
           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-          onTap: () {
-            // TODO: Open currency picker
-          },
+          onTap: _showCurrencyPicker,
         ),
         SwitchListTile(
           secondary: const Icon(Icons.notifications),
           title: const Text('Price Alerts'),
           subtitle: const Text('Notify when prices change'),
-          value: true,
+          value: _priceAlertsEnabled,
           onChanged: (value) {
-            // TODO: Toggle notifications
+            setState(() => _priceAlertsEnabled = value);
+            _savePreference('price_alerts', value);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  value ? 'Price alerts enabled' : 'Price alerts disabled',
+                ),
+              ),
+            );
           },
         ),
       ],
@@ -199,25 +245,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           leading: const Icon(Icons.privacy_tip),
           title: const Text('Privacy Policy'),
           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-          onTap: () {
-            // TODO: Open privacy policy
-          },
+          onTap: _showPrivacyPolicy,
         ),
         ListTile(
           leading: const Icon(Icons.description),
           title: const Text('Terms of Service'),
           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-          onTap: () {
-            // TODO: Open terms
-          },
+          onTap: _showTermsOfService,
         ),
         ListTile(
           leading: const Icon(Icons.help),
           title: const Text('Help & Support'),
           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-          onTap: () {
-            // TODO: Open help
-          },
+          onTap: _showHelp,
         ),
       ],
     );
@@ -455,6 +495,209 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showLanguagePicker() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Language'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _availableLanguages.length,
+            itemBuilder: (context, index) {
+              final language = _availableLanguages[index];
+              final isSelected = language == _selectedLanguage;
+              return ListTile(
+                title: Text(language),
+                trailing: isSelected ? const Icon(Icons.check, color: Colors.green) : null,
+                selected: isSelected,
+                onTap: () {
+                  setState(() => _selectedLanguage = language);
+                  _savePreference('language', language);
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Language set to $language')),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCurrencyPicker() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Currency'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _availableCurrencies.length,
+            itemBuilder: (context, index) {
+              final currency = _availableCurrencies[index];
+              final isSelected = currency == _selectedCurrency;
+              return ListTile(
+                title: Text(currency),
+                trailing: isSelected ? const Icon(Icons.check, color: Colors.green) : null,
+                selected: isSelected,
+                onTap: () {
+                  setState(() => _selectedCurrency = currency);
+                  _savePreference('currency', currency);
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Currency set to $currency')),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showPrivacyPolicy() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Privacy Policy'),
+        content: const SingleChildScrollView(
+          child: Text(
+            'Antique Identifier Privacy Policy\n\n'
+            'Last updated: 2025\n\n'
+            '1. Information We Collect\n'
+            'We collect images you upload for analysis, analysis results, and account information if you choose to sign in.\n\n'
+            '2. How We Use Your Information\n'
+            'Your images and data are used solely to provide antique identification services. We use AI services to analyze your images.\n\n'
+            '3. Data Storage\n'
+            'Data is stored securely on our servers and in local device storage. You can delete your data at any time.\n\n'
+            '4. Third-Party Services\n'
+            'We use Google AI (Gemini) for image analysis and Supabase for cloud storage.\n\n'
+            '5. Your Rights\n'
+            'You have the right to access, modify, or delete your data at any time.\n\n'
+            'For questions, contact: support@antiqueidentifier.com',
+            style: TextStyle(height: 1.5),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showTermsOfService() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Terms of Service'),
+        content: const SingleChildScrollView(
+          child: Text(
+            'Antique Identifier Terms of Service\n\n'
+            'Last updated: 2025\n\n'
+            '1. Acceptance of Terms\n'
+            'By using Antique Identifier, you agree to these terms.\n\n'
+            '2. Service Description\n'
+            'Antique Identifier provides AI-powered identification and valuation of antique items. Results are estimates and not professional appraisals.\n\n'
+            '3. User Responsibilities\n'
+            '• Upload only images you own or have permission to use\n'
+            '• Use the service for lawful purposes only\n'
+            '• Do not attempt to reverse engineer or abuse the AI system\n\n'
+            '4. Disclaimers\n'
+            '• Valuations are estimates only\n'
+            '• Professional appraisal recommended for significant items\n'
+            '• We are not liable for decisions made based on app results\n\n'
+            '5. Subscription Terms\n'
+            '• Subscriptions renew automatically\n'
+            '• Cancel anytime through your app store\n'
+            '• No refunds for partial periods\n\n'
+            '6. Changes to Terms\n'
+            'We may update these terms. Continued use constitutes acceptance.\n\n'
+            'Contact: support@antiqueidentifier.com',
+            style: TextStyle(height: 1.5),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showHelp() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Help & Support'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Getting Started',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              const Text('1. Take a clear photo of your antique item\n'
+                  '2. The AI will analyze and identify it\n'
+                  '3. Review the detailed analysis results\n'
+                  '4. Save to your collection or export as PDF'),
+              const SizedBox(height: 16),
+              const Text(
+                'Features',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              const Text('• Visual matches - Find similar items online\n'
+                  '• Marks scanner - Identify manufacturer marks\n'
+                  '• Encyclopedia - Learn about antiques\n'
+                  '• Price tracking - Monitor value changes\n'
+                  '• Multi-photo analysis - Better accuracy'),
+              const SizedBox(height: 16),
+              const Text(
+                'Tips for Best Results',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              const Text('• Use good lighting\n'
+                  '• Take photos from multiple angles\n'
+                  '• Include close-ups of marks or signatures\n'
+                  '• Clean the item before photographing'),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 8),
+              const Text(
+                'Need more help?',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text('Email: support@antiqueidentifier.com'),
+              const Text('Response time: 24-48 hours'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }
