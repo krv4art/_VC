@@ -9,6 +9,8 @@ import '../screens/template_selection_screen.dart';
 import '../screens/preview_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/interview_questions_screen.dart';
+import '../screens/cover_letter_list_screen.dart';
+import '../screens/cover_letter_editor_screen.dart';
 
 // No transition page builder
 Page<void> _buildPageWithNoTransition(
@@ -73,6 +75,16 @@ final GoRouter appRouter = GoRouter(
       path: '/interview-questions',
       pageBuilder: (context, state) =>
           _buildPageWithNoTransition(context, state, const InterviewQuestionsScreen()),
+    ),
+    GoRoute(
+      path: '/cover-letters',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const CoverLetterListScreen()),
+    ),
+    GoRoute(
+      path: '/cover-letter-editor',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const CoverLetterEditorScreen()),
     ),
   ],
 );

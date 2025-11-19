@@ -9,6 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/resume_provider.dart';
+import 'providers/cover_letter_provider.dart';
 import 'services/storage_service.dart';
 import 'services/rating_service.dart';
 import 'services/onboarding_service.dart';
@@ -33,15 +34,20 @@ void main() async {
     );
   }
 
+  final storageService = StorageService();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => LocaleProvider()),
         ChangeNotifierProvider(
-          create: (context) => ResumeProvider(StorageService()),
+          create: (context) => ResumeProvider(storageService),
         ),
-        Provider<StorageService>(create: (_) => StorageService()),
+        ChangeNotifierProvider(
+          create: (context) => CoverLetterProvider(storageService),
+        ),
+        Provider<StorageService>(create: (_) => storageService),
       ],
       child: const MyApp(),
     ),
@@ -66,6 +72,7 @@ class _MyAppState extends State<MyApp> {
       context.read<ThemeProvider>().initialize();
       context.read<LocaleProvider>().initialize();
       context.read<ResumeProvider>().initialize();
+      context.read<CoverLetterProvider>().initialize();
     });
   }
 

@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const SizedBox(height: AppTheme.space24),
 
-                  // Quick actions
+                  // Quick actions - Row 1
                   Row(
                     children: [
                       Expanded(
@@ -150,6 +150,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: Icons.folder_outlined,
                           title: 'My Resumes',
                           onTap: () => context.push('/resumes'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppTheme.space16),
+
+                  // Quick actions - Row 2
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _QuickActionCard(
+                          icon: Icons.mail_outline,
+                          title: 'Cover Letters',
+                          onTap: () => context.push('/cover-letters'),
                         ),
                       ),
                       const SizedBox(width: AppTheme.space16),

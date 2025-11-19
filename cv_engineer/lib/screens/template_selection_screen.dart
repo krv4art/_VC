@@ -122,6 +122,12 @@ class TemplateSelectionScreen extends StatelessWidget {
         return Icons.palette;
       case 'modern':
         return Icons.auto_awesome;
+      case 'minimalist':
+        return Icons.remove_circle_outline;
+      case 'executive':
+        return Icons.workspace_premium;
+      case 'academic':
+        return Icons.school;
       default:
         return Icons.description;
     }
