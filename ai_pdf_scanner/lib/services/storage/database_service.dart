@@ -27,7 +27,7 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 3, // Updated version for migrations
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
