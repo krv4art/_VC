@@ -36,30 +36,21 @@ GoRouter createAppRouter() {
     initialLocation: '/',
     redirect: (context, state) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final isAuthenticated = authProvider.status == AuthStatus.authenticated;
       final isOnboardingComplete = AppConfig().isOnboardingComplete;
 
-      // Public routes that don't require authentication
-      final publicRoutes = ['/login', '/register', '/forgot-password'];
-      final isPublicRoute = publicRoutes.contains(state.matchedLocation);
+      // Auth routes
+      final authRoutes = ['/login', '/register', '/forgot-password'];
+      final isAuthRoute = authRoutes.contains(state.matchedLocation);
 
-      // If not authenticated and trying to access protected route, redirect to login
-      if (!isAuthenticated && !isPublicRoute) {
-        return '/login';
-      }
-
-      // If authenticated but not onboarded, redirect to onboarding
-      if (isAuthenticated && !isOnboardingComplete && !state.matchedLocation.startsWith('/onboarding')) {
+      // If not onboarded, redirect to onboarding (except auth routes)
+      if (!isOnboardingComplete &&
+          !state.matchedLocation.startsWith('/onboarding') &&
+          !isAuthRoute) {
         return '/onboarding/welcome';
       }
 
       // If onboarded and going to onboarding, redirect to home
       if (isOnboardingComplete && state.matchedLocation.startsWith('/onboarding')) {
-        return '/home';
-      }
-
-      // If authenticated and trying to access auth pages, redirect to home
-      if (isAuthenticated && isPublicRoute) {
         return '/home';
       }
 
@@ -70,11 +61,6 @@ GoRouter createAppRouter() {
       GoRoute(
         path: '/',
         redirect: (context, state) {
-          final authProvider = Provider.of<AuthProvider>(context, listen: false);
-          final isAuthenticated = authProvider.status == AuthStatus.authenticated;
-          if (!isAuthenticated) {
-            return '/login';
-          }
           final isOnboardingComplete = AppConfig().isOnboardingComplete;
           return isOnboardingComplete ? '/home' : '/onboarding/welcome';
         },
