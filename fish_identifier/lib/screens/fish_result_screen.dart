@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../flutter_gen/gen_l10n/app_localizations.dart';
 import '../providers/identification_provider.dart';
 import '../providers/collection_provider.dart';
@@ -237,12 +238,40 @@ class _FishResultScreenState extends State<FishResultScreen> {
     );
   }
 
-  void _shareResult(BuildContext context, FishIdentification fish) {
-    final l10n = AppLocalizations.of(context)!;
-    // Share functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.shareComingSoon)),
-    );
+  void _shareResult(BuildContext context, FishIdentification fish) async {
+    try {
+      final text = '''
+🐟 ${fish.fishName}
+📝 Scientific Name: ${fish.scientificName}
+📊 Confidence: ${(fish.confidenceScore * 100).toStringAsFixed(0)}%
+🌊 Habitat: ${fish.habitat}
+🍽️ Diet: ${fish.diet}
+${fish.edibility != null ? '🍴 Edibility: ${fish.edibility}' : ''}
+
+Identified using Fish Identifier 🎣
+''';
+
+      // Share with image if available
+      if (fish.imagePath.isNotEmpty) {
+        final file = File(fish.imagePath);
+        if (await file.exists()) {
+          await Share.shareXFiles(
+            [XFile(fish.imagePath)],
+            text: text,
+          );
+          return;
+        }
+      }
+
+      // Share text only if image not available
+      await Share.share(text);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to share. Please try again.')),
+        );
+      }
+    }
   }
 
   void _deleteResult(BuildContext context, int id) {
