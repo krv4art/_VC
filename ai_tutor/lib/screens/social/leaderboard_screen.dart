@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:go_router/go_router.dart';
 import '../../models/leaderboard_entry.dart';
 import '../../services/leaderboard_service.dart';
 import '../../providers/user_profile_provider.dart';
@@ -70,6 +71,61 @@ class _LeaderboardScreenState extends State<LeaderboardScreen>
   @override
   Widget build(BuildContext context) {
     _isRussian = context.watch<UserProfileProvider>().profile.preferredLanguage == 'ru';
+    final authProvider = context.watch<AuthProvider>();
+
+    // Check if user is anonymous
+    if (authProvider.isAnonymous) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(_isRussian ? 'Таблица лидеров' : 'Leaderboard'),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.lock_outline,
+                  size: 80,
+                  color: Theme.of(context).primaryColor.withOpacity(0.5),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  _isRussian
+                      ? 'Требуется авторизация'
+                      : 'Authentication Required',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  _isRussian
+                      ? 'Войдите в аккаунт, чтобы увидеть таблицу лидеров и соревноваться с друзьями'
+                      : 'Sign in to view the leaderboard and compete with friends',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton.icon(
+                  onPressed: () => context.push('/login'),
+                  icon: const Icon(Icons.login),
+                  label: Text(_isRussian ? 'Войти' : 'Sign In'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(

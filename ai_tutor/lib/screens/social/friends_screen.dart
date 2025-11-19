@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:go_router/go_router.dart';
 import '../../models/friend.dart';
 import '../../services/friends_service.dart';
 import '../../services/leaderboard_service.dart';
@@ -60,6 +61,61 @@ class _FriendsScreenState extends State<FriendsScreen> {
   @override
   Widget build(BuildContext context) {
     _isRussian = context.watch<UserProfileProvider>().profile.preferredLanguage == 'ru';
+    final authProvider = context.watch<AuthProvider>();
+
+    // Check if user is anonymous
+    if (authProvider.isAnonymous) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(_isRussian ? 'Друзья' : 'Friends'),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.people_outline,
+                  size: 80,
+                  color: Theme.of(context).primaryColor.withOpacity(0.5),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  _isRussian
+                      ? 'Требуется авторизация'
+                      : 'Authentication Required',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  _isRussian
+                      ? 'Войдите в аккаунт, чтобы добавлять друзей и соревноваться с ними'
+                      : 'Sign in to add friends and compete with them',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton.icon(
+                  onPressed: () => context.push('/login'),
+                  icon: const Icon(Icons.login),
+                  label: Text(_isRussian ? 'Войти' : 'Sign In'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(

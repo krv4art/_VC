@@ -26,12 +26,24 @@ class AuthProvider with ChangeNotifier {
   User? get user => _user;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
+  bool get isAnonymous => _user?.isAnonymous ?? false;
+  bool get isFullyAuthenticated => isAuthenticated && !isAnonymous;
   String? get userId => _user?.id;
 
-  void _initialize() {
+  void _initialize() async {
     // Check initial auth state
     _user = _authService.currentUser;
     _status = _user != null ? AuthStatus.authenticated : AuthStatus.unauthenticated;
+
+    // If no user, sign in anonymously for background authentication
+    if (_user == null) {
+      try {
+        await signInAnonymously();
+      } catch (e) {
+        // Silent fail - app can work without auth
+        debugPrint('Background anonymous sign-in failed: $e');
+      }
+    }
 
     // Listen to auth changes
     _authSubscription = _authService.authStateChanges.listen((event) {
