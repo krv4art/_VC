@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'similar_item.dart';
 
 /// Информация о материале антикварного предмета
 class MaterialInfo {
@@ -86,6 +87,10 @@ class AnalysisResult {
   final String? authenticityNotes;
   final List<String> similarItems;
   final String? aiSummary;
+  final List<SimilarItem> visualMatches; // Visual matches from online marketplaces
+  final bool? isFavorite; // User favorite flag
+  final List<String> tags; // User-defined tags
+  final String? notes; // User notes
 
   AnalysisResult({
     required this.isAntique,
@@ -102,6 +107,10 @@ class AnalysisResult {
     this.authenticityNotes,
     required this.similarItems,
     this.aiSummary,
+    this.visualMatches = const [],
+    this.isFavorite = false,
+    this.tags = const [],
+    this.notes,
   });
 
   factory AnalysisResult.fromJson(Map<String, dynamic> json) {
@@ -134,6 +143,17 @@ class AnalysisResult {
               .toList() ??
           [],
       aiSummary: json['ai_summary'] as String?,
+      visualMatches: (json['visual_matches'] as List<dynamic>?)
+              ?.map((item) => SimilarItem.fromJson(
+                  item is Map ? item.cast<String, dynamic>() : {}))
+              .toList() ??
+          [],
+      isFavorite: json['is_favorite'] as bool?,
+      tags: (json['tags'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      notes: json['notes'] as String?,
     );
   }
 
@@ -153,6 +173,53 @@ class AnalysisResult {
       'authenticity_notes': authenticityNotes,
       'similar_items': similarItems,
       'ai_summary': aiSummary,
+      'visual_matches': visualMatches.map((e) => e.toJson()).toList(),
+      'is_favorite': isFavorite,
+      'tags': tags,
+      'notes': notes,
     };
+  }
+
+  /// Creates a copy with updated fields
+  AnalysisResult copyWith({
+    bool? isAntique,
+    String? humorousMessage,
+    String? itemName,
+    String? category,
+    String? description,
+    List<MaterialInfo>? materials,
+    String? historicalContext,
+    String? estimatedPeriod,
+    String? estimatedOrigin,
+    PriceEstimate? priceEstimate,
+    List<String>? warnings,
+    String? authenticityNotes,
+    List<String>? similarItems,
+    String? aiSummary,
+    List<SimilarItem>? visualMatches,
+    bool? isFavorite,
+    List<String>? tags,
+    String? notes,
+  }) {
+    return AnalysisResult(
+      isAntique: isAntique ?? this.isAntique,
+      humorousMessage: humorousMessage ?? this.humorousMessage,
+      itemName: itemName ?? this.itemName,
+      category: category ?? this.category,
+      description: description ?? this.description,
+      materials: materials ?? this.materials,
+      historicalContext: historicalContext ?? this.historicalContext,
+      estimatedPeriod: estimatedPeriod ?? this.estimatedPeriod,
+      estimatedOrigin: estimatedOrigin ?? this.estimatedOrigin,
+      priceEstimate: priceEstimate ?? this.priceEstimate,
+      warnings: warnings ?? this.warnings,
+      authenticityNotes: authenticityNotes ?? this.authenticityNotes,
+      similarItems: similarItems ?? this.similarItems,
+      aiSummary: aiSummary ?? this.aiSummary,
+      visualMatches: visualMatches ?? this.visualMatches,
+      isFavorite: isFavorite ?? this.isFavorite,
+      tags: tags ?? this.tags,
+      notes: notes ?? this.notes,
+    );
   }
 }
