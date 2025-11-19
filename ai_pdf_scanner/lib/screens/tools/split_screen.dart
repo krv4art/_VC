@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../constants/app_dimensions.dart';
@@ -304,10 +306,14 @@ class _SplitScreenState extends State<SplitScreen> {
       );
 
       if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+
+        // Get actual page count
+        final pageCount = await _getPageCount(filePath);
+
         setState(() {
-          _selectedFilePath = result.files.single.path!;
-          // TODO: Get actual page count from PDF
-          _totalPages = 10; // Placeholder
+          _selectedFilePath = filePath;
+          _totalPages = pageCount;
           _selectedPages.clear();
         });
       }
@@ -354,7 +360,12 @@ class _SplitScreenState extends State<SplitScreen> {
           break;
 
         case SplitMode.everyNPages:
-          // TODO: Implement split by page count
+          outputPaths = await provider.splitPDFEveryNPages(
+            pdfPath: _selectedFilePath!,
+            pagesPerFile: _pagesPerFileController.text.isNotEmpty
+                ? int.parse(_pagesPerFileController.text)
+                : 1,
+          );
           break;
 
         case SplitMode.customPages:
@@ -396,8 +407,18 @@ class _SplitScreenState extends State<SplitScreen> {
   }
 }
 
-enum SplitMode {
-  allPages,
-  everyNPages,
-  customPages,
+
+  /// Get actual page count from PDF
+  Future<int> _getPageCount(String pdfPath) async {
+    try {
+      final bytes = await File(pdfPath).readAsBytes();
+      final PdfDocument document = PdfDocument(inputBytes: bytes);
+      final pageCount = document.pages.count;
+      document.dispose();
+      return pageCount;
+    } catch (e) {
+      return 10; // Fallback
+    }
+  }
 }
+

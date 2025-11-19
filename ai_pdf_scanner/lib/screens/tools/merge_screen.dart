@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../constants/app_dimensions.dart';
@@ -268,7 +269,7 @@ class _MergeScreenState extends State<MergeScreen> {
               label: 'View',
               textColor: Colors.white,
               onPressed: () {
-                // TODO: Navigate to viewer
+                context.push('/viewer', extra: outputPath);
               },
             ),
           ),

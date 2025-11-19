@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../constants/app_dimensions.dart';
 
 /// About Screen - App information and credits
@@ -277,7 +278,10 @@ class AboutScreen extends StatelessWidget {
   }
 
   void _rateApp(BuildContext context) {
-    // TODO: Implement app rating
+    final uri = Uri.parse('https://play.google.com/store/apps/details?id=com.example.ai_pdf_scanner');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    }
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Thank you for your interest!')),
     );
