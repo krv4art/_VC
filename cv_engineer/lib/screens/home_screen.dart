@@ -6,6 +6,7 @@ import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/animated_card.dart';
 import '../utils/demo_data.dart';
+import '../utils/time_utils.dart';
 import '../services/rating_service.dart';
 import '../widgets/rating_request_dialog.dart';
 
@@ -129,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const SizedBox(height: AppTheme.space24),
 
-                  // Quick actions
+                  // Quick actions - Row 1
                   Row(
                     children: [
                       Expanded(
@@ -142,6 +143,28 @@ class _HomeScreenState extends State<HomeScreen> {
                               context.push('/templates');
                             }
                           },
+                        ),
+                      ),
+                      const SizedBox(width: AppTheme.space16),
+                      Expanded(
+                        child: _QuickActionCard(
+                          icon: Icons.folder_outlined,
+                          title: 'My Resumes',
+                          onTap: () => context.push('/resumes'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppTheme.space16),
+
+                  // Quick actions - Row 2
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _QuickActionCard(
+                          icon: Icons.mail_outline,
+                          title: 'Cover Letters',
+                          onTap: () => context.push('/cover-letters'),
                         ),
                       ),
                       const SizedBox(width: AppTheme.space16),
@@ -320,6 +343,43 @@ class _QuickActionCard extends StatelessWidget {
   }
 }
 
+void _editResumeTitle(BuildContext context, ResumeProvider provider, dynamic resume) {
+  final controller = TextEditingController(text: resume.customTitle ?? '');
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Rename Resume'),
+      content: TextField(
+        controller: controller,
+        decoration: const InputDecoration(
+          labelText: 'Resume Title',
+          hintText: 'e.g., Google Software Engineer Resume',
+          border: OutlineInputBorder(),
+        ),
+        autofocus: true,
+        onSubmitted: (_) {
+          provider.updateCustomTitle(controller.text.trim());
+          Navigator.pop(context);
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: () {
+            provider.updateCustomTitle(controller.text.trim());
+            Navigator.pop(context);
+          },
+          child: const Text('Save'),
+        ),
+      ],
+    ),
+  );
+}
+
 class _CurrentResumeCard extends StatelessWidget {
   final ResumeProvider resumeProvider;
 
@@ -343,18 +403,21 @@ class _CurrentResumeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      resume.personalInfo.fullName.isNotEmpty
-                          ? resume.personalInfo.fullName
-                          : 'Untitled Resume',
+                      resume.displayName,
                       style: theme.textTheme.titleLarge,
                     ),
                     const SizedBox(height: AppTheme.space4),
                     Text(
-                      'Last updated: ${_formatDate(resume.updatedAt)}',
+                      'Last updated: ${TimeUtils.formatLastEdited(resume.updatedAt)}',
                       style: theme.textTheme.bodySmall,
                     ),
                   ],
                 ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit_outlined),
+                onPressed: () => _editResumeTitle(context, resumeProvider, resume),
+                tooltip: 'Rename',
               ),
               IconButton(
                 icon: const Icon(Icons.visibility),
@@ -377,10 +440,6 @@ class _CurrentResumeCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 }
 

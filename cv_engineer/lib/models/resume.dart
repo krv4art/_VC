@@ -9,6 +9,7 @@ import 'custom_section.dart';
 /// Main Resume model
 class Resume {
   final String id;
+  final String? customTitle; // Custom name for the resume
   final String templateId;
   final PersonalInfo personalInfo;
   final List<Experience> experiences;
@@ -26,6 +27,7 @@ class Resume {
 
   Resume({
     required this.id,
+    this.customTitle,
     required this.templateId,
     required this.personalInfo,
     this.experiences = const [],
@@ -40,8 +42,20 @@ class Resume {
     this.fontFamily = 'Roboto',
   });
 
+  /// Get display name for the resume
+  String get displayName {
+    if (customTitle != null && customTitle!.isNotEmpty) {
+      return customTitle!;
+    }
+    if (personalInfo.fullName.isNotEmpty) {
+      return personalInfo.fullName;
+    }
+    return 'Untitled Resume';
+  }
+
   Resume copyWith({
     String? id,
+    String? customTitle,
     String? templateId,
     PersonalInfo? personalInfo,
     List<Experience>? experiences,
@@ -57,6 +71,7 @@ class Resume {
   }) {
     return Resume(
       id: id ?? this.id,
+      customTitle: customTitle ?? this.customTitle,
       templateId: templateId ?? this.templateId,
       personalInfo: personalInfo ?? this.personalInfo,
       experiences: experiences ?? this.experiences,
@@ -75,6 +90,7 @@ class Resume {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'customTitle': customTitle,
       'templateId': templateId,
       'personalInfo': personalInfo.toJson(),
       'experiences': experiences.map((e) => e.toJson()).toList(),
@@ -93,6 +109,7 @@ class Resume {
   factory Resume.fromJson(Map<String, dynamic> json) {
     return Resume(
       id: json['id'],
+      customTitle: json['customTitle'] as String?,
       templateId: json['templateId'],
       personalInfo: PersonalInfo.fromJson(json['personalInfo']),
       experiences: (json['experiences'] as List)

@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../models/resume.dart';
 import '../../theme/app_theme.dart';
 import 'resume_template.dart';
@@ -87,6 +89,9 @@ class CreativeTemplate extends ResumeTemplate {
   }
 
   Widget _buildHeader(ThemeData theme) {
+    final hasPhoto = resume.personalInfo.photoPath != null &&
+                    resume.personalInfo.photoPath!.isNotEmpty;
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -104,36 +109,72 @@ class CreativeTemplate extends ResumeTemplate {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            resume.personalInfo.fullName,
-            style: const TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              letterSpacing: 0.5,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  resume.personalInfo.fullName,
+                  style: const TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 20,
+                  runSpacing: 12,
+                  children: [
+                    if (resume.personalInfo.email.isNotEmpty)
+                      _buildHeaderContact(Icons.email_outlined, resume.personalInfo.email),
+                    if (resume.personalInfo.phone.isNotEmpty)
+                      _buildHeaderContact(Icons.phone_outlined, resume.personalInfo.phone),
+                    if (resume.personalInfo.city != null && resume.personalInfo.city!.isNotEmpty)
+                      _buildHeaderContact(Icons.location_on_outlined,
+                        [resume.personalInfo.city, resume.personalInfo.country]
+                          .where((s) => s != null && s.isNotEmpty).join(', ')),
+                    if (resume.personalInfo.linkedin != null)
+                      _buildHeaderContact(Icons.link, resume.personalInfo.linkedin!),
+                  ],
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 20,
-            runSpacing: 12,
-            children: [
-              if (resume.personalInfo.email.isNotEmpty)
-                _buildHeaderContact(Icons.email_outlined, resume.personalInfo.email),
-              if (resume.personalInfo.phone.isNotEmpty)
-                _buildHeaderContact(Icons.phone_outlined, resume.personalInfo.phone),
-              if (resume.personalInfo.city != null && resume.personalInfo.city!.isNotEmpty)
-                _buildHeaderContact(Icons.location_on_outlined,
-                  [resume.personalInfo.city, resume.personalInfo.country]
-                    .where((s) => s != null && s.isNotEmpty).join(', ')),
-              if (resume.personalInfo.linkedin != null)
-                _buildHeaderContact(Icons.link, resume.personalInfo.linkedin!),
-            ],
+          if (hasPhoto) ...[
+            const SizedBox(width: 24),
+            _buildProfilePhoto(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfilePhoto() {
+    final photoPath = resume.personalInfo.photoPath!;
+
+    return Container(
+      width: 120,
+      height: 120,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 4),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
+        image: DecorationImage(
+          image: kIsWeb
+            ? NetworkImage(photoPath) as ImageProvider
+            : FileImage(File(photoPath)),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

@@ -26,7 +26,7 @@ class ExperienceEditorScreen extends StatelessWidget {
               padding: const EdgeInsets.all(AppTheme.space16),
               itemCount: experiences.length,
               onReorder: (oldIndex, newIndex) {
-                // TODO: Implement reordering
+                resumeProvider.reorderExperiences(oldIndex, newIndex);
               },
               itemBuilder: (context, index) {
                 final exp = experiences[index];

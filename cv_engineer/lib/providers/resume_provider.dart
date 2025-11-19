@@ -127,6 +127,26 @@ class ResumeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Reorder experiences
+  Future<void> reorderExperiences(int oldIndex, int newIndex) async {
+    if (_currentResume == null) return;
+    final experiences = List<Experience>.from(_currentResume!.experiences);
+
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
+    final item = experiences.removeAt(oldIndex);
+    experiences.insert(newIndex, item);
+
+    _currentResume = _currentResume!.copyWith(
+      experiences: experiences,
+      updatedAt: DateTime.now(),
+    );
+    await _saveCurrentResume();
+    notifyListeners();
+  }
+
   // Add education
   Future<void> addEducation(Education education) async {
     if (_currentResume == null) return;
@@ -291,11 +311,42 @@ class ResumeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Reorder custom sections
+  Future<void> reorderCustomSections(int oldIndex, int newIndex) async {
+    if (_currentResume == null) return;
+    final sections = List<CustomSection>.from(_currentResume!.customSections);
+
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
+    final item = sections.removeAt(oldIndex);
+    sections.insert(newIndex, item);
+
+    _currentResume = _currentResume!.copyWith(
+      customSections: sections,
+      updatedAt: DateTime.now(),
+    );
+    await _saveCurrentResume();
+    notifyListeners();
+  }
+
   // Update template
   Future<void> updateTemplate(String templateId) async {
     if (_currentResume == null) return;
     _currentResume = _currentResume!.copyWith(
       templateId: templateId,
+      updatedAt: DateTime.now(),
+    );
+    await _saveCurrentResume();
+    notifyListeners();
+  }
+
+  // Update custom title
+  Future<void> updateCustomTitle(String? customTitle) async {
+    if (_currentResume == null) return;
+    _currentResume = _currentResume!.copyWith(
+      customTitle: customTitle,
       updatedAt: DateTime.now(),
     );
     await _saveCurrentResume();

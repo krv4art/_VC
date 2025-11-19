@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../models/resume.dart';
 import '../../theme/app_theme.dart';
 import 'resume_template.dart';
@@ -91,45 +93,78 @@ class ProfessionalTemplate extends ResumeTemplate {
   }
 
   Widget _buildHeader(ThemeData theme) {
-    return Column(
+    final hasPhoto = resume.personalInfo.photoPath != null &&
+                    resume.personalInfo.photoPath!.isNotEmpty;
+
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          resume.personalInfo.fullName,
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: primaryColor,
-            letterSpacing: 0.5,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 16,
-          runSpacing: 8,
-          children: [
-            if (resume.personalInfo.email.isNotEmpty)
-              _buildContactItem(Icons.email, resume.personalInfo.email),
-            if (resume.personalInfo.phone.isNotEmpty)
-              _buildContactItem(Icons.phone, resume.personalInfo.phone),
-            if (resume.personalInfo.city != null && resume.personalInfo.city!.isNotEmpty)
-              _buildContactItem(Icons.location_on,
-                [resume.personalInfo.city, resume.personalInfo.country]
-                  .where((s) => s != null && s.isNotEmpty).join(', ')),
-            if (resume.personalInfo.linkedin != null)
-              _buildContactItem(Icons.link, resume.personalInfo.linkedin!),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Container(
-          height: 3,
-          width: 60,
-          decoration: BoxDecoration(
-            color: primaryColor,
-            borderRadius: BorderRadius.circular(2),
+        if (hasPhoto) ...[
+          _buildProfilePhoto(),
+          const SizedBox(width: 24),
+        ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                resume.personalInfo.fullName,
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: primaryColor,
+                  letterSpacing: 0.5,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 16,
+                runSpacing: 8,
+                children: [
+                  if (resume.personalInfo.email.isNotEmpty)
+                    _buildContactItem(Icons.email, resume.personalInfo.email),
+                  if (resume.personalInfo.phone.isNotEmpty)
+                    _buildContactItem(Icons.phone, resume.personalInfo.phone),
+                  if (resume.personalInfo.city != null && resume.personalInfo.city!.isNotEmpty)
+                    _buildContactItem(Icons.location_on,
+                      [resume.personalInfo.city, resume.personalInfo.country]
+                        .where((s) => s != null && s.isNotEmpty).join(', ')),
+                  if (resume.personalInfo.linkedin != null)
+                    _buildContactItem(Icons.link, resume.personalInfo.linkedin!),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 3,
+                width: 60,
+                decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildProfilePhoto() {
+    final photoPath = resume.personalInfo.photoPath!;
+
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: primaryColor, width: 3),
+        image: DecorationImage(
+          image: kIsWeb
+            ? NetworkImage(photoPath) as ImageProvider
+            : FileImage(File(photoPath)),
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 

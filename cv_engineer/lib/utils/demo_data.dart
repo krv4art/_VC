@@ -25,11 +25,12 @@ class DemoData {
       ),
       experiences: [
         Experience(
+          id: 'exp_1',
           jobTitle: 'Senior Software Engineer',
           company: 'TechCorp Solutions',
           location: 'San Francisco, CA',
           startDate: DateTime(2021, 3, 1),
-          isCurrent: true,
+          isCurrentJob: true,
           description: 'Leading development of cloud-native applications and mentoring team of 5 engineers.',
           responsibilities: [
             'Architected and implemented microservices architecture reducing deployment time by 60%',
@@ -40,6 +41,7 @@ class DemoData {
           ],
         ),
         Experience(
+          id: 'exp_2',
           jobTitle: 'Software Engineer',
           company: 'StartupXYZ',
           location: 'Palo Alto, CA',
@@ -54,6 +56,7 @@ class DemoData {
           ],
         ),
         Experience(
+          id: 'exp_3',
           jobTitle: 'Junior Developer',
           company: 'Digital Agency Pro',
           location: 'San Jose, CA',
@@ -164,11 +167,12 @@ class DemoData {
       ),
       experiences: [
         Experience(
+          id: 'exp_4',
           jobTitle: 'Senior UX Designer',
           company: 'DesignHub',
           location: 'New York, NY',
           startDate: DateTime(2022, 1, 1),
-          isCurrent: true,
+          isCurrentJob: true,
           description: 'Leading UX design for mobile and web applications, conducting user research and usability testing.',
           responsibilities: [
             'Led design of mobile app redesign increasing user retention by 45%',
@@ -178,6 +182,7 @@ class DemoData {
           ],
         ),
         Experience(
+          id: 'exp_5',
           jobTitle: 'UX Designer',
           company: 'Creative Agency',
           location: 'Brooklyn, NY',
@@ -257,11 +262,12 @@ class DemoData {
       ),
       experiences: [
         Experience(
+          id: 'exp_6',
           jobTitle: 'Marketing Manager',
           company: 'Growth Tech Inc.',
           location: 'Austin, TX',
           startDate: DateTime(2021, 6, 1),
-          isCurrent: true,
+          isCurrentJob: true,
           description: 'Leading marketing team of 8 people, developing and executing comprehensive marketing strategies.',
           responsibilities: [
             'Increased brand awareness by 150% through integrated marketing campaigns',
@@ -272,6 +278,7 @@ class DemoData {
           ],
         ),
         Experience(
+          id: 'exp_7',
           jobTitle: 'Digital Marketing Specialist',
           company: 'E-Commerce Plus',
           location: 'Dallas, TX',

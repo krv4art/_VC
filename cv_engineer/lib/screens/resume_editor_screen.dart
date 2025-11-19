@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/resume_provider.dart';
 import '../theme/app_theme.dart';
+import '../utils/validators.dart';
 import 'experience_editor_screen.dart';
 import 'education_editor_screen.dart';
 import 'skills_editor_screen.dart';
@@ -128,65 +129,9 @@ class ResumeEditorScreen extends StatelessWidget {
   }
 
   void _showPersonalInfoDialog(BuildContext context, ResumeProvider provider) {
-    final personalInfo = provider.currentResume!.personalInfo;
-    final nameController = TextEditingController(text: personalInfo.fullName);
-    final emailController = TextEditingController(text: personalInfo.email);
-    final phoneController = TextEditingController(text: personalInfo.phone);
-    final summaryController = TextEditingController(text: personalInfo.profileSummary);
-
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Personal Information'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Full Name'),
-              ),
-              const SizedBox(height: AppTheme.space16),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: AppTheme.space16),
-              TextField(
-                controller: phoneController,
-                decoration: const InputDecoration(labelText: 'Phone'),
-                keyboardType: TextInputType.phone,
-              ),
-              const SizedBox(height: AppTheme.space16),
-              TextField(
-                controller: summaryController,
-                decoration: const InputDecoration(labelText: 'Profile Summary'),
-                maxLines: 4,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final updatedInfo = personalInfo.copyWith(
-                fullName: nameController.text,
-                email: emailController.text,
-                phone: phoneController.text,
-                profileSummary: summaryController.text,
-              );
-              provider.updatePersonalInfo(updatedInfo);
-              Navigator.pop(context);
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
+      builder: (context) => _PersonalInfoDialog(provider: provider),
     );
   }
 
@@ -222,6 +167,124 @@ class _SectionCard extends StatelessWidget {
         trailing: const Icon(Icons.chevron_right),
         onTap: onTap,
       ),
+    );
+  }
+}
+
+class _PersonalInfoDialog extends StatefulWidget {
+  final ResumeProvider provider;
+
+  const _PersonalInfoDialog({required this.provider});
+
+  @override
+  State<_PersonalInfoDialog> createState() => _PersonalInfoDialogState();
+}
+
+class _PersonalInfoDialogState extends State<_PersonalInfoDialog> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _nameController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _summaryController;
+
+  @override
+  void initState() {
+    super.initState();
+    final personalInfo = widget.provider.currentResume!.personalInfo;
+    _nameController = TextEditingController(text: personalInfo.fullName);
+    _emailController = TextEditingController(text: personalInfo.email);
+    _phoneController = TextEditingController(text: personalInfo.phone);
+    _summaryController = TextEditingController(text: personalInfo.profileSummary);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _summaryController.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    if (_formKey.currentState!.validate()) {
+      final personalInfo = widget.provider.currentResume!.personalInfo;
+      final updatedInfo = personalInfo.copyWith(
+        fullName: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        phone: _phoneController.text.trim(),
+        profileSummary: _summaryController.text.trim(),
+      );
+      widget.provider.updatePersonalInfo(updatedInfo);
+      Navigator.pop(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Personal Information'),
+      content: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Full Name',
+                  hintText: 'John Doe',
+                ),
+                validator: (value) =>
+                    Validators.validateRequired(value, fieldName: 'Full name'),
+                textCapitalization: TextCapitalization.words,
+              ),
+              const SizedBox(height: AppTheme.space16),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  hintText: 'john.doe@example.com',
+                ),
+                keyboardType: TextInputType.emailAddress,
+                validator: Validators.validateEmail,
+              ),
+              const SizedBox(height: AppTheme.space16),
+              TextFormField(
+                controller: _phoneController,
+                decoration: const InputDecoration(
+                  labelText: 'Phone',
+                  hintText: '+1 (555) 123-4567',
+                ),
+                keyboardType: TextInputType.phone,
+                validator: Validators.validatePhone,
+              ),
+              const SizedBox(height: AppTheme.space16),
+              TextFormField(
+                controller: _summaryController,
+                decoration: const InputDecoration(
+                  labelText: 'Profile Summary',
+                  hintText: 'Brief description about yourself...',
+                  alignLabelWithHint: true,
+                ),
+                maxLines: 4,
+                textCapitalization: TextCapitalization.sentences,
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: _save,
+          child: const Text('Save'),
+        ),
+      ],
     );
   }
 }

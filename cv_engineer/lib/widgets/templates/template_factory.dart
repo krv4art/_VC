@@ -4,6 +4,9 @@ import 'resume_template.dart';
 import 'professional_template.dart';
 import 'creative_template.dart';
 import 'modern_template.dart';
+import 'minimalist_template.dart';
+import 'executive_template.dart';
+import 'academic_template.dart';
 
 /// Factory class for creating resume templates
 class TemplateFactory {
@@ -31,6 +34,27 @@ class TemplateFactory {
         primaryColor: const Color(0xFF009688),
         thumbnailPath: 'assets/templates/modern.png',
       ),
+      TemplateInfo(
+        id: 'minimalist',
+        name: 'Minimalist',
+        description: 'Ultra-clean and simple design with focus on content',
+        primaryColor: const Color(0xFF212121),
+        thumbnailPath: 'assets/templates/minimalist.png',
+      ),
+      TemplateInfo(
+        id: 'executive',
+        name: 'Executive',
+        description: 'Sophisticated and formal design for C-level positions',
+        primaryColor: const Color(0xFF1A237E),
+        thumbnailPath: 'assets/templates/executive.png',
+      ),
+      TemplateInfo(
+        id: 'academic',
+        name: 'Academic',
+        description: 'Traditional academic CV format for researchers and educators',
+        primaryColor: const Color(0xFF8B0000),
+        thumbnailPath: 'assets/templates/academic.png',
+      ),
     ];
   }
 
@@ -43,6 +67,12 @@ class TemplateFactory {
         return CreativeTemplate(resume: resume);
       case 'modern':
         return ModernTemplate(resume: resume);
+      case 'minimalist':
+        return MinimalistTemplate(resume: resume);
+      case 'executive':
+        return ExecutiveTemplate(resume: resume);
+      case 'academic':
+        return AcademicTemplate(resume: resume);
       default:
         return ProfessionalTemplate(resume: resume);
     }
