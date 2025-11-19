@@ -343,6 +343,43 @@ class _QuickActionCard extends StatelessWidget {
   }
 }
 
+void _editResumeTitle(BuildContext context, ResumeProvider provider, dynamic resume) {
+  final controller = TextEditingController(text: resume.customTitle ?? '');
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Rename Resume'),
+      content: TextField(
+        controller: controller,
+        decoration: const InputDecoration(
+          labelText: 'Resume Title',
+          hintText: 'e.g., Google Software Engineer Resume',
+          border: OutlineInputBorder(),
+        ),
+        autofocus: true,
+        onSubmitted: (_) {
+          provider.updateCustomTitle(controller.text.trim());
+          Navigator.pop(context);
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: () {
+            provider.updateCustomTitle(controller.text.trim());
+            Navigator.pop(context);
+          },
+          child: const Text('Save'),
+        ),
+      ],
+    ),
+  );
+}
+
 class _CurrentResumeCard extends StatelessWidget {
   final ResumeProvider resumeProvider;
 
@@ -366,9 +403,7 @@ class _CurrentResumeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      resume.personalInfo.fullName.isNotEmpty
-                          ? resume.personalInfo.fullName
-                          : 'Untitled Resume',
+                      resume.displayName,
                       style: theme.textTheme.titleLarge,
                     ),
                     const SizedBox(height: AppTheme.space4),
@@ -378,6 +413,11 @@ class _CurrentResumeCard extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit_outlined),
+                onPressed: () => _editResumeTitle(context, resumeProvider, resume),
+                tooltip: 'Rename',
               ),
               IconButton(
                 icon: const Icon(Icons.visibility),

@@ -233,9 +233,7 @@ class _ResumeListScreenState extends State<ResumeListScreen> {
                           children: [
                             Expanded(
                               child: Text(
-                                resume.personalInfo.fullName.isNotEmpty
-                                    ? resume.personalInfo.fullName
-                                    : 'Untitled Resume',
+                                resume.displayName,
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -306,6 +304,9 @@ class _ResumeListScreenState extends State<ResumeListScreen> {
                     icon: const Icon(Icons.more_vert),
                     onSelected: (value) async {
                       switch (value) {
+                        case 'rename':
+                          _editResumeTitle(context, provider, resume);
+                          break;
                         case 'edit':
                           await provider.loadResume(resume.id);
                           if (context.mounted) {
@@ -321,6 +322,16 @@ class _ResumeListScreenState extends State<ResumeListScreen> {
                       }
                     },
                     itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'rename',
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit_outlined),
+                            SizedBox(width: 12),
+                            Text('Rename'),
+                          ],
+                        ),
+                      ),
                       const PopupMenuItem(
                         value: 'edit',
                         child: Row(
@@ -432,6 +443,49 @@ class _ResumeListScreenState extends State<ResumeListScreen> {
     }
   }
 
+  void _editResumeTitle(
+    BuildContext context,
+    ResumeProvider provider,
+    dynamic resume,
+  ) {
+    final controller = TextEditingController(text: resume.customTitle ?? '');
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Rename Resume'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            labelText: 'Resume Title',
+            hintText: 'e.g., Google Software Engineer Resume',
+            border: OutlineInputBorder(),
+          ),
+          autofocus: true,
+          onSubmitted: (_) async {
+            await provider.loadResume(resume.id);
+            await provider.updateCustomTitle(controller.text.trim());
+            if (context.mounted) Navigator.pop(context);
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              await provider.loadResume(resume.id);
+              await provider.updateCustomTitle(controller.text.trim());
+              if (context.mounted) Navigator.pop(context);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _duplicateResume(
     BuildContext context,
     ResumeProvider provider,
@@ -482,7 +536,7 @@ class _ResumeListScreenState extends State<ResumeListScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Delete Resume'),
         content: Text(
-          'Are you sure you want to delete "${resume.personalInfo.fullName.isNotEmpty ? resume.personalInfo.fullName : 'Untitled Resume'}"?',
+          'Are you sure you want to delete "${resume.displayName}"?',
         ),
         actions: [
           TextButton(

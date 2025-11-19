@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../providers/resume_provider.dart';
 import '../models/skill.dart';
 import '../theme/app_theme.dart';
+import '../utils/common_skills.dart';
 
 class SkillsEditorScreen extends StatelessWidget {
   const SkillsEditorScreen({super.key});
@@ -248,15 +249,36 @@ class _SkillDialogState extends State<_SkillDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Skill Name
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Skill Name *',
-                  hintText: 'e.g. Flutter, JavaScript',
-                ),
-                validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
-                autofocus: true,
+              // Skill Name with Autocomplete
+              Autocomplete<String>(
+                initialValue: TextEditingValue(text: _nameController.text),
+                optionsBuilder: (textEditingValue) {
+                  if (textEditingValue.text.isEmpty) {
+                    return const Iterable<String>.empty();
+                  }
+                  return CommonSkills.searchSkills(textEditingValue.text);
+                },
+                onSelected: (selection) {
+                  _nameController.text = selection;
+                },
+                fieldViewBuilder: (context, controller, focusNode, onEditingComplete) {
+                  // Sync with our controller
+                  if (controller.text != _nameController.text) {
+                    controller.text = _nameController.text;
+                  }
+                  return TextFormField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(
+                      labelText: 'Skill Name *',
+                      hintText: 'e.g. Flutter, JavaScript',
+                      helperText: 'Start typing for suggestions',
+                    ),
+                    validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+                    autofocus: true,
+                    onChanged: (value) => _nameController.text = value,
+                  );
+                },
               ),
               const SizedBox(height: AppTheme.space16),
 

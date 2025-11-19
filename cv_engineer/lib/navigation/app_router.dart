@@ -11,6 +11,7 @@ import '../screens/settings_screen.dart';
 import '../screens/interview_questions_screen.dart';
 import '../screens/cover_letter_list_screen.dart';
 import '../screens/cover_letter_editor_screen.dart';
+import '../screens/cover_letter_preview_screen.dart';
 
 // No transition page builder
 Page<void> _buildPageWithNoTransition(
@@ -85,6 +86,11 @@ final GoRouter appRouter = GoRouter(
       path: '/cover-letter-editor',
       pageBuilder: (context, state) =>
           _buildPageWithNoTransition(context, state, const CoverLetterEditorScreen()),
+    ),
+    GoRoute(
+      path: '/cover-letter-preview',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const CoverLetterPreviewScreen()),
     ),
   ],
 );

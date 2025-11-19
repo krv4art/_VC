@@ -342,6 +342,17 @@ class ResumeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Update custom title
+  Future<void> updateCustomTitle(String? customTitle) async {
+    if (_currentResume == null) return;
+    _currentResume = _currentResume!.copyWith(
+      customTitle: customTitle,
+      updatedAt: DateTime.now(),
+    );
+    await _saveCurrentResume();
+    notifyListeners();
+  }
+
   // Update formatting
   Future<void> updateFormatting({
     double? fontSize,
