@@ -48,9 +48,39 @@ class HomeScreen extends StatelessWidget {
               _buildActionButton(
                 context: context,
                 icon: Icons.history,
-                label: 'View History',
+                label: 'View Collection',
                 onPressed: () => context.push('/history'),
                 backgroundColor: Colors.grey.shade700,
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildSmallActionButton(
+                      context: context,
+                      icon: Icons.bookmark,
+                      label: 'Wishlist',
+                      onPressed: () => context.push('/wishlist'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildSmallActionButton(
+                      context: context,
+                      icon: Icons.bar_chart,
+                      label: 'Statistics',
+                      onPressed: () => context.push('/statistics'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _buildActionButton(
+                context: context,
+                icon: Icons.settings,
+                label: 'Settings',
+                onPressed: () => context.push('/settings'),
+                backgroundColor: Colors.blueGrey.shade600,
               ),
               const SizedBox(height: 48),
               Container(
@@ -110,6 +140,38 @@ class HomeScreen extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSmallActionButton({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return SizedBox(
+      height: 56,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.8),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 20),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ),
     );

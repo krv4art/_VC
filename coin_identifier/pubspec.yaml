@@ -55,6 +55,22 @@ dependencies:
   # Utilities
   uuid: ^4.5.2
 
+  # Charts and Analytics
+  fl_chart: ^0.69.2
+
+  # PDF Generation and Printing
+  pdf: ^3.11.1
+  printing: ^5.13.2
+
+  # CSV Export
+  csv: ^6.0.0
+
+  # Image Gallery
+  photo_view: ^0.15.0
+
+  # Calendar
+  table_calendar: ^3.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../models/analysis_result.dart';
 import '../providers/analysis_provider.dart';
+import '../providers/collection_provider.dart';
 import '../widgets/animated_entrance.dart';
 import 'dart:math' as math;
 
@@ -1254,27 +1256,430 @@ class ResultsScreen extends StatelessWidget {
 
   // Actions
   void _shareResults(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Share functionality coming soon!'),
-        duration: Duration(seconds: 2),
-      ),
+    final provider = context.read<AnalysisProvider>();
+    final result = provider.currentAnalysis;
+
+    if (result == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No results to share')),
+      );
+      return;
+    }
+
+    // Build share text
+    final shareText = StringBuffer();
+    shareText.writeln('🪙 ${result.name}');
+    shareText.writeln();
+
+    if (result.country != null) {
+      shareText.writeln('📍 Country: ${result.country}');
+    }
+    if (result.yearOfIssue != null) {
+      shareText.writeln('📅 Year: ${result.yearOfIssue}');
+    }
+
+    shareText.writeln('⭐ Rarity: ${result.rarityLevel} (${result.rarityScore}/10)');
+
+    if (result.marketValue != null) {
+      shareText.writeln('💰 Value: ${result.marketValue!.getFormattedRange()}');
+    }
+
+    shareText.writeln();
+    shareText.writeln('Description:');
+    shareText.writeln(result.description);
+
+    if (result.mintErrors.isNotEmpty) {
+      shareText.writeln();
+      shareText.writeln('⚠️ Mint Errors:');
+      for (var error in result.mintErrors) {
+        shareText.writeln('  • ${error.errorType}');
+      }
+    }
+
+    shareText.writeln();
+    shareText.writeln('Analyzed with Coin Identifier App');
+
+    Share.share(
+      shareText.toString(),
+      subject: result.name,
     );
   }
 
   void _saveToCollection(BuildContext context) {
-    final provider = context.read<AnalysisProvider>();
-    final result = provider.currentAnalysis;
+    final analysisProvider = context.read<AnalysisProvider>();
+    final result = analysisProvider.currentAnalysis;
 
     if (result != null) {
-      provider.addToHistory(result);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${result.name} saved to collection!'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      _showSaveDialog(context, result);
     }
+  }
+
+  void _showSaveDialog(BuildContext context, AnalysisResult result) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => _SaveCoinDialog(result: result),
+    );
+  }
+}
+
+/// Dialog for saving coin to collection with metadata
+class _SaveCoinDialog extends StatefulWidget {
+  final AnalysisResult result;
+
+  const _SaveCoinDialog({required this.result});
+
+  @override
+  State<_SaveCoinDialog> createState() => _SaveCoinDialogState();
+}
+
+class _SaveCoinDialogState extends State<_SaveCoinDialog> {
+  final _notesController = TextEditingController();
+  final _purchasePriceController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _tagController = TextEditingController();
+
+  final List<String> _tags = [];
+  bool _saveToWishlist = false;
+  bool _markAsFavorite = false;
+  DateTime? _purchaseDate;
+  bool _isSaving = false;
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    _purchasePriceController.dispose();
+    _locationController.dispose();
+    _tagController.dispose();
+    super.dispose();
+  }
+
+  void _addTag() {
+    final tag = _tagController.text.trim();
+    if (tag.isNotEmpty && !_tags.contains(tag)) {
+      setState(() {
+        _tags.add(tag);
+        _tagController.clear();
+      });
+    }
+  }
+
+  void _removeTag(String tag) {
+    setState(() {
+      _tags.remove(tag);
+    });
+  }
+
+  Future<void> _selectPurchaseDate() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (date != null) {
+      setState(() {
+        _purchaseDate = date;
+      });
+    }
+  }
+
+  Future<void> _saveCoin() async {
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      final collectionProvider = context.read<CollectionProvider>();
+
+      // Create updated coin with metadata
+      final updatedCoin = widget.result.copyWith(
+        tags: _tags,
+        userNotes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
+        purchasePrice: _purchasePriceController.text.trim().isEmpty
+            ? null
+            : double.tryParse(_purchasePriceController.text.trim()),
+        purchaseDate: _purchaseDate,
+        location: _locationController.text.trim().isEmpty
+            ? null
+            : _locationController.text.trim(),
+        isInWishlist: _saveToWishlist,
+        isFavorite: _markAsFavorite,
+        addedAt: DateTime.now(),
+      );
+
+      // Save to collection
+      await collectionProvider.addCoin(updatedCoin);
+
+      if (mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _saveToWishlist
+                  ? '${widget.result.name} added to wishlist!'
+                  : '${widget.result.name} saved to collection!'
+            ),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+            action: SnackBarAction(
+              label: 'View',
+              textColor: Colors.white,
+              onPressed: () {
+                context.push(_saveToWishlist ? '/wishlist' : '/history');
+              },
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving coin: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Row(
+        children: [
+          const Icon(Icons.bookmark_add, color: Color(0xFFD4AF37)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Save to Collection',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Coin name preview
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD4AF37).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: const Color(0xFFD4AF37).withOpacity(0.3),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.monetization_on, color: Color(0xFFD4AF37)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.result.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          if (widget.result.country != null)
+                            Text(
+                              widget.result.country!,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Save options
+              SwitchListTile(
+                title: const Text('Add to Wishlist'),
+                subtitle: const Text('Save as a coin you want to acquire'),
+                value: _saveToWishlist,
+                onChanged: (value) {
+                  setState(() {
+                    _saveToWishlist = value;
+                  });
+                },
+                contentPadding: EdgeInsets.zero,
+              ),
+              SwitchListTile(
+                title: const Text('Mark as Favorite'),
+                subtitle: const Text('Add to your favorites'),
+                value: _markAsFavorite,
+                onChanged: (value) {
+                  setState(() {
+                    _markAsFavorite = value;
+                  });
+                },
+                contentPadding: EdgeInsets.zero,
+              ),
+              const Divider(height: 24),
+
+              // Tags section
+              Text(
+                'Tags',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _tagController,
+                      decoration: const InputDecoration(
+                        hintText: 'Add tag...',
+                        isDense: true,
+                        border: OutlineInputBorder(),
+                      ),
+                      onSubmitted: (_) => _addTag(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: _addTag,
+                    color: const Color(0xFFD4AF37),
+                  ),
+                ],
+              ),
+              if (_tags.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: _tags.map((tag) {
+                    return Chip(
+                      label: Text(tag),
+                      onDeleted: () => _removeTag(tag),
+                      deleteIcon: const Icon(Icons.close, size: 16),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    );
+                  }).toList(),
+                ),
+              ],
+              const SizedBox(height: 16),
+
+              // Notes
+              Text(
+                'Notes',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _notesController,
+                decoration: const InputDecoration(
+                  hintText: 'Add your notes about this coin...',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 16),
+
+              // Purchase info
+              Text(
+                'Purchase Information (Optional)',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _purchasePriceController,
+                      decoration: const InputDecoration(
+                        labelText: 'Purchase Price',
+                        prefixText: '\$ ',
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _selectPurchaseDate,
+                      icon: const Icon(Icons.calendar_today, size: 16),
+                      label: Text(
+                        _purchaseDate == null
+                            ? 'Date'
+                            : '${_purchaseDate!.month}/${_purchaseDate!.day}/${_purchaseDate!.year}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _locationController,
+                decoration: const InputDecoration(
+                  labelText: 'Storage Location',
+                  hintText: 'e.g., Safe, Binder 1, Display Case',
+                  border: OutlineInputBorder(),
+                  isDense: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _isSaving ? null : () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton.icon(
+          onPressed: _isSaving ? null : _saveCoin,
+          icon: _isSaving
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                )
+              : const Icon(Icons.save),
+          label: Text(_isSaving ? 'Saving...' : 'Save'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFD4AF37),
+            foregroundColor: Colors.white,
+          ),
+        ),
+      ],
+    );
   }
 }
