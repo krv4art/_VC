@@ -86,6 +86,11 @@ class ImageProcessingProvider extends ChangeNotifier {
     await loadHistory();
   }
 
+  Future<void> deleteAllHistory() async {
+    await _databaseService.deleteAllProcessedImages();
+    await loadHistory();
+  }
+
   void clearError() {
     _error = null;
     notifyListeners();

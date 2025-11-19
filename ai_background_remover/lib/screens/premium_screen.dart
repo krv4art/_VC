@@ -177,9 +177,35 @@ class PremiumScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // TODO: Implement actual purchase flow
+                        // RevenueCat purchase flow
+                        // Full implementation requires:
+                        // 1. Configure RevenueCat dashboard with products
+                        // 2. Add entitlement identifiers
+                        // 3. Implement purchase service
+                        //
+                        // Example implementation:
+                        // try {
+                        //   final offerings = await Purchases.getOfferings();
+                        //   if (offerings.current != null) {
+                        //     final package = offerings.current!.monthly;
+                        //     final purchaserInfo = await Purchases.purchasePackage(package);
+                        //     if (purchaserInfo.entitlements.all['premium']?.isActive == true) {
+                        //       await premiumProvider.setPremium(true);
+                        //     }
+                        //   }
+                        // } catch (e) {
+                        //   // Handle error
+                        // }
+                        //
+                        // For testing/development, directly enable premium:
                         await premiumProvider.setPremium(true);
                         if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Premium activated! (Dev mode)'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
                           context.pop();
                         }
                       },

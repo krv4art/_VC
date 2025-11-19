@@ -3,37 +3,48 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import '../models/processing_options.dart';
+import 'ai_background_removal_service.dart';
 
 class ImageProcessingService {
+  final AIBackgroundRemovalService _aiService = AIBackgroundRemovalService();
+
   Future<File> removeBackground(File imageFile, ProcessingOptions options) async {
     try {
-      // Read the image
-      final bytes = await imageFile.readAsBytes();
-      final image = img.decodeImage(bytes);
-
-      if (image == null) {
-        throw Exception('Failed to decode image');
-      }
-
       // Process the image based on mode
-      img.Image processedImage;
+      img.Image? processedImage;
+      Uint8List? processedBytes;
 
       switch (options.mode) {
         case 'Remove Background':
-          processedImage = await _removeBackground(image);
+          // Use AI service for background removal
+          processedBytes = await _aiService.removeBackground(
+            imageFile: imageFile,
+            isPremium: options.isPremium ?? false,
+          );
+          processedImage = img.decodePng(processedBytes);
           break;
         case 'Remove Object':
-          processedImage = await _removeObject(image);
+          processedImage = await _removeObject(imageFile);
           break;
         case 'Auto Enhance':
-          processedImage = _autoEnhance(image);
+          final bytes = await imageFile.readAsBytes();
+          final image = img.decodeImage(bytes);
+          if (image != null) {
+            processedImage = _autoEnhance(image);
+          }
           break;
         case 'Smart Erase':
-          processedImage = await _smartErase(image);
+          processedImage = await _smartErase(imageFile);
           break;
         default:
-          processedImage = image;
+          final bytes = await imageFile.readAsBytes();
+          processedImage = img.decodeImage(bytes);
+      }
+
+      if (processedImage == null) {
+        throw Exception('Failed to process image');
       }
 
       // Apply background if specified
@@ -67,47 +78,17 @@ class ImageProcessingService {
     }
   }
 
-  Future<img.Image> _removeBackground(img.Image image) async {
-    // Create a new image with transparency
-    final result = img.Image(width: image.width, height: image.height);
-
-    // Simple background removal algorithm
-    // This is a basic implementation - in production, you'd use ML models
-    for (int y = 0; y < image.height; y++) {
-      for (int x = 0; x < image.width; x++) {
-        final pixel = image.getPixel(x, y);
-        final r = pixel.r.toInt();
-        final g = pixel.g.toInt();
-        final b = pixel.b.toInt();
-
-        // Simple green screen effect
-        // In production, use proper background removal AI
-        if (_isBackgroundPixel(r, g, b)) {
-          result.setPixelRgba(x, y, 0, 0, 0, 0); // Transparent
-        } else {
-          result.setPixel(x, y, pixel);
-        }
-      }
+  Future<img.Image> _removeObject(File imageFile) async {
+    // Use AI service for object removal (similar to background removal)
+    final bytes = await _aiService.removeBackground(
+      imageFile: imageFile,
+      isPremium: false,
+    );
+    final result = img.decodePng(bytes);
+    if (result == null) {
+      throw Exception('Failed to remove object');
     }
-
     return result;
-  }
-
-  bool _isBackgroundPixel(int r, int g, int b) {
-    // Simple algorithm to detect background
-    // Check if pixel is close to white or has uniform color
-    final brightness = (r + g + b) / 3;
-    final variance = ((r - brightness).abs() +
-                     (g - brightness).abs() +
-                     (b - brightness).abs()) / 3;
-
-    // If brightness is high and variance is low, likely background
-    return brightness > 200 && variance < 30;
-  }
-
-  Future<img.Image> _removeObject(img.Image image) async {
-    // Similar to background removal but more selective
-    return _removeBackground(image);
   }
 
   img.Image _autoEnhance(img.Image image) {
@@ -132,9 +113,17 @@ class ImageProcessingService {
     return enhanced;
   }
 
-  Future<img.Image> _smartErase(img.Image image) async {
-    // Smart erase implementation
-    return _removeBackground(image);
+  Future<img.Image> _smartErase(File imageFile) async {
+    // Smart erase implementation using AI
+    final bytes = await _aiService.removeBackground(
+      imageFile: imageFile,
+      isPremium: false,
+    );
+    final result = img.decodePng(bytes);
+    if (result == null) {
+      throw Exception('Failed to smart erase');
+    }
+    return result;
   }
 
   img.Image _applyBackgroundColor(img.Image foreground, Color color) {
@@ -212,5 +201,33 @@ class ImageProcessingService {
     await outputFile.writeAsBytes(img.encodePng(filtered));
 
     return outputFile;
+  }
+
+  /// Save image to device gallery
+  Future<bool> saveToGallery(File imageFile, {String? name}) async {
+    try {
+      final bytes = await imageFile.readAsBytes();
+      final fileName = name ?? 'background_removed_${DateTime.now().millisecondsSinceEpoch}';
+
+      final result = await ImageGallerySaver.saveImage(
+        bytes,
+        quality: 100,
+        name: fileName,
+      );
+
+      return result['isSuccess'] ?? false;
+    } catch (e) {
+      throw Exception('Failed to save to gallery: $e');
+    }
+  }
+
+  /// Share processed image
+  Future<void> shareImage(File imageFile) async {
+    try {
+      // This method can be enhanced with share_plus package
+      await saveToGallery(imageFile);
+    } catch (e) {
+      throw Exception('Failed to share image: $e');
+    }
   }
 }
