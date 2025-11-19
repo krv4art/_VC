@@ -12,6 +12,7 @@ import '../theme/theme_extensions_v2.dart';
 import '../constants/app_dimensions.dart';
 import '../widgets/common/app_spacer.dart';
 import '../widgets/poll_widget.dart';
+import '../widgets/usage_indicator_widget.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -353,7 +354,11 @@ class _HomepageScreenState extends State<HomepageScreen>
                       );
                     },
                   ),
-                  AppSpacer.v32(),
+                  AppSpacer.v24(),
+
+                  // Usage indicator (compact mode for free users)
+                  const UsageIndicatorWidget(compact: true),
+                  AppSpacer.v24(),
 
                   // Quick actions with animations
                   AnimatedBuilder(

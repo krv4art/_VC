@@ -24,6 +24,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   String? _selectedSkinType;
   String? _selectedAgeRange;
   final List<String> _selectedAllergies = [];
+  String? _selectedAction; // 'scan' or 'chat'
 
   // For custom allergies input
   final TextEditingController _customAllergyController = TextEditingController();
@@ -151,6 +152,8 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         return l10n.selectIngredientsAllergicSensitive;
       case 4:
         return l10n.enterYourName;
+      case 5:
+        return l10n.selectYourActionDescription;
       default:
         return '';
     }
@@ -168,42 +171,54 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         return true; // Шаг аллергенов - кнопка всегда активна, можно пропустить
       case 4:
         return true; // Шаг имени - кнопка всегда активна, можно пропустить
+      case 5:
+        return false; // Шаг выбора действия - кнопка скрыта, выбор действия навигирует напрямую
       default:
         return false;
     }
   }
 
   Future<void> _handleNextStep() async {
-    if (_currentStep < 4) {
+    if (_currentStep < 5) {
       await _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
-    } else {
-      // Save all data and navigate to paywall
-      final userState = Provider.of<UserState>(context, listen: false);
+    }
+    // Step 5 handles navigation directly through action selection
+    // No need for else block here as action buttons will handle navigation
+  }
 
-      if (_selectedSkinType != null) {
-        await userState.setSkinType(_selectedSkinType);
-      }
-      if (_selectedAgeRange != null) {
-        await userState.setAgeRange(_selectedAgeRange);
-      }
-      // Only set allergies if user selected at least one
-      // If skipped, allergies card will remain visible on home screen
-      if (_selectedAllergies.isNotEmpty) {
-        await userState.setAllergies(_selectedAllergies);
-      }
-      // Save name if entered
-      final name = _nameController.text.trim();
-      if (name.isNotEmpty) {
-        await userState.updateUserInfo(name, null);
-      }
-      await userState.completeOnboarding();
+  Future<void> _handleActionSelection(String action) async {
+    // Save all onboarding data
+    final userState = Provider.of<UserState>(context, listen: false);
 
-      if (!mounted) return;
-      // Navigate to paywall screen
-      context.push('/modern-paywall');
+    if (_selectedSkinType != null) {
+      await userState.setSkinType(_selectedSkinType);
+    }
+    if (_selectedAgeRange != null) {
+      await userState.setAgeRange(_selectedAgeRange);
+    }
+    // Only set allergies if user selected at least one
+    if (_selectedAllergies.isNotEmpty) {
+      await userState.setAllergies(_selectedAllergies);
+    }
+    // Save name if entered
+    final name = _nameController.text.trim();
+    if (name.isNotEmpty) {
+      await userState.updateUserInfo(name, null);
+    }
+    await userState.completeOnboarding();
+
+    if (!mounted) return;
+
+    // Navigate based on selected action
+    if (action == 'scan') {
+      // Navigate to scanning screen
+      context.go('/scanning');
+    } else if (action == 'chat') {
+      // Navigate to chat screen
+      context.go('/chat');
     }
   }
 
@@ -232,7 +247,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
           controller: _pageController,
           onPageChanged: _handlePageChanged,
           physics: const BouncingScrollPhysics(),
-          itemCount: 5,
+          itemCount: 6,
           itemBuilder: (context, index) {
             return Column(
               children: [
@@ -353,7 +368,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
-                          5,
+                          6,
                           (index) => Container(
                             margin: EdgeInsets.symmetric(
                               horizontal: AppDimensions.space4,
@@ -419,7 +434,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              _currentStep == 4 ? l10n.finish : l10n.next,
+                              _currentStep == 5 ? l10n.finish : l10n.next,
                               maxLines: 1,
                               overflow: TextOverflow.visible,
                             ),
@@ -450,6 +465,8 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         return _buildAllergiesStep(l10n);
       case 4:
         return _buildNameStep(l10n);
+      case 5:
+        return _buildActionChoiceStep(l10n);
       default:
         return const SizedBox.shrink();
     }
@@ -786,6 +803,45 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
               horizontal: AppDimensions.space16,
               vertical: AppDimensions.space16,
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionChoiceStep(AppLocalizations l10n) {
+    return Column(
+      children: [
+        AppSpacer.v24(),
+        // Scan cosmetic button
+        SizedBox(
+          width: double.infinity,
+          child: ChatOptionButton(
+            icon: Icons.qr_code_scanner,
+            label: l10n.scanCosmetic,
+            isSelected: _selectedAction == 'scan',
+            onTap: () async {
+              setState(() {
+                _selectedAction = 'scan';
+              });
+              await _handleActionSelection('scan');
+            },
+          ),
+        ),
+        AppSpacer.v16(),
+        // Go to chat button
+        SizedBox(
+          width: double.infinity,
+          child: ChatOptionButton(
+            icon: Icons.chat_bubble_outline,
+            label: l10n.goToChat,
+            isSelected: _selectedAction == 'chat',
+            onTap: () async {
+              setState(() {
+                _selectedAction = 'chat';
+              });
+              await _handleActionSelection('chat');
+            },
           ),
         ),
       ],
