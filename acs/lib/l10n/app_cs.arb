@@ -418,5 +418,11 @@
   "requestFeatureDevelopment": "Požádat o vývoj vlastní funkce",
   "requestFeatureDescription": "Potřebujete konkrétní funkci? Kontaktujte nás a probereme možnosti vývoje na míru pro vaše obchodní potřeby.",
   "pollHelpTitle": "Jak hlasovat",
-  "pollHelpDescription": "• Můžete hlasovat až pro 3 možnosti\n• Klepnutím vyberte možnost\n• Dalším klepnutím zrušíte výběr\n• Přidejte vlastní možnost, pokud nevidíte to, co potřebujete\n• Vaše hlasy jsou automaticky uloženy"
+  "pollHelpDescription": "• Můžete hlasovat až pro 3 možnosti\n• Klepnutím vyberte možnost\n• Dalším klepnutím zrušíte výběr\n• Přidejte vlastní možnost, pokud nevidíte to, co potřebujete\n• Vaše hlasy jsou automaticky uloženy",
+  "remainingScans": "Zbývající skeny",
+  "remainingMessages": "Zbývající zprávy",
+  "usageLimitsBadge": "5 skenů/týden • 5 zpráv/den",
+  "subscriptionBenefitsTitle": "Odemkněte funkce Premium",
+  "subscriptionBenefitsDescription": "Přejděte na Premium a získejte neomezený přístup ke všem funkcím",
+  "getSubscription": "Získat Premium"
 }

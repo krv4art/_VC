@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "Solicitar Desenvolvimento de Funcionalidade Personalizada",
   "requestFeatureDescription": "Precisa de uma funcionalidade específica? Entre em contacto connosco para discutir desenvolvimento personalizado para as suas necessidades empresariais.",
   "pollHelpTitle": "Como votar",
-  "pollHelpDescription": "• Toque numa opção para a selecionar\n• Toque novamente para desselecionar\n• Selecione quantas opções quiser\n• Clique no botão 'Votar' para enviar os seus votos\n• Adicione a sua própria opção se não vir o que precisa"
+  "pollHelpDescription": "• Toque numa opção para a selecionar\n• Toque novamente para desselecionar\n• Selecione quantas opções quiser\n• Clique no botão 'Votar' para enviar os seus votos\n• Adicione a sua própria opção se não vir o que precisa",
+  "remainingScans": "Digitalizações restantes",
+  "remainingMessages": "Mensagens restantes",
+  "usageLimitsBadge": "5 digitalizações/semana • 5 mensagens/dia",
+  "subscriptionBenefitsTitle": "Desbloquear recursos Premium",
+  "subscriptionBenefitsDescription": "Atualize para Premium e obtenha acesso ilimitado a todos os recursos",
+  "getSubscription": "Obter Premium"
 }

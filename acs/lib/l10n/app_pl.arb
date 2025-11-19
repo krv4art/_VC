@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "Poproś o Rozwój Niestandardowej Funkcji",
   "requestFeatureDescription": "Potrzebujesz konkretnej funkcji? Skontaktuj się z nami, aby omówić niestandardowy rozwój dla Twoich potrzeb biznesowych.",
   "pollHelpTitle": "Jak głosować",
-  "pollHelpDescription": "• Dotknij opcję, aby ją wybrać\n• Dotknij ponownie, aby cofnąć wybór\n• Wybierz tyle opcji, ile chcesz\n• Kliknij przycisk 'Głosuj', aby wysłać swoje głosy\n• Dodaj własną opcję, jeśli nie widzisz tego, czego potrzebujesz"
+  "pollHelpDescription": "• Dotknij opcję, aby ją wybrać\n• Dotknij ponownie, aby cofnąć wybór\n• Wybierz tyle opcji, ile chcesz\n• Kliknij przycisk 'Głosuj', aby wysłać swoje głosy\n• Dodaj własną opcję, jeśli nie widzisz tego, czego potrzebujesz",
+  "remainingScans": "Pozostałe skany",
+  "remainingMessages": "Pozostałe wiadomości",
+  "usageLimitsBadge": "5 skanów/tydzień • 5 wiadomości/dzień",
+  "subscriptionBenefitsTitle": "Odblokuj funkcje Premium",
+  "subscriptionBenefitsDescription": "Przejdź na Premium i uzyskaj nieograniczony dostęp do wszystkich funkcji",
+  "getSubscription": "Zdobądź Premium"
 }

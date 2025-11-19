@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "Begär Anpassad Funktionsutveckling",
   "requestFeatureDescription": "Behöver du en specifik funktion? Kontakta oss för att diskutera anpassad utveckling för dina affärsbehov.",
   "pollHelpTitle": "Hur man röstar",
-  "pollHelpDescription": "• Tryck på ett alternativ för att välja det\n• Tryck igen för att avmarkera\n• Välj så många alternativ du vill\n• Klicka på 'Rösta'-knappen för att skicka dina röster\n• Lägg till ditt eget alternativ om du inte ser vad du behöver"
+  "pollHelpDescription": "• Tryck på ett alternativ för att välja det\n• Tryck igen för att avmarkera\n• Välj så många alternativ du vill\n• Klicka på 'Rösta'-knappen för att skicka dina röster\n• Lägg till ditt eget alternativ om du inte ser vad du behöver",
+  "remainingScans": "Återstående skanningar",
+  "remainingMessages": "Återstående meddelanden",
+  "usageLimitsBadge": "5 skanningar/vecka • 5 meddelanden/dag",
+  "subscriptionBenefitsTitle": "Lås upp Premium-funktioner",
+  "subscriptionBenefitsDescription": "Uppgradera till Premium och få obegränsad tillgång till alla funktioner",
+  "getSubscription": "Skaffa Premium"
 }
