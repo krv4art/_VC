@@ -10,6 +10,8 @@ import 'package:ai_photo_studio_pro/screens/profile_screen.dart';
 import 'package:ai_photo_studio_pro/screens/new_paywall_screen.dart';
 import 'package:ai_photo_studio_pro/screens/language_screen.dart';
 import 'package:ai_photo_studio_pro/screens/theme_selection_screen.dart';
+import 'package:ai_photo_studio_pro/screens/advanced_photo_editor_screen.dart';
+import 'package:ai_photo_studio_pro/screens/batch_generation_screen.dart';
 import 'package:ai_photo_studio_pro/models/style_model.dart';
 
 // No transition page builder
@@ -90,6 +92,26 @@ final GoRouter appRouter = GoRouter(
         state,
         const ThemeSelectionScreen(),
       ),
+    ),
+    GoRoute(
+      path: '/advanced-editor',
+      pageBuilder: (context, state) {
+        final imagePath = state.extra as String?;
+        if (imagePath == null) {
+          // Navigate to gallery to select a photo first
+          return _buildPageWithNoTransition(context, state, const GalleryScreen());
+        }
+        return _buildPageWithNoTransition(
+          context,
+          state,
+          AdvancedPhotoEditorScreen(imagePath: imagePath),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/batch-generation',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const BatchGenerationScreen()),
     ),
   ],
 );

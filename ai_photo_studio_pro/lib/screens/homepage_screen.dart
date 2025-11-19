@@ -444,6 +444,46 @@ class _HomepageScreenState extends State<HomepageScreen>
                       ),
                     ],
                   ),
+                  AppSpacer.v16(),
+
+                  // New AI Features Row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AnimatedBuilder(
+                          animation: _quickActionsCard1Animation,
+                          builder: (context, child) {
+                            return FadeTransition(
+                              opacity: _quickActionsCard1Animation,
+                              child: _buildQuickAction(
+                                context,
+                                'AI Editor',
+                                Icons.auto_fix_high,
+                                () => context.push('/advanced-editor'),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      AppSpacer.h16(),
+                      Expanded(
+                        child: AnimatedBuilder(
+                          animation: _quickActionsCard2Animation,
+                          builder: (context, child) {
+                            return FadeTransition(
+                              opacity: _quickActionsCard2Animation,
+                              child: _buildQuickAction(
+                                context,
+                                'Batch Gen',
+                                Icons.burst_mode,
+                                () => context.push('/batch-generation'),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                   AppSpacer.v32(),
 
                   // Settings section - only show subscription if not premium
