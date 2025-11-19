@@ -8,6 +8,7 @@ import 'experience_editor_screen.dart';
 import 'education_editor_screen.dart';
 import 'skills_editor_screen.dart';
 import 'languages_editor_screen.dart';
+import 'custom_sections_editor_screen.dart';
 
 class ResumeEditorScreen extends StatelessWidget {
   const ResumeEditorScreen({super.key});
@@ -114,7 +115,12 @@ class ResumeEditorScreen extends StatelessWidget {
             title: 'Custom Sections',
             subtitle: '${resume.customSections.length} sections',
             onTap: () {
-              _showSnackBar(context, 'Custom sections editor coming soon');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CustomSectionsEditorScreen(),
+                ),
+              );
             },
           ),
           const SizedBox(height: AppTheme.space32),

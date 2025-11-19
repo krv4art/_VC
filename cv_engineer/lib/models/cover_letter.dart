@@ -17,6 +17,7 @@ class CoverLetter {
   final String body; // Main content paragraphs
   final String closing; // e.g., "Sincerely"
   final String? associatedResumeId; // Link to resume
+  final CoverLetterTemplate template; // Template style
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -36,6 +37,7 @@ class CoverLetter {
     required this.body,
     this.closing = 'Sincerely',
     this.associatedResumeId,
+    this.template = CoverLetterTemplate.professional,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -88,6 +90,7 @@ class CoverLetter {
     String? body,
     String? closing,
     String? associatedResumeId,
+    CoverLetterTemplate? template,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -107,6 +110,7 @@ class CoverLetter {
       body: body ?? this.body,
       closing: closing ?? this.closing,
       associatedResumeId: associatedResumeId ?? this.associatedResumeId,
+      template: template ?? this.template,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -129,6 +133,7 @@ class CoverLetter {
       'body': body,
       'closing': closing,
       'associatedResumeId': associatedResumeId,
+      'template': template.name,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -151,6 +156,12 @@ class CoverLetter {
       body: json['body'] as String,
       closing: json['closing'] as String? ?? 'Sincerely',
       associatedResumeId: json['associatedResumeId'] as String?,
+      template: json['template'] != null
+          ? CoverLetterTemplate.values.firstWhere(
+              (t) => t.name == json['template'],
+              orElse: () => CoverLetterTemplate.professional,
+            )
+          : CoverLetterTemplate.professional,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -176,5 +187,28 @@ class CoverLetter {
       createdAt: now,
       updatedAt: now,
     );
+  }
+}
+
+enum CoverLetterTemplate {
+  professional,
+  creative,
+  modern,
+  executive,
+  entryLevel;
+
+  String get displayName {
+    switch (this) {
+      case CoverLetterTemplate.professional:
+        return 'Professional';
+      case CoverLetterTemplate.creative:
+        return 'Creative';
+      case CoverLetterTemplate.modern:
+        return 'Modern';
+      case CoverLetterTemplate.executive:
+        return 'Executive';
+      case CoverLetterTemplate.entryLevel:
+        return 'Entry Level';
+    }
   }
 }

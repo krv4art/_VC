@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../models/cover_letter.dart';
+import '../models/resume.dart';
 import '../services/storage_service.dart';
+import '../services/cover_letter_service.dart';
 
 /// Provider for managing cover letters
 class CoverLetterProvider extends ChangeNotifier {
@@ -9,13 +11,17 @@ class CoverLetterProvider extends ChangeNotifier {
   CoverLetter? _currentCoverLetter;
   List<CoverLetter> _savedCoverLetters = [];
   bool _isLoading = false;
+  bool _isGenerating = false;
+  String? _error;
 
   CoverLetterProvider(this._storageService);
 
   CoverLetter? get currentCoverLetter => _currentCoverLetter;
   List<CoverLetter> get savedCoverLetters => _savedCoverLetters;
   bool get isLoading => _isLoading;
+  bool get isGenerating => _isGenerating;
   bool get hasCurrentCoverLetter => _currentCoverLetter != null;
+  String? get error => _error;
 
   final _uuid = const Uuid();
 
@@ -31,6 +37,7 @@ class CoverLetterProvider extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Error loading cover letters: $e');
+      _error = e.toString();
     }
 
     _isLoading = false;
@@ -60,6 +67,45 @@ class CoverLetterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Generate new cover letter using AI
+  Future<CoverLetter?> generateCoverLetter({
+    required Resume resume,
+    required String companyName,
+    required String position,
+    String hiringManagerName = '',
+    String jobDescription = '',
+    CoverLetterTemplate template = CoverLetterTemplate.professional,
+  }) async {
+    _isGenerating = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final coverLetter = await CoverLetterService.generateCoverLetter(
+        resume: resume,
+        companyName: companyName,
+        position: position,
+        hiringManagerName: hiringManagerName,
+        jobDescription: jobDescription,
+        template: template,
+      );
+
+      _savedCoverLetters.add(coverLetter);
+      _currentCoverLetter = coverLetter;
+      await _saveCurrentCoverLetter();
+
+      _isGenerating = false;
+      notifyListeners();
+
+      return coverLetter;
+    } catch (e) {
+      _error = e.toString();
+      _isGenerating = false;
+      notifyListeners();
+      return null;
+    }
+  }
+
   /// Load existing cover letter
   Future<void> loadCoverLetter(String coverLetterId) async {
     final coverLetter = _savedCoverLetters.firstWhere(
@@ -85,6 +131,7 @@ class CoverLetterProvider extends ChangeNotifier {
     String? body,
     String? closing,
     String? associatedResumeId,
+    CoverLetterTemplate? template,
   }) async {
     if (_currentCoverLetter == null) return;
 
@@ -103,11 +150,30 @@ class CoverLetterProvider extends ChangeNotifier {
       body: body,
       closing: closing,
       associatedResumeId: associatedResumeId,
+      template: template,
       updatedAt: DateTime.now(),
     );
 
     await _saveCurrentCoverLetter();
     notifyListeners();
+  }
+
+  /// Update a specific cover letter by ID
+  Future<void> updateCoverLetterById(CoverLetter coverLetter) async {
+    try {
+      final index = _savedCoverLetters.indexWhere((cl) => cl.id == coverLetter.id);
+      if (index != -1) {
+        _savedCoverLetters[index] = coverLetter;
+        if (_currentCoverLetter?.id == coverLetter.id) {
+          _currentCoverLetter = coverLetter;
+        }
+        await _storageService.saveCoverLetter(coverLetter);
+        notifyListeners();
+      }
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
   }
 
   /// Update title only
@@ -155,6 +221,7 @@ class CoverLetterProvider extends ChangeNotifier {
       body: original.body,
       closing: original.closing,
       associatedResumeId: original.associatedResumeId,
+      template: original.template,
       createdAt: now,
       updatedAt: now,
     );
@@ -201,5 +268,20 @@ class CoverLetterProvider extends ChangeNotifier {
     return _savedCoverLetters
         .where((cl) => cl.associatedResumeId == resumeId)
         .toList();
+  }
+
+  /// Get cover letter by ID
+  CoverLetter? getCoverLetterById(String id) {
+    try {
+      return _savedCoverLetters.firstWhere((cl) => cl.id == id);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Clear error
+  void clearError() {
+    _error = null;
+    notifyListeners();
   }
 }

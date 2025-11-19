@@ -4,6 +4,65 @@ A comprehensive Flutter application for creating professional resumes with AI as
 
 ## Features
 
+### NEW: Advanced Features (2025 Major Update) ⭐
+
+#### 🎯 ATS Optimization System
+- **ATS Compatibility Checker**: Full applicant tracking system analysis
+  - Keyword matching against job descriptions
+  - Triple-score system (Keywords 40% + Format 30% + Content 30%)
+  - Required vs preferred skills identification
+  - Missing keyword recommendations
+  - Interactive score visualization with gauges
+
+#### 📊 Resume Analytics Dashboard
+- **Quality Score Engine**: Professional resume evaluation (0-100)
+  - Section analysis: Personal Info, Experience, Education, Skills, Languages
+  - Content metrics: Word count, readability, achievements
+  - Interactive charts (fl_chart) showing completeness
+  - Personalized strength & improvement lists
+
+#### 💼 Job Application Tracker
+- **Kanban Board**: Visual job search management
+  - 8-stage pipeline: Saved → Applied → Phone Screen → Interview → Offer → Accepted/Rejected/Declined
+  - Interview scheduling with reminders
+  - Application statistics (interview rate, offer rate)
+  - Advanced search and filtering
+
+#### 📝 Cover Letter Generator
+- **AI-Powered Writing Assistant**: Tailored cover letters in seconds
+  - 5 professional templates (Professional, Creative, Modern, Executive, Entry Level)
+  - Auto-fill from resume data
+  - Job description integration
+  - Export to PDF & DOCX
+
+#### 🔗 Social & Professional Links
+- **12+ Platform Support**: Complete online presence
+  - LinkedIn, GitHub, Portfolio, Twitter, Behance, Dribbble, Medium, Stack Overflow, etc.
+  - Font Awesome icons for all platforms
+  - Drag & drop reordering
+  - QR code integration
+
+#### 📱 QR Code Generator
+- **vCard Digital Business Cards**: Contactless networking
+  - Full contact info in scannable format
+  - Customizable styling and colors
+  - Image export capability
+
+#### 📄 DOCX Export
+- **Microsoft Word Compatibility**: Industry-standard format
+  - Full .docx file generation
+  - All sections preserved
+  - Compatible with Word, Google Docs, LibreOffice
+
+#### 📚 Pre-written Content Library
+- **200+ Ready-to-Use Phrases**: Professional writing assistance
+  - 45+ powerful action verbs
+  - Role-specific summaries (Software Engineer, Data Scientist, PM, UX Designer, Marketing)
+  - 40+ experience bullet points per role
+  - Achievement templates with placeholders
+  - 100+ categorized skills
+  - Common certifications by field
+
 ### Core Functionality
 - **Onboarding Experience**: Beautiful 4-page introduction for first-time users with smooth animations
 - **Professional Templates**: Three beautifully designed resume templates (Professional, Creative, Modern)

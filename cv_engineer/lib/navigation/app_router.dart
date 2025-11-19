@@ -13,6 +13,14 @@ import '../screens/cover_letter_list_screen.dart';
 import '../screens/cover_letter_editor_screen.dart';
 import '../screens/cover_letter_preview_screen.dart';
 
+// New advanced feature screens
+import '../screens/ats_analyzer_screen.dart';
+import '../screens/social_links_editor_screen.dart';
+import '../screens/cover_letter_screen.dart' as cl_generator;
+import '../screens/job_tracker_screen.dart';
+import '../screens/resume_analytics_screen.dart';
+import '../screens/resume_versions_screen.dart';
+
 // No transition page builder
 Page<void> _buildPageWithNoTransition(
   BuildContext context,
@@ -77,6 +85,8 @@ final GoRouter appRouter = GoRouter(
       pageBuilder: (context, state) =>
           _buildPageWithNoTransition(context, state, const InterviewQuestionsScreen()),
     ),
+
+    // Cover Letter Routes (from HEAD)
     GoRoute(
       path: '/cover-letters',
       pageBuilder: (context, state) =>
@@ -91,6 +101,38 @@ final GoRouter appRouter = GoRouter(
       path: '/cover-letter-preview',
       pageBuilder: (context, state) =>
           _buildPageWithNoTransition(context, state, const CoverLetterPreviewScreen()),
+    ),
+
+    // Advanced Features Routes (from branch)
+    GoRoute(
+      path: '/ats-checker',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const ATSAnalyzerScreen()),
+    ),
+    GoRoute(
+      path: '/social-links',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const SocialLinksEditorScreen()),
+    ),
+    GoRoute(
+      path: '/cover-letter',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const cl_generator.CoverLetterGeneratorScreen()),
+    ),
+    GoRoute(
+      path: '/job-tracker',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const JobTrackerScreen()),
+    ),
+    GoRoute(
+      path: '/analytics',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const ResumeAnalyticsScreen()),
+    ),
+    GoRoute(
+      path: '/versions',
+      pageBuilder: (context, state) =>
+          _buildPageWithNoTransition(context, state, const ResumeVersionsScreen()),
     ),
   ],
 );

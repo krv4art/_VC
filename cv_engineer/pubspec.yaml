@@ -62,6 +62,26 @@ dependencies:
   # UUID
   uuid: ^4.5.2
 
+  # ATS Optimization & Analytics
+  html: ^0.15.4
+  string_similarity: ^2.0.0
+  fl_chart: ^0.70.1
+  syncfusion_flutter_gauges: ^28.1.33
+
+  # DOCX Export
+  archive: ^3.6.1
+
+  # Social Media & QR
+  qr_flutter: ^4.1.0
+  font_awesome_flutter: ^10.7.0
+
+  # LinkedIn Import
+  webview_flutter: ^4.10.0
+
+  # Monetization
+  purchases_flutter: ^6.30.8
+  in_app_purchase: ^3.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -5,6 +5,7 @@ import 'education.dart';
 import 'skill.dart';
 import 'language.dart';
 import 'custom_section.dart';
+import 'social_links.dart';
 
 /// Main Resume model
 class Resume {
@@ -17,6 +18,7 @@ class Resume {
   final List<Skill> skills;
   final List<Language> languages;
   final List<CustomSection> customSections;
+  final List<SocialLink> socialLinks;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -35,6 +37,7 @@ class Resume {
     this.skills = const [],
     this.languages = const [],
     this.customSections = const [],
+    this.socialLinks = const [],
     required this.createdAt,
     required this.updatedAt,
     this.fontSize = 11.0,
@@ -63,6 +66,7 @@ class Resume {
     List<Skill>? skills,
     List<Language>? languages,
     List<CustomSection>? customSections,
+    List<SocialLink>? socialLinks,
     DateTime? createdAt,
     DateTime? updatedAt,
     double? fontSize,
@@ -79,6 +83,7 @@ class Resume {
       skills: skills ?? this.skills,
       languages: languages ?? this.languages,
       customSections: customSections ?? this.customSections,
+      socialLinks: socialLinks ?? this.socialLinks,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       fontSize: fontSize ?? this.fontSize,
@@ -98,6 +103,7 @@ class Resume {
       'skills': skills.map((s) => s.toJson()).toList(),
       'languages': languages.map((l) => l.toJson()).toList(),
       'customSections': customSections.map((cs) => cs.toJson()).toList(),
+      'socialLinks': socialLinks.map((sl) => sl.toJson()).toList(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'fontSize': fontSize,
@@ -127,6 +133,9 @@ class Resume {
       customSections: (json['customSections'] as List)
           .map((cs) => CustomSection.fromJson(cs))
           .toList(),
+      socialLinks: (json['socialLinks'] as List?)
+          ?.map((sl) => SocialLink.fromJson(sl))
+          .toList() ?? [],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       fontSize: json['fontSize'] ?? 11.0,
