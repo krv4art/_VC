@@ -85,23 +85,22 @@ class _ScanningScreenState extends State<ScanningScreen>
       return;
     }
 
-    setState(() {
-      _isProcessing = true;
-      _showSlowInternetMessage = false;
-    });
+    // Блокируем повторные нажатия без показа оверлея
+    _isProcessing = true;
 
     try {
       final XFile picture = await _cameraManager.controller!.takePicture();
 
-      if (!mounted) return;
+      if (!mounted) {
+        _isProcessing = false;
+        return;
+      }
 
-      // Stop camera before navigating to confirmation screen
-      await _cameraManager.stopCamera();
-
-      // Show photo confirmation screen with current selected type
+      // Мгновенный переход без остановки камеры и без анимаций
       await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => PhotoConfirmationScreen(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              PhotoConfirmationScreen(
             photo: picture,
             imageType: _selectedImageType,
             onRetake: () async {
@@ -116,12 +115,13 @@ class _ScanningScreenState extends State<ScanningScreen>
 
               if (mounted) {
                 _addCapturedImage(picture, _selectedImageType);
-
-                // Автоматически переходим к анализу после подтверждения
-                await _analyzeImages();
+                // Возвращаемся в экран сканирования, анализ по отдельной кнопке
+                await _initializeCamera();
               }
             },
           ),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
         ),
       );
     } catch (e) {
@@ -130,9 +130,7 @@ class _ScanningScreenState extends State<ScanningScreen>
       _showError('${l10n.analysisFailed} ${e.toString()}');
     } finally {
       if (mounted) {
-        setState(() {
-          _isProcessing = false;
-        });
+        _isProcessing = false;
       }
     }
   }
@@ -446,6 +444,7 @@ class _ScanningScreenState extends State<ScanningScreen>
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
+          _cameraManager.stopCamera();
           context.go('/home');
         }
       },
@@ -459,7 +458,10 @@ class _ScanningScreenState extends State<ScanningScreen>
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => context.go('/home'),
+            onPressed: () {
+              _cameraManager.stopCamera();
+              context.go('/home');
+            },
           ),
           actions: [
             IconButton(

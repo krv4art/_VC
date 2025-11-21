@@ -14,7 +14,8 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nMerge branch ''claude/market-research-analysis-01RdtF4R8KvTC8ziPgS2o1Af'' into main\n\nMerged market research analysis features including:\n- Advanced photo editor with AI retouch\n- Batch generation capabilities\n- AI image expansion service\n- AI outfit change service\n- Image upscaling service\n- Enhanced photo provider\n- Background and retouch settings models\n- Updated documentation and setup guides\n\nResolved conflicts by keeping HEAD versions of:\n- analysis_results_screen.dart\n- background_removal_service.dart\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(flutter run:*)",
       "Bash(flutter build:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Improve scanning screen transitions and camera management\n\n- Remove processing overlay during photo confirmation transition\n- Use instant PageRouteBuilder transition (no animation)\n- Return to scanning screen after photo confirmation (not to analysis)\n- Stop camera on screen exit (back button, system back)\n- Analysis triggered only by dedicated button\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
