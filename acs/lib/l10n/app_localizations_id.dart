@@ -802,6 +802,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get remainingMessages => 'Pesan tersisa';
 
   @override
+  String get usageLimitsBadge => 'Batasan versi gratis';
+
+  @override
   String get unlockUnlimitedAccess => 'Buka Akses Tak Terbatas';
 
   @override
@@ -809,6 +812,15 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get premiumBenefits => 'Manfaat Premium';
+
+  @override
+  String get subscriptionBenefitsTitle => 'Buka fitur Premium';
+
+  @override
+  String get subscriptionBenefitsDescription => 'Tingkatkan ke Premium dan dapatkan akses tak terbatas ke semua fitur';
+
+  @override
+  String get getSubscription => 'Dapatkan Premium';
 
   @override
   String get unlimitedAiChatMessages => 'Pesan obrolan AI tak terbatas';
@@ -1032,6 +1044,43 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get finish => 'Selesai';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => 'Fitur tema kustom sedang dalam pengembangan';

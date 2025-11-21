@@ -1,0 +1,71 @@
+{
+  "@@locale": "en",
+  "appTitle": "CV Engineer",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "resume": "Resume",
+  "@resume": {
+    "description": "Resume label"
+  },
+  "personalInfo": "Personal Information",
+  "@personalInfo": {
+    "description": "Personal information section title"
+  },
+  "experience": "Experience",
+  "@experience": {
+    "description": "Experience section title"
+  },
+  "education": "Education",
+  "@education": {
+    "description": "Education section title"
+  },
+  "skills": "Skills",
+  "@skills": {
+    "description": "Skills section title"
+  },
+  "languages": "Languages",
+  "@languages": {
+    "description": "Languages section title"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save button label"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button label"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add button label"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit button label"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button label"
+  },
+  "preview": "Preview",
+  "@preview": {
+    "description": "Preview button label"
+  },
+  "export": "Export",
+  "@export": {
+    "description": "Export button label"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings screen title"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting label"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language setting label"
+  }
+}

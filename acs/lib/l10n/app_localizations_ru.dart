@@ -472,7 +472,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get fullScanAndSearchHistory => 'Полная история сканирований и поиска';
 
   @override
-  String get adFreeExperience => '100% без рекламы';
+  String get adFreeExperience => 'Без рекламы';
 
   @override
   String get yearly => 'Ежегодно';
@@ -802,6 +802,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get remainingMessages => 'Осталось сообщений';
 
   @override
+  String get usageLimitsBadge => 'Ограничения бесплатной версии';
+
+  @override
   String get unlockUnlimitedAccess => 'Разблокируйте неограниченный доступ';
 
   @override
@@ -809,6 +812,15 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get premiumBenefits => 'Преимущества Premium';
+
+  @override
+  String get subscriptionBenefitsTitle => 'Откройте Premium-возможности';
+
+  @override
+  String get subscriptionBenefitsDescription => 'Оформите Premium и получите неограниченный доступ ко всем функциям';
+
+  @override
+  String get getSubscription => 'Получить Premium';
 
   @override
   String get unlimitedAiChatMessages => 'Неограниченные сообщения в чате с ИИ';
@@ -1032,6 +1044,43 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get finish => 'Завершить';
+
+  @override
+  String get selectYourActionDescription => 'Что вы хотите сделать сейчас?';
+
+  @override
+  String get scanCosmetic => 'Сканировать косметику';
+
+  @override
+  String get goToChat => 'Перейти в чат';
+
+  @override
+  String get enjoyingScanning => 'Нравится сканер?';
+
+  @override
+  String get enjoyingChat => 'Нравится чат?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'Вы использовали 3 сканирования! У вас осталось $remaining бесплатных сканирований на этой неделе. Оформите Premium для безлимитного доступа!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'Вы отправили 3 сообщения! У вас осталось $remaining сообщений на сегодня. Оформите Premium для неограниченного чата!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Безлимитные сканирования и чат';
+
+  @override
+  String get fullScanHistory => 'Полная история сканирований';
+
+  @override
+  String get tryPremium => 'Попробовать Premium';
+
+  @override
+  String get continueWithFree => 'Продолжить с бесплатным планом';
 
   @override
   String get customThemeInDevelopment => 'Функция кастомных тем находится в разработке';

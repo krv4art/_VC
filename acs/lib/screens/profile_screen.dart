@@ -20,7 +20,6 @@ import '../l10n/app_localizations.dart';
 import '../theme/theme_extensions_v2.dart';
 import '../widgets/animated/animated_card.dart';
 import '../widgets/animated/animated_button.dart' as btn;
-import '../widgets/usage_indicator_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -630,17 +629,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ),
                       const SizedBox(height: 24),
-
-                      // Usage Indicator - Full mode for free users
-                      FadeTransition(
-                        opacity: _animations[2],
-                        child: const UsageIndicatorWidget(
-                          showScans: true,
-                          showMessages: true,
-                          compact: false,
-                        ),
-                      ),
-                      const SizedBox(height: 30),
 
                       // Skin Profile Section - Animation 3
                       FadeTransition(

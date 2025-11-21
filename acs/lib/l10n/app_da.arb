@@ -421,7 +421,7 @@
   "pollHelpDescription": "• Du kan stemme på op til 3 muligheder\n• Tryk på en mulighed for at vælge den\n• Tryk igen for at fravælge\n• Tilføj din egen mulighed, hvis du ikke ser, hvad du har brug for\n• Dine stemmer gemmes automatisk",
   "remainingScans": "Resterende scanninger",
   "remainingMessages": "Resterende beskeder",
-  "usageLimitsBadge": "5 scanninger/uge • 5 beskeder/dag",
+  "usageLimitsBadge": "Begrænsninger for gratis version",
   "subscriptionBenefitsTitle": "Lås op for Premium-funktioner",
   "subscriptionBenefitsDescription": "Opgrader til Premium og få ubegrænset adgang til alle funktioner",
   "getSubscription": "Få Premium"

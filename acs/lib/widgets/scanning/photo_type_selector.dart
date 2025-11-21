@@ -2,13 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../models/scan_image.dart';
 
-/// Минималистичный виджет выбора типа фотографии для сканирования
+/// Виджет выбора типа фотографии для сканирования с кнопкой анализа
 class PhotoTypeSelector extends StatelessWidget {
   final ImageType? selectedType;
   final ScanImage? frontLabelImage;
   final ScanImage? ingredientsImage;
   final Function(ImageType) onTypeSelected;
   final Function(ImageType)? onRemoveImage;
+  final VoidCallback? onAnalyze;
 
   const PhotoTypeSelector({
     super.key,
@@ -17,14 +18,18 @@ class PhotoTypeSelector extends StatelessWidget {
     this.ingredientsImage,
     required this.onTypeSelected,
     this.onRemoveImage,
+    this.onAnalyze,
   });
+
+  bool get _hasAnyImage => frontLabelImage != null || ingredientsImage != null;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
+          // 1. Главная
           Expanded(
             child: _buildTypeCard(
               context: context,
@@ -34,7 +39,10 @@ class PhotoTypeSelector extends StatelessWidget {
               image: frontLabelImage,
             ),
           ),
+
           const SizedBox(width: 12),
+
+          // 2. Состав
           Expanded(
             child: _buildTypeCard(
               context: context,
@@ -44,7 +52,67 @@ class PhotoTypeSelector extends StatelessWidget {
               image: ingredientsImage,
             ),
           ),
+
+          const SizedBox(width: 12),
+
+          // 3. Кнопка Анализ
+          Expanded(
+            child: _buildAnalyzeButton(context),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAnalyzeButton(BuildContext context) {
+    final isEnabled = _hasAnyImage;
+
+    return GestureDetector(
+      onTap: isEnabled ? onAnalyze : null,
+      child: Container(
+        width: double.infinity,
+        height: 80,
+        decoration: BoxDecoration(
+          color: isEnabled
+              ? Colors.green.withOpacity(0.8)
+              : Colors.grey.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isEnabled
+                ? Colors.white
+                : Colors.white.withOpacity(0.2),
+            width: 1.5,
+          ),
+          boxShadow: isEnabled
+              ? [
+                  BoxShadow(
+                    color: Colors.green.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.play_arrow_rounded,
+              color: isEnabled ? Colors.white : Colors.white.withOpacity(0.5),
+              size: 32,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Анализ',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: isEnabled ? Colors.white : Colors.white.withOpacity(0.5),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -64,22 +132,30 @@ class PhotoTypeSelector extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            height: 70,
+            width: double.infinity,
+            height: 80,
             decoration: BoxDecoration(
               color: isSelected
-                  ? Colors.black.withOpacity(0.7)
-                  : Colors.black.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(12),
+                  ? Colors.black.withOpacity(0.8)
+                  : Colors.black.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isSelected
                     ? Colors.white
-                    : Colors.white.withOpacity(0.3),
-                width: isSelected ? 2 : 1,
+                    : Colors.white.withOpacity(0.4),
+                width: isSelected ? 2.5 : 1.5,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: hasImage
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(11),
+                    borderRadius: BorderRadius.circular(14),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -87,7 +163,6 @@ class PhotoTypeSelector extends StatelessWidget {
                           File(image.imagePath),
                           fit: BoxFit.cover,
                         ),
-                        // Полупрозрачный оверлей для лучшей читаемости текста
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -100,7 +175,6 @@ class PhotoTypeSelector extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // Текст поверх изображения
                         Positioned(
                           bottom: 8,
                           left: 0,
@@ -145,7 +219,6 @@ class PhotoTypeSelector extends StatelessWidget {
                     ],
                   ),
           ),
-          // Кнопка удаления
           if (hasImage && onRemoveImage != null)
             Positioned(
               top: 4,

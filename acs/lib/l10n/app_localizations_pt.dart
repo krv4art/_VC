@@ -802,6 +802,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get remainingMessages => 'Mensagens restantes';
 
   @override
+  String get usageLimitsBadge => 'Limites da versão gratuita';
+
+  @override
   String get unlockUnlimitedAccess => 'Desbloquear Acesso Ilimitado';
 
   @override
@@ -809,6 +812,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get premiumBenefits => 'Benefícios Premium';
+
+  @override
+  String get subscriptionBenefitsTitle => 'Desbloquear recursos Premium';
+
+  @override
+  String get subscriptionBenefitsDescription => 'Atualize para Premium e obtenha acesso ilimitado a todos os recursos';
+
+  @override
+  String get getSubscription => 'Obter Premium';
 
   @override
   String get unlimitedAiChatMessages => 'Mensagens de conversa com IA ilimitadas';
@@ -1032,6 +1044,43 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get finish => 'Concluir';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => 'A funcionalidade de temas personalizados está em desenvolvimento';
@@ -2016,10 +2065,13 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get limitsReached => 'Limites atingidos';
 
   @override
-  String get remainingScans => 'Escaneamentos restantes';
+  String get remainingScans => 'Digitalizações restantes';
 
   @override
   String get remainingMessages => 'Mensagens restantes';
+
+  @override
+  String get usageLimitsBadge => 'Limites da versão gratuita';
 
   @override
   String get unlockUnlimitedAccess => 'Desbloquear Acesso Ilimitado';
@@ -2029,6 +2081,15 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get premiumBenefits => 'Benefícios Premium';
+
+  @override
+  String get subscriptionBenefitsTitle => 'Desbloquear recursos Premium';
+
+  @override
+  String get subscriptionBenefitsDescription => 'Atualize para Premium e obtenha acesso ilimitado a todos os recursos';
+
+  @override
+  String get getSubscription => 'Obter Premium';
 
   @override
   String get unlimitedAiChatMessages => 'Mensagens de chat com IA ilimitadas';
@@ -3170,6 +3231,9 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
   String get remainingMessages => 'Mensagens restantes';
 
   @override
+  String get usageLimitsBadge => 'Limites da versão gratuita';
+
+  @override
   String get unlockUnlimitedAccess => 'Desbloquear Acesso Ilimitado';
 
   @override
@@ -3177,6 +3241,15 @@ class AppLocalizationsPtPt extends AppLocalizationsPt {
 
   @override
   String get premiumBenefits => 'Benefícios Premium';
+
+  @override
+  String get subscriptionBenefitsTitle => 'Desbloquear recursos Premium';
+
+  @override
+  String get subscriptionBenefitsDescription => 'Atualize para Premium e obtenha acesso ilimitado a todos os recursos';
+
+  @override
+  String get getSubscription => 'Obter Premium';
 
   @override
   String get unlimitedAiChatMessages => 'Mensagens de conversa com IA ilimitadas';

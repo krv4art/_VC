@@ -416,7 +416,7 @@
   "pollHelpDescription": "• Appuyez sur une option pour la sélectionner\n• Appuyez à nouveau pour désélectionner\n• Sélectionnez autant d'options que vous le souhaitez\n• Cliquez sur 'Voter' pour soumettre vos votes\n• Ajoutez votre propre option si vous ne trouvez pas ce dont vous avez besoin",
   "remainingScans": "Scans restants",
   "remainingMessages": "Messages restants",
-  "usageLimitsBadge": "5 scans/semaine • 5 messages/jour",
+  "usageLimitsBadge": "Limites de la version gratuite",
   "subscriptionBenefitsTitle": "Débloquer les fonctionnalités Premium",
   "subscriptionBenefitsDescription": "Passez à Premium et obtenez un accès illimité à toutes les fonctionnalités",
   "getSubscription": "Obtenir Premium"

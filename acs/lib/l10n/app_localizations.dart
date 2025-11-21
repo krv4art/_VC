@@ -1072,7 +1072,7 @@ abstract class AppLocalizations {
   /// No description provided for @adFreeExperience.
   ///
   /// In en, this message translates to:
-  /// **'100% Ad-Free Experience'**
+  /// **'Ad-free experience'**
   String get adFreeExperience;
 
   /// No description provided for @yearly.
@@ -1717,6 +1717,12 @@ abstract class AppLocalizations {
   /// **'Remaining messages'**
   String get remainingMessages;
 
+  /// No description provided for @usageLimitsBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Free version limits'**
+  String get usageLimitsBadge;
+
   /// No description provided for @unlockUnlimitedAccess.
   ///
   /// In en, this message translates to:
@@ -1734,6 +1740,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Premium Benefits'**
   String get premiumBenefits;
+
+  /// No description provided for @subscriptionBenefitsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Premium Features'**
+  String get subscriptionBenefitsTitle;
+
+  /// No description provided for @subscriptionBenefitsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Premium and get unlimited access to all features'**
+  String get subscriptionBenefitsDescription;
+
+  /// No description provided for @getSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Premium'**
+  String get getSubscription;
 
   /// No description provided for @unlimitedAiChatMessages.
   ///
@@ -2172,6 +2196,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Finish'**
   String get finish;
+
+  /// No description provided for @selectYourActionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to do now?'**
+  String get selectYourActionDescription;
+
+  /// No description provided for @scanCosmetic.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Cosmetic'**
+  String get scanCosmetic;
+
+  /// No description provided for @goToChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Chat'**
+  String get goToChat;
+
+  /// No description provided for @enjoyingScanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoying the scanner?'**
+  String get enjoyingScanning;
+
+  /// No description provided for @enjoyingChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoying the chat?'**
+  String get enjoyingChat;
+
+  /// No description provided for @softPaywallScanMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve used 3 scans! You have {remaining} free scans left this week. Upgrade to Premium for unlimited access!'**
+  String softPaywallScanMessage(int remaining);
+
+  /// No description provided for @softPaywallMessageMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve sent 3 messages! You have {remaining} messages left today. Upgrade to Premium for unlimited chat!'**
+  String softPaywallMessageMessage(int remaining);
+
+  /// No description provided for @unlimitedScansAndChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited scans and chat'**
+  String get unlimitedScansAndChat;
+
+  /// No description provided for @fullScanHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Access full scan history'**
+  String get fullScanHistory;
+
+  /// No description provided for @tryPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Premium'**
+  String get tryPremium;
+
+  /// No description provided for @continueWithFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with free plan'**
+  String get continueWithFree;
 
   /// No description provided for @customThemeInDevelopment.
   ///

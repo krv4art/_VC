@@ -802,6 +802,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get remainingMessages => 'शेष संदेश';
 
   @override
+  String get usageLimitsBadge => 'मुफ्त संस्करण की सीमाएं';
+
+  @override
   String get unlockUnlimitedAccess => 'असीमित पहुंच अनलॉक करें';
 
   @override
@@ -809,6 +812,15 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get premiumBenefits => 'प्रीमियम लाभ';
+
+  @override
+  String get subscriptionBenefitsTitle => 'प्रीमियम सुविधाओं को अनलॉक करें';
+
+  @override
+  String get subscriptionBenefitsDescription => 'प्रीमियम में अपग्रेड करें और सभी सुविधाओं तक असीमित पहुंच प्राप्त करें';
+
+  @override
+  String get getSubscription => 'प्रीमियम प्राप्त करें';
 
   @override
   String get unlimitedAiChatMessages => 'असीमित AI चैट संदेश';
@@ -1032,6 +1044,43 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get finish => 'समाप्त';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => 'कस्टम थीम सुविधा विकास में है';

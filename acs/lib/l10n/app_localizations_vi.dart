@@ -796,10 +796,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get limitsReached => 'Đã đạt giới hạn';
 
   @override
-  String get remainingScans => 'Số lần quét còn lại';
+  String get remainingScans => 'Lần quét còn lại';
 
   @override
   String get remainingMessages => 'Tin nhắn còn lại';
+
+  @override
+  String get usageLimitsBadge => 'Giới hạn phiên bản miễn phí';
 
   @override
   String get unlockUnlimitedAccess => 'Mở Khóa Truy Cập Không Giới Hạn';
@@ -809,6 +812,15 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get premiumBenefits => 'Lợi Ích Premium';
+
+  @override
+  String get subscriptionBenefitsTitle => 'Mở khóa tính năng Premium';
+
+  @override
+  String get subscriptionBenefitsDescription => 'Nâng cấp lên Premium và nhận quyền truy cập không giới hạn vào tất cả tính năng';
+
+  @override
+  String get getSubscription => 'Nhận Premium';
 
   @override
   String get unlimitedAiChatMessages => 'Tin nhắn trò chuyện AI không giới hạn';
@@ -1032,6 +1044,43 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get finish => 'Hoàn Thành';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => 'Tính năng chủ đề tùy chỉnh đang được phát triển';

@@ -438,7 +438,7 @@
   "pollHelpDescription": "• Nhấn vào tùy chọn để chọn\n• Nhấn lại để bỏ chọn\n• Chọn bao nhiêu tùy chọn tùy thích\n• Nhấn nút 'Bình Chọn' để gửi\n• Thêm tùy chọn của bạn nếu không thấy những gì bạn cần",
   "remainingScans": "Lần quét còn lại",
   "remainingMessages": "Tin nhắn còn lại",
-  "usageLimitsBadge": "5 lần quét/tuần • 5 tin nhắn/ngày",
+  "usageLimitsBadge": "Giới hạn phiên bản miễn phí",
   "subscriptionBenefitsTitle": "Mở khóa tính năng Premium",
   "subscriptionBenefitsDescription": "Nâng cấp lên Premium và nhận quyền truy cập không giới hạn vào tất cả tính năng",
   "getSubscription": "Nhận Premium"

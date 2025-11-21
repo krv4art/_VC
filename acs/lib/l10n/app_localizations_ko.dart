@@ -802,6 +802,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get remainingMessages => '남은 메시지';
 
   @override
+  String get usageLimitsBadge => '무료 버전 제한';
+
+  @override
   String get unlockUnlimitedAccess => '무제한 액세스 잠금 해제';
 
   @override
@@ -809,6 +812,15 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get premiumBenefits => '프리미엄 혜택';
+
+  @override
+  String get subscriptionBenefitsTitle => '프리미엄 기능 잠금 해제';
+
+  @override
+  String get subscriptionBenefitsDescription => '프리미엄으로 업그레이드하고 모든 기능에 무제한으로 액세스하세요';
+
+  @override
+  String get getSubscription => '프리미엄 받기';
 
   @override
   String get unlimitedAiChatMessages => '무제한 AI 채팅 메시지';
@@ -1032,6 +1044,43 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get finish => '완료';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => '커스텀 테마 기능은 개발 중입니다';

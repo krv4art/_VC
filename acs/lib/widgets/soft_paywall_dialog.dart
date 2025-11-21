@@ -19,7 +19,7 @@ class SoftPaywallDialog {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext dialogContext) {
-        final colors = Theme.of(dialogContext).extension<AppColorsExtension>()!;
+        final colors = dialogContext.colors;
 
         return Dialog(
           backgroundColor: colors.surface,
@@ -116,7 +116,7 @@ class SoftPaywallDialog {
                       AppSpacer.v8(),
                       _buildBenefit(
                         context,
-                        Icons.ads_click_off,
+                        Icons.block,
                         l10n.adFreeExperience,
                         colors,
                       ),
@@ -178,7 +178,7 @@ class SoftPaywallDialog {
     BuildContext context,
     IconData icon,
     String text,
-    AppColorsExtension colors,
+    ThemeColors colors,
   ) {
     return Row(
       children: [

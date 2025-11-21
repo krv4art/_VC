@@ -438,7 +438,7 @@
   "pollHelpDescription": "• Toque numa opção para a selecionar\n• Toque novamente para desselecionar\n• Selecione quantas opções quiser\n• Clique no botão 'Votar' para enviar os seus votos\n• Adicione a sua própria opção se não vir o que precisa",
   "remainingScans": "Digitalizações restantes",
   "remainingMessages": "Mensagens restantes",
-  "usageLimitsBadge": "5 digitalizações/semana • 5 mensagens/dia",
+  "usageLimitsBadge": "Limites da versão gratuita",
   "subscriptionBenefitsTitle": "Desbloquear recursos Premium",
   "subscriptionBenefitsDescription": "Atualize para Premium e obtenha acesso ilimitado a todos os recursos",
   "getSubscription": "Obter Premium"

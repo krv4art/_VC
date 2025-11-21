@@ -796,10 +796,13 @@ class AppLocalizationsCs extends AppLocalizations {
   String get limitsReached => 'Dosažené limity';
 
   @override
-  String get remainingScans => 'Zbývající skenování';
+  String get remainingScans => 'Zbývající skeny';
 
   @override
   String get remainingMessages => 'Zbývající zprávy';
+
+  @override
+  String get usageLimitsBadge => 'Omezení bezplatné verze';
 
   @override
   String get unlockUnlimitedAccess => 'Odemkněte neomezený přístup';
@@ -809,6 +812,15 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get premiumBenefits => 'Výhody Premium';
+
+  @override
+  String get subscriptionBenefitsTitle => 'Odemkněte funkce Premium';
+
+  @override
+  String get subscriptionBenefitsDescription => 'Přejděte na Premium a získejte neomezený přístup ke všem funkcím';
+
+  @override
+  String get getSubscription => 'Získat Premium';
 
   @override
   String get unlimitedAiChatMessages => 'Neomezené AI chat zprávy';
@@ -1032,6 +1044,43 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get finish => 'Dokončit';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => 'Funkce vlastních motivů je ve vývoji';

@@ -357,7 +357,9 @@ class _HomepageScreenState extends State<HomepageScreen>
                   AppSpacer.v24(),
 
                   // Usage indicator (compact mode for free users)
-                  const UsageIndicatorWidget(compact: true),
+                  Center(
+                    child: const UsageIndicatorWidget(compact: true),
+                  ),
                   AppSpacer.v24(),
 
                   // Quick actions with animations

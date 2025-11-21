@@ -802,6 +802,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get remainingMessages => 'Resterende berichten';
 
   @override
+  String get usageLimitsBadge => 'Beperkingen gratis versie';
+
+  @override
   String get unlockUnlimitedAccess => 'Ontgrendel Onbeperkte Toegang';
 
   @override
@@ -809,6 +812,15 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get premiumBenefits => 'Premium Voordelen';
+
+  @override
+  String get subscriptionBenefitsTitle => 'Premium-functies ontgrendelen';
+
+  @override
+  String get subscriptionBenefitsDescription => 'Upgrade naar Premium en krijg onbeperkte toegang tot alle functies';
+
+  @override
+  String get getSubscription => 'Premium verkrijgen';
 
   @override
   String get unlimitedAiChatMessages => 'Onbeperkte AI chatberichten';
@@ -1032,6 +1044,43 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get finish => 'Voltooien';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => 'Aangepaste thema\'s functie is in ontwikkeling';

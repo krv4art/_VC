@@ -453,7 +453,9 @@ class _ScanningScreenState extends State<ScanningScreen>
         backgroundColor: Colors.black,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: _cameraManager.cameraState == CameraState.ready
+              ? Colors.transparent
+              : context.colors.isDark ? context.colors.surface : context.colors.primaryDark,
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -540,7 +542,7 @@ class _ScanningScreenState extends State<ScanningScreen>
             // Индикатор фокусировки
             if (_focusPoint != null) FocusIndicator(position: _focusPoint!),
 
-            // Селектор типа фото (показываем всегда когда камера готова и не обрабатываем)
+            // Селектор типа фото (показываем когда камера готова и не обрабатываем)
             // Размещаем внизу, над основными кнопками интерфейса
             if (_cameraManager.cameraState == CameraState.ready && !_isProcessing)
               Positioned(
@@ -553,6 +555,7 @@ class _ScanningScreenState extends State<ScanningScreen>
                   ingredientsImage: _getImageByType(ImageType.ingredients),
                   onTypeSelected: _selectImageType,
                   onRemoveImage: _removeCapturedImage,
+                  onAnalyze: _capturedImages.isNotEmpty ? _analyzeImages : null,
                 ),
               ),
 

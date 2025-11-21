@@ -796,10 +796,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get limitsReached => '已达限制';
 
   @override
-  String get remainingScans => '剩余扫描';
+  String get remainingScans => '剩余扫描次数';
 
   @override
-  String get remainingMessages => '剩余消息';
+  String get remainingMessages => '剩余消息数';
+
+  @override
+  String get usageLimitsBadge => '免费版限制';
 
   @override
   String get unlockUnlimitedAccess => '解锁无限访问';
@@ -809,6 +812,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get premiumBenefits => '高级版权益';
+
+  @override
+  String get subscriptionBenefitsTitle => '解锁高级功能';
+
+  @override
+  String get subscriptionBenefitsDescription => '升级到高级版并获得所有功能的无限访问权限';
+
+  @override
+  String get getSubscription => '获取高级版';
 
   @override
   String get unlimitedAiChatMessages => '无限AI聊天消息';
@@ -1032,6 +1044,43 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get finish => '完成';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => '自定义主题功能正在开发中';
@@ -2016,10 +2065,13 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
   String get limitsReached => '已达限制';
 
   @override
-  String get remainingScans => '剩余扫描';
+  String get remainingScans => '剩余扫描次数';
 
   @override
-  String get remainingMessages => '剩余消息';
+  String get remainingMessages => '剩余消息数';
+
+  @override
+  String get usageLimitsBadge => '免费版限制';
 
   @override
   String get unlockUnlimitedAccess => '解锁无限访问';
@@ -2029,6 +2081,15 @@ class AppLocalizationsZhCn extends AppLocalizationsZh {
 
   @override
   String get premiumBenefits => '高级版权益';
+
+  @override
+  String get subscriptionBenefitsTitle => '解锁高级功能';
+
+  @override
+  String get subscriptionBenefitsDescription => '升级到高级版并获得所有功能的无限访问权限';
+
+  @override
+  String get getSubscription => '获取高级版';
 
   @override
   String get unlimitedAiChatMessages => '无限AI聊天消息';
@@ -3164,10 +3225,13 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get limitsReached => '已達限制';
 
   @override
-  String get remainingScans => '剩餘掃描';
+  String get remainingScans => '剩餘掃描次數';
 
   @override
-  String get remainingMessages => '剩餘訊息';
+  String get remainingMessages => '剩餘訊息數';
+
+  @override
+  String get usageLimitsBadge => '免費版限制';
 
   @override
   String get unlockUnlimitedAccess => '解鎖無限存取';
@@ -3177,6 +3241,15 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get premiumBenefits => '進階版權益';
+
+  @override
+  String get subscriptionBenefitsTitle => '解鎖進階功能';
+
+  @override
+  String get subscriptionBenefitsDescription => '升級到進階版並獲得所有功能的無限存取權限';
+
+  @override
+  String get getSubscription => '獲取進階版';
 
   @override
   String get unlimitedAiChatMessages => '無限AI聊天訊息';

@@ -796,10 +796,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get limitsReached => 'تم بلوغ الحدود';
 
   @override
-  String get remainingScans => 'عمليات المسح المتبقية';
+  String get remainingScans => 'الفحوصات المتبقية';
 
   @override
   String get remainingMessages => 'الرسائل المتبقية';
+
+  @override
+  String get usageLimitsBadge => 'قيود النسخة المجانية';
 
   @override
   String get unlockUnlimitedAccess => 'افتح الوصول غير المحدود';
@@ -809,6 +812,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get premiumBenefits => 'مزايا المميز';
+
+  @override
+  String get subscriptionBenefitsTitle => 'افتح ميزات بريميوم';
+
+  @override
+  String get subscriptionBenefitsDescription => 'قم بالترقية إلى Premium واحصل على وصول غير محدود لجميع الميزات';
+
+  @override
+  String get getSubscription => 'احصل على بريميوم';
 
   @override
   String get unlimitedAiChatMessages => 'رسائل محادثة ذكية غير محدودة';
@@ -1032,6 +1044,43 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get finish => 'إنهاء';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => 'ميزة السمات المخصصة قيد التطوير';

@@ -472,7 +472,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fullScanAndSearchHistory => 'Full Scan and Search History';
 
   @override
-  String get adFreeExperience => '100% Ad-Free Experience';
+  String get adFreeExperience => 'Ad-free experience';
 
   @override
   String get yearly => 'Yearly';
@@ -802,6 +802,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remainingMessages => 'Remaining messages';
 
   @override
+  String get usageLimitsBadge => 'Free version limits';
+
+  @override
   String get unlockUnlimitedAccess => 'Unlock Unlimited Access';
 
   @override
@@ -809,6 +812,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get premiumBenefits => 'Premium Benefits';
+
+  @override
+  String get subscriptionBenefitsTitle => 'Unlock Premium Features';
+
+  @override
+  String get subscriptionBenefitsDescription => 'Upgrade to Premium and get unlimited access to all features';
+
+  @override
+  String get getSubscription => 'Get Premium';
 
   @override
   String get unlimitedAiChatMessages => 'Unlimited AI chat messages';
@@ -1032,6 +1044,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get finish => 'Finish';
+
+  @override
+  String get selectYourActionDescription => 'What would you like to do now?';
+
+  @override
+  String get scanCosmetic => 'Scan Cosmetic';
+
+  @override
+  String get goToChat => 'Go to Chat';
+
+  @override
+  String get enjoyingScanning => 'Enjoying the scanner?';
+
+  @override
+  String get enjoyingChat => 'Enjoying the chat?';
+
+  @override
+  String softPaywallScanMessage(int remaining) {
+    return 'You\'ve used 3 scans! You have $remaining free scans left this week. Upgrade to Premium for unlimited access!';
+  }
+
+  @override
+  String softPaywallMessageMessage(int remaining) {
+    return 'You\'ve sent 3 messages! You have $remaining messages left today. Upgrade to Premium for unlimited chat!';
+  }
+
+  @override
+  String get unlimitedScansAndChat => 'Unlimited scans and chat';
+
+  @override
+  String get fullScanHistory => 'Access full scan history';
+
+  @override
+  String get tryPremium => 'Try Premium';
+
+  @override
+  String get continueWithFree => 'Continue with free plan';
 
   @override
   String get customThemeInDevelopment => 'Custom themes feature is under development';
