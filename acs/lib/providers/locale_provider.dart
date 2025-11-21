@@ -22,7 +22,11 @@ class LocaleProvider with ChangeNotifier {
     } else {
       // Если язык не сохранен, используем системный язык
       final systemLocale = ui.PlatformDispatcher.instance.locale;
-      final supportedLanguages = ['en', 'ru', 'uk', 'es', 'de', 'fr', 'it'];
+      final supportedLanguages = [
+        'ar', 'cs', 'da', 'de', 'el', 'en', 'es', 'fi', 'fr', 'hi', 'hu',
+        'id', 'it', 'ja', 'ko', 'nl', 'no', 'pl', 'pt', 'ro', 'ru', 'sv',
+        'th', 'tr', 'uk', 'vi', 'zh'
+      ];
 
       // Проверяем, поддерживается ли системный язык
       if (supportedLanguages.contains(systemLocale.languageCode)) {

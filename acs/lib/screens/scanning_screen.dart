@@ -245,75 +245,8 @@ class _ScanningScreenState extends State<ScanningScreen>
     }
   }
 
-  Future<void> _processImage(XFile imageFile) async {
-    setState(() {
-      _isProcessing = true;
-      _showSlowInternetMessage = false;
-    });
-
-    final analysisService = const ImageAnalysisService();
-
-    // Создаем список с одним изображением для обратной совместимости
-    final scanImage = ScanImage(
-      imagePath: imageFile.path,
-      type: ImageType.ingredients,
-      order: 0,
-    );
-
-    final result = await analysisService.processImages(
-      [scanImage],
-      context: context,
-      showSlowInternetMessage: false,
-      onSlowInternetMessage: () {
-        if (mounted) {
-          setState(() {
-            _showSlowInternetMessage = true;
-          });
-        }
-      },
-    );
-
-    if (mounted) {
-      if (result.shouldShowJoke && result.jokeText != null) {
-        setState(() {
-          _isProcessing = false;
-          _showSlowInternetMessage = false;
-        });
-        _showJokeBubble(result.jokeText!);
-        // Reinitialize camera after showing joke
-        await _initializeCamera();
-      } else if (result.analysisResult != null && result.images.isNotEmpty) {
-        // Полностью останавливаем камеру перед навигацией
-        await _cameraManager.stopCamera();
-
-        // Используем go чтобы заменить весь стек навигации
-        if (mounted) {
-          context.go(
-            '/analysis',
-            extra: {
-              'result': result.analysisResult,
-              'images': result.images.map((img) => img.toMap()).toList(),
-              'source': 'scanning',
-            },
-          );
-        }
-      } else {
-        setState(() {
-          _isProcessing = false;
-          _showSlowInternetMessage = false;
-        });
-        // Reinitialize camera on error
-        await _initializeCamera();
-      }
-    }
-  }
-
   Future<void> _pickImageFromGallery() async {
     if (_isProcessing) return;
-
-    setState(() {
-      _isProcessing = true;
-    });
 
     // Сохраняем локализацию перед асинхронными операциями
     final l10n = AppLocalizations.of(context)!;
@@ -326,11 +259,13 @@ class _ScanningScreenState extends State<ScanningScreen>
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
-        await _processImage(image);
+        // Add image to captured images list, same as camera button
+        _addCapturedImage(image, _selectedImageType);
+        // Reinitialize camera after selecting image
+        if (mounted) {
+          await _initializeCamera();
+        }
       } else {
-        setState(() {
-          _isProcessing = false;
-        });
         // Reinitialize camera if user cancels gallery selection
         if (mounted) {
           await _initializeCamera();
@@ -338,9 +273,6 @@ class _ScanningScreenState extends State<ScanningScreen>
       }
     } catch (e) {
       _showError('${l10n.analysisFailed} ${e.toString()}');
-      setState(() {
-        _isProcessing = false;
-      });
       // Reinitialize camera on error
       if (mounted) {
         await _initializeCamera();
@@ -478,7 +410,10 @@ class _ScanningScreenState extends State<ScanningScreen>
                 _cameraManager.controller != null)
               GestureDetector(
                 onTapDown: _onTapToFocus,
-                child: CameraPreview(_cameraManager.controller!),
+                child: AspectRatio(
+                  aspectRatio: _cameraManager.controller!.value.aspectRatio,
+                  child: CameraPreview(_cameraManager.controller!),
+                ),
               )
             else if (_cameraManager.cameraState == CameraState.permissionDenied)
               CameraPermissionDenied(
@@ -539,6 +474,7 @@ class _ScanningScreenState extends State<ScanningScreen>
                 onGalleryTap: _pickImageFromGallery,
                 onFlashlightTap: _toggleFlashlight,
                 isFlashlightOn: _isFlashlightOn,
+                selectedImageType: _selectedImageType,
               ),
 
             // Индикатор фокусировки
