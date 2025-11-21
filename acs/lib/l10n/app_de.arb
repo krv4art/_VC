@@ -413,5 +413,11 @@
   "requestFeatureDevelopment": "Benutzerdefinierte Feature-Entwicklung anfordern",
   "requestFeatureDescription": "Benötigen Sie eine bestimmte Funktion? Kontaktieren Sie uns, um die benutzerdefinierte Entwicklung für Ihre Geschäftsbedürfnisse zu besprechen.",
   "pollHelpTitle": "Wie man abstimmt",
-  "pollHelpDescription": "• Tippen Sie auf eine Option, um sie auszuwählen\n• Tippen Sie erneut, um die Auswahl aufzuheben\n• Wählen Sie so viele Optionen, wie Sie möchten\n• Klicken Sie auf 'Abstimmen', um Ihre Stimmen zu senden\n• Fügen Sie Ihre eigene Option hinzu, wenn Sie nicht finden, was Sie brauchen"
+  "pollHelpDescription": "• Tippen Sie auf eine Option, um sie auszuwählen\n• Tippen Sie erneut, um die Auswahl aufzuheben\n• Wählen Sie so viele Optionen, wie Sie möchten\n• Klicken Sie auf 'Abstimmen', um Ihre Stimmen zu senden\n• Fügen Sie Ihre eigene Option hinzu, wenn Sie nicht finden, was Sie brauchen",
+  "remainingScans": "Verbleibende Scans",
+  "remainingMessages": "Verbleibende Nachrichten",
+  "usageLimitsBadge": "5 Scans/Woche • 5 Nachrichten/Tag",
+  "subscriptionBenefitsTitle": "Premium-Funktionen freischalten",
+  "subscriptionBenefitsDescription": "Upgraden Sie auf Premium und erhalten Sie unbegrenzten Zugriff auf alle Funktionen",
+  "getSubscription": "Premium erhalten"
 }

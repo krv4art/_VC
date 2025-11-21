@@ -1,20 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import '../l10n/app_localizations.dart';
 import '../theme/theme_extensions_v2.dart';
 import '../constants/app_dimensions.dart';
+import '../models/scan_image.dart';
 
 class PhotoConfirmationScreen extends StatefulWidget {
   final XFile photo;
   final VoidCallback onRetake;
   final VoidCallback onConfirm;
+  final ImageType imageType;
 
   const PhotoConfirmationScreen({
     super.key,
     required this.photo,
     required this.onRetake,
     required this.onConfirm,
+    required this.imageType,
   });
 
   @override
@@ -78,6 +80,7 @@ class _PhotoConfirmationScreenState extends State<PhotoConfirmationScreen>
         );
   }
 
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -86,8 +89,6 @@ class _PhotoConfirmationScreenState extends State<PhotoConfirmationScreen>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
@@ -121,6 +122,7 @@ class _PhotoConfirmationScreenState extends State<PhotoConfirmationScreen>
                   // Add space for app bar
                   const SizedBox(height: kToolbarHeight),
                   const Expanded(child: SizedBox()), // Push buttons to bottom
+
                   // Buttons
                   Padding(
                     padding: EdgeInsets.only(

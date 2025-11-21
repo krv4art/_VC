@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "请求定制功能开发",
   "requestFeatureDescription": "需要特定功能?联系我们讨论为你的业务需求定制开发。",
   "pollHelpTitle": "如何投票",
-  "pollHelpDescription": "• 点击选项进行选择\n• 再次点击取消选择\n• 可以选择任意多个选项\n• 点击'投票'按钮提交\n• 如果没有看到需要的选项,可以添加自己的选项"
+  "pollHelpDescription": "• 点击选项进行选择\n• 再次点击取消选择\n• 可以选择任意多个选项\n• 点击'投票'按钮提交\n• 如果没有看到需要的选项,可以添加自己的选项",
+  "remainingScans": "剩余扫描次数",
+  "remainingMessages": "剩余消息数",
+  "usageLimitsBadge": "每周5次扫描 • 每天5条消息",
+  "subscriptionBenefitsTitle": "解锁高级功能",
+  "subscriptionBenefitsDescription": "升级到高级版并获得所有功能的无限访问权限",
+  "getSubscription": "获取高级版"
 }

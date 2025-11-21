@@ -83,8 +83,19 @@ final GoRouter appRouter = GoRouter(
         if (state.extra is Map<String, dynamic>) {
           final data = state.extra as Map<String, dynamic>;
           final result = data['result'] as AnalysisResult;
-          final imagePath = data['imagePath'] as String;
           final source = (data['source'] as String?) ?? 'scanning';
+
+          // Поддержка как старого формата (imagePath), так и нового (images)
+          String imagePath = '';
+          if (data.containsKey('imagePath')) {
+            imagePath = data['imagePath'] as String;
+          } else if (data.containsKey('images')) {
+            final images = data['images'] as List<dynamic>;
+            if (images.isNotEmpty) {
+              final firstImage = images[0] as Map<String, dynamic>;
+              imagePath = firstImage['imagePath'] as String;
+            }
+          }
 
           return _buildPageWithNoTransition(
             context,

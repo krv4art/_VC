@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "Solicită Dezvoltare Funcție Personalizată",
   "requestFeatureDescription": "Ai nevoie de o funcție specifică? Contactează-ne pentru a discuta dezvoltarea personalizată pentru nevoile afacerii tale.",
   "pollHelpTitle": "Cum să votezi",
-  "pollHelpDescription": "• Atinge o opțiune pentru a o selecta\n• Atinge din nou pentru a deselecta\n• Selectează câte opțiuni dorești\n• Apasă butonul 'Votează' pentru a trimite voturile\n• Adaugă propria opțiune dacă nu găsești ce cauți"
+  "pollHelpDescription": "• Atinge o opțiune pentru a o selecta\n• Atinge din nou pentru a deselecta\n• Selectează câte opțiuni dorești\n• Apasă butonul 'Votează' pentru a trimite voturile\n• Adaugă propria opțiune dacă nu găsești ce cauți",
+  "remainingScans": "Scanări rămase",
+  "remainingMessages": "Mesaje rămase",
+  "usageLimitsBadge": "5 scanări/săptămână • 5 mesaje/zi",
+  "subscriptionBenefitsTitle": "Deblocați funcțiile Premium",
+  "subscriptionBenefitsDescription": "Treceți la Premium și obțineți acces nelimitat la toate funcțiile",
+  "getSubscription": "Obțineți Premium"
 }

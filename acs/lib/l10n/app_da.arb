@@ -418,5 +418,11 @@
   "requestFeatureDevelopment": "Anmod om tilpasset funktionsudvikling",
   "requestFeatureDescription": "Har du brug for en specifik funktion? Kontakt os for at diskutere tilpasset udvikling til dine forretningsmæssige behov.",
   "pollHelpTitle": "Sådan stemmer du",
-  "pollHelpDescription": "• Du kan stemme på op til 3 muligheder\n• Tryk på en mulighed for at vælge den\n• Tryk igen for at fravælge\n• Tilføj din egen mulighed, hvis du ikke ser, hvad du har brug for\n• Dine stemmer gemmes automatisk"
+  "pollHelpDescription": "• Du kan stemme på op til 3 muligheder\n• Tryk på en mulighed for at vælge den\n• Tryk igen for at fravælge\n• Tilføj din egen mulighed, hvis du ikke ser, hvad du har brug for\n• Dine stemmer gemmes automatisk",
+  "remainingScans": "Resterende scanninger",
+  "remainingMessages": "Resterende beskeder",
+  "usageLimitsBadge": "5 scanninger/uge • 5 beskeder/dag",
+  "subscriptionBenefitsTitle": "Lås op for Premium-funktioner",
+  "subscriptionBenefitsDescription": "Opgrader til Premium og få ubegrænset adgang til alle funktioner",
+  "getSubscription": "Få Premium"
 }

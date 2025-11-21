@@ -6,6 +6,7 @@ import '../../models/subject.dart';
 import '../../providers/user_profile_provider.dart';
 import '../../providers/chat_provider.dart';
 import '../../providers/challenge_provider.dart';
+import '../../providers/auth_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -63,6 +64,76 @@ class HomeScreen extends StatelessWidget {
                       style: theme.textTheme.bodyLarge,
                     ),
                     const SizedBox(height: 24),
+
+                    // Anonymous user banner
+                    Consumer<AuthProvider>(
+                      builder: (context, authProvider, _) {
+                        if (authProvider.isAnonymous) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 24),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  colorScheme.secondary,
+                                  colorScheme.secondary.withOpacity(0.7),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.account_circle,
+                                  color: colorScheme.onSecondary,
+                                  size: 40,
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Sign in to unlock all features',
+                                        style: TextStyle(
+                                          color: colorScheme.onSecondary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Leaderboard, Friends, Cloud sync',
+                                        style: TextStyle(
+                                          color: colorScheme.onSecondary.withOpacity(0.9),
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                ElevatedButton(
+                                  onPressed: () => context.push('/login'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: colorScheme.onSecondary,
+                                    foregroundColor: colorScheme.secondary,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                  ),
+                                  child: const Text('Sign In'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
 
                     // Interests summary
                     if (profileProvider.selectedInterests.isNotEmpty) ...[

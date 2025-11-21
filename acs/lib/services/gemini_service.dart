@@ -64,6 +64,14 @@ class GeminiService {
     String prompt, {
     String languageCode = 'en',
   }) async {
+    return await analyzeMultipleImages([base64Image], prompt, languageCode: languageCode);
+  }
+
+  Future<AnalysisResult> analyzeMultipleImages(
+    List<String> base64Images,
+    String prompt, {
+    String languageCode = 'en',
+  }) async {
     if (!useProxy || _supabaseClient == null) {
       throw Exception(
         'This function requires proxy mode with a Supabase client.',
@@ -77,15 +85,23 @@ class GeminiService {
     final languageInstruction = _getLanguageInstruction(languageCode);
     final fullPrompt = '$prompt\n\n$languageInstruction';
 
+    // Build parts array with all images and prompt
+    final List<Map<String, dynamic>> parts = [];
+
+    // Add all images
+    for (final base64Image in base64Images) {
+      parts.add({
+        'inline_data': {'mime_type': 'image/png', 'data': base64Image},
+      });
+    }
+
+    // Add text prompt at the end
+    parts.add({'text': fullPrompt});
+
     final requestBody = {
       'contents': [
         {
-          'parts': [
-            {
-              'inline_data': {'mime_type': 'image/png', 'data': base64Image},
-            },
-            {'text': fullPrompt},
-          ],
+          'parts': parts,
         },
       ],
     };

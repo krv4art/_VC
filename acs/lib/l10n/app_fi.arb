@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "Pyydä ominaisuuden kehittämistä",
   "requestFeatureDescription": "Tarvitsetko tietyn ominaisuuden? Ota yhteyttä keskustellaksemme räätälöidystä kehityksestä liiketoimintatarpeisiisi.",
   "pollHelpTitle": "Kuinka äänestää",
-  "pollHelpDescription": "• Napauta vaihtoehtoa valitaksesi sen\n• Napauta uudelleen poistaaksesi valinnan\n• Valitse niin monta vaihtoehtoa kuin haluat\n• Napsauta 'Äänestä'-painiketta lähettääksesi äänesi\n• Lisää oma vaihtoehto, jos et näe tarvitsemaasi"
+  "pollHelpDescription": "• Napauta vaihtoehtoa valitaksesi sen\n• Napauta uudelleen poistaaksesi valinnan\n• Valitse niin monta vaihtoehtoa kuin haluat\n• Napsauta 'Äänestä'-painiketta lähettääksesi äänesi\n• Lisää oma vaihtoehto, jos et näe tarvitsemaasi",
+  "remainingScans": "Jäljellä olevat skannaukset",
+  "remainingMessages": "Jäljellä olevat viestit",
+  "usageLimitsBadge": "5 skannausta/viikko • 5 viestiä/päivä",
+  "subscriptionBenefitsTitle": "Avaa Premium-ominaisuudet",
+  "subscriptionBenefitsDescription": "Päivitä Premium-tilaukseen ja saa rajoittamaton pääsy kaikkiin ominaisuuksiin",
+  "getSubscription": "Hanki Premium"
 }

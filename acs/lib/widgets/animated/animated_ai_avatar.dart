@@ -55,11 +55,11 @@ class _AnimatedAiAvatarState extends State<AnimatedAiAvatar>
   Duration _getDurationForState(AvatarAnimationState state) {
     switch (state) {
       case AvatarAnimationState.idle:
-        return const Duration(milliseconds: 2500); // Calm breathing - 2.5s
+        return const Duration(milliseconds: 3500); // Calm breathing - 3.5s
       case AvatarAnimationState.thinking:
-        return const Duration(milliseconds: 2000); // Moderate rotation - 2s
+        return const Duration(milliseconds: 3000); // Slower rotation - 3s
       case AvatarAnimationState.speaking:
-        return const Duration(milliseconds: 2000); // Moderate fade wave - 2s
+        return const Duration(milliseconds: 2500); // Moderate fade wave - 2.5s
     }
   }
 

@@ -33,12 +33,13 @@ class LocalDataService {
 
     return await openDatabase(
       path,
-      version: 6,
+      version: 8,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE scan_results(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             imagePath TEXT,
+            images TEXT,
             analysisResult TEXT,
             scanDate TEXT
           )
@@ -142,6 +143,12 @@ class LocalDataService {
             ALTER TABLE ai_bot_settings ADD COLUMN custom_prompt TEXT NOT NULL DEFAULT ''
           ''');
         }
+        if (oldVersion < 8) {
+          // Add images column to scan_results table for multi-photo support
+          await db.execute('''
+            ALTER TABLE scan_results ADD COLUMN images TEXT
+          ''');
+        }
       },
     );
   }
@@ -156,11 +163,23 @@ class LocalDataService {
   Future<int> findOrCreateScanResult(ScanResult result) async {
     final db = await database;
 
-    // Ищем существующую запись по imagePath
+    // Для нового формата (с несколькими изображениями) всегда создаем новую запись
+    if (result.images.isNotEmpty) {
+      debugPrint('=== DB DEBUG: Creating new multi-image scan result ===');
+      return await db.insert('scan_results', result.toMap());
+    }
+
+    // Для старого формата (обратная совместимость) ищем по imagePath
+    final imagePath = result.firstImagePath;
+    if (imagePath == null || imagePath.isEmpty) {
+      debugPrint('=== DB DEBUG: Creating new scan result (no images) ===');
+      return await db.insert('scan_results', result.toMap());
+    }
+
     final existing = await db.query(
       'scan_results',
       where: 'imagePath = ?',
-      whereArgs: [result.imagePath],
+      whereArgs: [imagePath],
       limit: 1,
     );
 

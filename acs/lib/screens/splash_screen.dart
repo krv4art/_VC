@@ -6,6 +6,7 @@ import '../providers/subscription_provider.dart';
 import '../providers/user_state.dart';
 import '../constants/app_dimensions.dart';
 import '../widgets/common/app_spacer.dart';
+import '../widgets/animated/animated_ai_avatar.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -60,50 +61,20 @@ class _SplashScreenState extends State<SplashScreen> {
     final colors = themeProvider.currentColors;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: colors.primaryGradient,
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Логотип приложения с тенью
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppDimensions.space24 + AppDimensions.space4 + AppDimensions.space4),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(AppDimensions.space24 + AppDimensions.space4 + AppDimensions.space4),
-                  child: Image.asset(
-                    'assets/icon/logo.png',
-                    width: AppDimensions.space64 + AppDimensions.space64 + AppDimensions.space16 + AppDimensions.space4 + AppDimensions.space4,
-                    height: AppDimensions.space64 + AppDimensions.space64 + AppDimensions.space16 + AppDimensions.space4 + AppDimensions.space4,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              AppSpacer.v24(),
-              // Индикатор загрузки
-              SizedBox(
-                width: AppDimensions.space40,
-                height: AppDimensions.space40,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.white.withValues(alpha: 0.8),
-                  ),
-                ),
-              ),
-            ],
-          ),
+      backgroundColor: colors.background,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Анимированный аватар бота
+            AnimatedAiAvatar(
+              size: AppDimensions.space64 + AppDimensions.space64 + AppDimensions.space64,
+              state: AvatarAnimationState.thinking,
+              colors: colors,
+            ),
+            AppSpacer.v24(),
+            // Индикатор загрузки (убран, так как аватар уже анимирован)
+          ],
         ),
       ),
     );

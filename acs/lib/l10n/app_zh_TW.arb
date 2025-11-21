@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "請求訂製功能開發",
   "requestFeatureDescription": "需要特定功能?聯絡我們討論為你的業務需求訂製開發。",
   "pollHelpTitle": "如何投票",
-  "pollHelpDescription": "• 點選選項進行選擇\n• 再次點選取消選擇\n• 可以選擇任意多個選項\n• 點選「投票」按鈕提交\n• 如果沒有看到需要的選項,可以新增自己的選項"
+  "pollHelpDescription": "• 點選選項進行選擇\n• 再次點選取消選擇\n• 可以選擇任意多個選項\n• 點選「投票」按鈕提交\n• 如果沒有看到需要的選項,可以新增自己的選項",
+  "remainingScans": "剩餘掃描次數",
+  "remainingMessages": "剩餘訊息數",
+  "usageLimitsBadge": "每週5次掃描 • 每天5條訊息",
+  "subscriptionBenefitsTitle": "解鎖進階功能",
+  "subscriptionBenefitsDescription": "升級到進階版並獲得所有功能的無限存取權限",
+  "getSubscription": "獲取進階版"
 }

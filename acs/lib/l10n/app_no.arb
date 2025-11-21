@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "Forespør Egendefinert Funksjonsutvikling",
   "requestFeatureDescription": "Trenger du en spesifikk funksjon? Kontakt oss for å diskutere tilpasset utvikling for dine forretningsbehov.",
   "pollHelpTitle": "Hvordan stemme",
-  "pollHelpDescription": "• Trykk på et alternativ for å velge det\n• Trykk igjen for å oppheve valget\n• Velg så mange alternativer du vil\n• Klikk på 'Stem'-knappen for å sende inn stemmene dine\n• Legg til ditt eget alternativ hvis du ikke ser det du trenger"
+  "pollHelpDescription": "• Trykk på et alternativ for å velge det\n• Trykk igjen for å oppheve valget\n• Velg så mange alternativer du vil\n• Klikk på 'Stem'-knappen for å sende inn stemmene dine\n• Legg til ditt eget alternativ hvis du ikke ser det du trenger",
+  "remainingScans": "Gjenstående skanninger",
+  "remainingMessages": "Gjenstående meldinger",
+  "usageLimitsBadge": "5 skanninger/uke • 5 meldinger/dag",
+  "subscriptionBenefitsTitle": "Lås opp Premium-funksjoner",
+  "subscriptionBenefitsDescription": "Oppgrader til Premium og få ubegrenset tilgang til alle funksjoner",
+  "getSubscription": "Få Premium"
 }

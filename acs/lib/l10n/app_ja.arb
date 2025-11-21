@@ -435,5 +435,11 @@
   "requestFeatureDevelopment": "カスタム機能開発をリクエスト",
   "requestFeatureDescription": "特定の機能が必要ですか？お客様のビジネスニーズに合わせたカスタム開発について、お問い合わせください。",
   "pollHelpTitle": "投票方法",
-  "pollHelpDescription": "• オプションをタップして選択\n• もう一度タップして選択解除\n• 好きなだけ選択可能\n• 「投票」ボタンをクリックして投票を送信\n• 必要なものがない場合は、独自のオプションを追加"
+  "pollHelpDescription": "• オプションをタップして選択\n• もう一度タップして選択解除\n• 好きなだけ選択可能\n• 「投票」ボタンをクリックして投票を送信\n• 必要なものがない場合は、独自のオプションを追加",
+  "remainingScans": "残りのスキャン",
+  "remainingMessages": "残りのメッセージ",
+  "usageLimitsBadge": "週5スキャン・1日5メッセージ",
+  "subscriptionBenefitsTitle": "プレミアム機能のロック解除",
+  "subscriptionBenefitsDescription": "プレミアムにアップグレードして、すべての機能への無制限アクセスを取得",
+  "getSubscription": "プレミアムを取得"
 }
