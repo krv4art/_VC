@@ -15,7 +15,7 @@ import '../widgets/camera/camera_permission_denied.dart';
 import '../widgets/camera/focus_indicator.dart';
 import '../widgets/scanning/joke_bubble_widget.dart';
 import '../widgets/scanning/processing_overlay.dart';
-import '../widgets/scanning/scan_images_grid.dart';
+import '../widgets/scanning/photo_type_selector.dart';
 import '../widgets/dialogs/scanning_hint_dialog.dart';
 import '../services/camera/camera_manager.dart';
 import '../services/scanning/image_analysis_service.dart';
@@ -43,7 +43,7 @@ class _ScanningScreenState extends State<ScanningScreen>
 
   // Multi-photo scanning state
   final List<ScanImage> _capturedImages = [];
-  ImageType? _nextImageType;
+  ImageType _selectedImageType = ImageType.frontLabel;
 
   // Joke bubble state
   String? _jokeText;
@@ -98,16 +98,12 @@ class _ScanningScreenState extends State<ScanningScreen>
       // Stop camera before navigating to confirmation screen
       await _cameraManager.stopCamera();
 
-      // Determine suggested type based on what's already captured
-      final hasFrontLabel = _capturedImages.any((img) => img.type == ImageType.frontLabel);
-      final suggestedType = hasFrontLabel ? ImageType.ingredients : ImageType.frontLabel;
-
-      // Show photo confirmation screen
+      // Show photo confirmation screen with current selected type
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => PhotoConfirmationScreen(
             photo: picture,
-            suggestedType: suggestedType,
+            imageType: _selectedImageType,
             onRetake: () async {
               Navigator.of(context).pop();
               // Reinitialize camera when returning from confirmation screen
@@ -115,13 +111,14 @@ class _ScanningScreenState extends State<ScanningScreen>
                 await _initializeCamera();
               }
             },
-            onConfirm: (ImageType type) async {
+            onConfirm: () async {
               Navigator.of(context).pop();
 
               if (mounted) {
-                _addCapturedImage(picture, type);
-                // Reinitialize camera to continue scanning
-                await _initializeCamera();
+                _addCapturedImage(picture, _selectedImageType);
+
+                // Автоматически переходим к анализу после подтверждения
+                await _analyzeImages();
               }
             },
           ),
@@ -150,13 +147,20 @@ class _ScanningScreenState extends State<ScanningScreen>
           order: order,
         ),
       );
+
+      // Автоматически переключаем на следующий тип фото
+      if (type == ImageType.frontLabel) {
+        _selectedImageType = ImageType.ingredients;
+      }
     });
   }
 
-  void _removeCapturedImage(int index) {
+  void _removeCapturedImage(ImageType type) {
     setState(() {
-      if (index >= 0 && index < _capturedImages.length) {
-        _capturedImages.removeAt(index);
+      _capturedImages.removeWhere((img) => img.type == type);
+      // Если удалили главное фото, возвращаем выбор на него
+      if (type == ImageType.frontLabel) {
+        _selectedImageType = ImageType.frontLabel;
       }
     });
   }
@@ -164,7 +168,22 @@ class _ScanningScreenState extends State<ScanningScreen>
   void _clearCapturedImages() {
     setState(() {
       _capturedImages.clear();
+      _selectedImageType = ImageType.frontLabel;
     });
+  }
+
+  void _selectImageType(ImageType type) {
+    setState(() {
+      _selectedImageType = type;
+    });
+  }
+
+  ScanImage? _getImageByType(ImageType type) {
+    try {
+      return _capturedImages.firstWhere((img) => img.type == type);
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<void> _analyzeImages() async {
@@ -521,64 +540,19 @@ class _ScanningScreenState extends State<ScanningScreen>
             // Индикатор фокусировки
             if (_focusPoint != null) FocusIndicator(position: _focusPoint!),
 
-            // Multi-photo grid (показываем когда есть захваченные изображения)
-            if (_capturedImages.isNotEmpty && !_isProcessing)
+            // Селектор типа фото (показываем всегда когда камера готова и не обрабатываем)
+            // Размещаем внизу, над основными кнопками интерфейса
+            if (_cameraManager.cameraState == CameraState.ready && !_isProcessing)
               Positioned(
-                top: kToolbarHeight + 16,
+                bottom: AppDimensions.space48 + AppDimensions.space64 + AppDimensions.space40,
                 left: 0,
                 right: 0,
-                child: Column(
-                  children: [
-                    ScanImagesGrid(
-                      images: _capturedImages,
-                      onAddImage: (type) {
-                        _nextImageType = type;
-                        // Trigger camera or gallery based on user choice
-                        // For now, just show a hint
-                      },
-                      onRemoveImage: _removeCapturedImage,
-                    ),
-                    const SizedBox(height: 16),
-                    // Analyze button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: _analyzeImages,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: context.colors.primary,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: const Text(
-                                'Анализировать',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          // Clear button
-                          IconButton(
-                            onPressed: _clearCapturedImages,
-                            icon: const Icon(Icons.delete_outline),
-                            color: Colors.white,
-                            style: IconButton.styleFrom(
-                              backgroundColor: Colors.red.withOpacity(0.8),
-                              padding: const EdgeInsets.all(16),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                child: PhotoTypeSelector(
+                  selectedType: _selectedImageType,
+                  frontLabelImage: _getImageByType(ImageType.frontLabel),
+                  ingredientsImage: _getImageByType(ImageType.ingredients),
+                  onTypeSelected: _selectImageType,
+                  onRemoveImage: _removeCapturedImage,
                 ),
               ),
 

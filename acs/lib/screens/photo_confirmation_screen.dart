@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import '../l10n/app_localizations.dart';
 import '../theme/theme_extensions_v2.dart';
 import '../constants/app_dimensions.dart';
 import '../models/scan_image.dart';
@@ -9,15 +8,15 @@ import '../models/scan_image.dart';
 class PhotoConfirmationScreen extends StatefulWidget {
   final XFile photo;
   final VoidCallback onRetake;
-  final Function(ImageType type) onConfirm;
-  final ImageType? suggestedType;
+  final VoidCallback onConfirm;
+  final ImageType imageType;
 
   const PhotoConfirmationScreen({
     super.key,
     required this.photo,
     required this.onRetake,
     required this.onConfirm,
-    this.suggestedType,
+    required this.imageType,
   });
 
   @override
@@ -32,12 +31,10 @@ class _PhotoConfirmationScreenState extends State<PhotoConfirmationScreen>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _buttonFadeAnimation;
   late Animation<Offset> _buttonSlideAnimation;
-  late ImageType _selectedType;
 
   @override
   void initState() {
     super.initState();
-    _selectedType = widget.suggestedType ?? ImageType.ingredients;
     _initializeAnimations();
     _animationController.forward();
   }
@@ -83,50 +80,6 @@ class _PhotoConfirmationScreenState extends State<PhotoConfirmationScreen>
         );
   }
 
-  Widget _buildTypeOption({
-    required String label,
-    required ImageType type,
-    required IconData icon,
-  }) {
-    final isSelected = _selectedType == type;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedType = type),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.white.withOpacity(0.2)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected
-                ? Colors.white
-                : Colors.white.withOpacity(0.3),
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 28,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   void dispose() {
@@ -136,8 +89,6 @@ class _PhotoConfirmationScreenState extends State<PhotoConfirmationScreen>
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
@@ -171,58 +122,6 @@ class _PhotoConfirmationScreenState extends State<PhotoConfirmationScreen>
                   // Add space for app bar
                   const SizedBox(height: kToolbarHeight),
                   const Expanded(child: SizedBox()), // Push buttons to bottom
-
-                  // Type selector
-                  FadeTransition(
-                    opacity: _buttonFadeAnimation,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
-                          width: 1,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'Что на этом фото?',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _buildTypeOption(
-                                  label: 'Главная этикетка',
-                                  type: ImageType.frontLabel,
-                                  icon: Icons.label_outline,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: _buildTypeOption(
-                                  label: 'Состав',
-                                  type: ImageType.ingredients,
-                                  icon: Icons.list_alt,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
 
                   // Buttons
                   Padding(
@@ -266,7 +165,7 @@ class _PhotoConfirmationScreenState extends State<PhotoConfirmationScreen>
                             SizedBox(width: AppDimensions.space40),
                             // Confirm button (checkmark icon)
                             GestureDetector(
-                              onTap: () => widget.onConfirm(_selectedType),
+                              onTap: widget.onConfirm,
                               child: Container(
                                 height:
                                     AppDimensions.space64 +

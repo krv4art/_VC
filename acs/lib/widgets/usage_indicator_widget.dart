@@ -74,50 +74,140 @@ class UsageIndicatorWidget extends StatelessWidget {
     int remainingMessages,
   ) {
     final l10n = AppLocalizations.of(context)!;
-    final hasReachedLimit = remainingScans <= 0 && remainingMessages <= 0;
+    final scansUsed = 5 - remainingScans;
+    final messagesUsed = 5 - remainingMessages;
 
-    return GestureDetector(
-      onTap: () => _showSubscriptionBenefitsModal(context),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: AppDimensions.radius12, vertical: AppDimensions.space4 + AppDimensions.space4),
-        decoration: BoxDecoration(
-          color: hasReachedLimit
-              ? context.colors.warning.withValues(alpha: 0.1)
-              : context.colors.surface.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(AppDimensions.radius16),
-          border: Border.all(
-            color: hasReachedLimit
-                ? context.colors.warning
-                : context.colors.onSecondary.withValues(alpha: 0.3),
-            width: 1,
+    return Center(
+      child: GestureDetector(
+        onTap: () => _showSubscriptionBenefitsModal(context),
+        child: Container(
+          padding: EdgeInsets.all(AppDimensions.space12),
+          decoration: BoxDecoration(
+            color: context.colors.surface.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(AppDimensions.radius16),
+            border: Border.all(
+              color: context.colors.onSecondary.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              // Заголовок
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: 14,
+                    color: context.colors.onBackground.withValues(alpha: 0.7),
+                  ),
+                  SizedBox(width: AppDimensions.space4),
+                  Flexible(
+                    child: Text(
+                      l10n.usageLimitsBadge,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: context.colors.onBackground.withValues(alpha: 0.7),
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: AppDimensions.space8),
+
+              // Прогресс-бары
+              _buildCompactUsageItem(
+                context,
+                l10n.scansThisWeek,
+                scansUsed,
+                5,
+                Icons.camera_alt_outlined,
+                remainingScans <= 0,
+              ),
+              SizedBox(height: AppDimensions.space4),
+              _buildCompactUsageItem(
+                context,
+                l10n.messagesToday,
+                messagesUsed,
+                5,
+                Icons.chat_outlined,
+                remainingMessages <= 0,
+              ),
+            ],
           ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+      ),
+    );
+  }
+
+  Widget _buildCompactUsageItem(
+    BuildContext context,
+    String title,
+    int used,
+    int limit,
+    IconData icon,
+    bool isLimitReached,
+  ) {
+    final progress = (used / limit).clamp(0.0, 1.0);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
             Icon(
-              hasReachedLimit ? Icons.lock_outline : Icons.info_outline,
-              size: 14,
-              color: hasReachedLimit
-                  ? context.colors.warning
-                  : context.colors.onBackground.withValues(alpha: 0.7),
+              icon,
+              size: 12,
+              color: context.colors.onBackground.withValues(alpha: 0.7),
             ),
-            AppSpacer.h4(),
+            SizedBox(width: AppDimensions.space4),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: context.colors.onBackground.withValues(alpha: 0.7),
+                  height: 1.2,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
             Text(
-              hasReachedLimit
-                  ? l10n.limitsReached
-                  : l10n.usageLimitsBadge,
+              '$used/$limit',
               style: TextStyle(
                 fontSize: 11,
-                color: hasReachedLimit
-                    ? context.colors.warning
-                    : context.colors.onBackground.withValues(alpha: 0.7),
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.bold,
+                color: isLimitReached
+                    ? context.colors.error
+                    : context.colors.onBackground,
               ),
             ),
           ],
         ),
-      ),
+        SizedBox(height: 3),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(2),
+          child: SizedBox(
+            height: 4,
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: context.colors.onSecondary.withValues(alpha: 0.2),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                isLimitReached
+                    ? context.colors.error
+                    : progress > 0.7
+                    ? context.colors.warning
+                    : context.colors.primary,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -155,7 +245,7 @@ class UsageIndicatorWidget extends StatelessWidget {
               ),
               AppSpacer.h8(),
               Text(
-                'Free Plan Usage',
+                l10n.freePlanUsage,
                 style: TextStyle(
                   fontSize: AppDimensions.iconSmall,
                   fontWeight: FontWeight.bold,
@@ -182,7 +272,7 @@ class UsageIndicatorWidget extends StatelessWidget {
           if (showScans) ...[
             _buildUsageItem(
               context,
-              'Scans this week',
+              l10n.scansThisWeek,
               scansCount,
               5,
               Icons.camera_alt_outlined,
@@ -195,7 +285,7 @@ class UsageIndicatorWidget extends StatelessWidget {
           if (showMessages) ...[
             _buildUsageItem(
               context,
-              'Messages today',
+              l10n.messagesToday,
               messagesCount,
               5,
               Icons.chat_outlined,
