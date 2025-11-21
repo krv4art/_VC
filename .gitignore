@@ -90,6 +90,18 @@ nul
 # Web
 **/web/flutter_service_worker.js
 **/web/manifest.json
+**/web/favicon.png
+**/web/icons/
+
+# Generated localization files
+**/lib/l10n/app_localizations*.dart
+
+# Generated plugin registration files
+**/android/**/GeneratedPluginRegistrant.java
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/windows/flutter/generated_plugin_registrant.*
+**/linux/flutter/generated_plugin_registrant.*
 
 # Coverage
 coverage/
