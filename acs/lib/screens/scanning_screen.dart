@@ -137,12 +137,14 @@ class _ScanningScreenState extends State<ScanningScreen>
 
   void _addCapturedImage(XFile imageFile, ImageType type) {
     setState(() {
-      final order = _capturedImages.where((img) => img.type == type).length;
+      // Удаляем старое фото этого типа, если есть
+      _capturedImages.removeWhere((img) => img.type == type);
+
       _capturedImages.add(
         ScanImage(
           imagePath: imageFile.path,
           type: type,
-          order: order,
+          order: 0,
         ),
       );
 
@@ -192,9 +194,7 @@ class _ScanningScreenState extends State<ScanningScreen>
       _showSlowInternetMessage = false;
     });
 
-    // Stop camera before processing
-    await _cameraManager.stopCamera();
-
+    // Не останавливаем камеру сразу - оставляем превью видимым
     final analysisService = const ImageAnalysisService();
 
     final result = await analysisService.processImages(

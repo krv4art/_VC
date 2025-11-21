@@ -254,7 +254,9 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen>
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                '${analysisResult.ingredients.length} ${l10n.ingredientsFound}',
+                                                analysisResult.brandName?.isNotEmpty == true
+                                                    ? analysisResult.brandName!
+                                                    : '${analysisResult.ingredients.length} ${l10n.ingredientsFound}',
                                                 style: AppTheme.bodyLarge
                                                     .copyWith(
                                                       fontWeight:
