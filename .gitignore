@@ -31,6 +31,7 @@ nul
 .pub/
 /build/
 *.lock
+**/.*-plugins-dependencies
 
 # Android related
 **/android/**/gradle-wrapper.jar
@@ -93,8 +94,12 @@ nul
 **/web/favicon.png
 **/web/icons/
 
+# Android icons
+**/android/app/src/main/res/mipmap-*/
+
 # Generated localization files
 **/lib/l10n/app_localizations*.dart
+**/lib/l10n/app_*.arb
 
 # Generated plugin registration files
 **/android/**/GeneratedPluginRegistrant.java
