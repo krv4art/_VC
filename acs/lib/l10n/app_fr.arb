@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Thème lumineux rose et violet",
   "scanAnalysis": "Analyse de Scan",
   "ingredients": "ingrédients",
+  "frontLabelType": "Étiquette avant",
+  "ingredientsType": "Ingrédients",
+  "analyzeButton": "Analyser",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },
@@ -307,6 +310,8 @@
   "noAds": "100% sans publicité",
   "noAdsDesc": "Pour ceux qui apprécient leur temps",
   "multiLanguage": "Connaît presque toutes les langues du monde",
+  "scansThisWeek": "Analyses cette semaine",
+  "messagesToday": "Messages aujourd'hui",
   "multiLanguageDesc": "Traducteur amélioré",
   "paywallTitle": "Découvrez les secrets de vos cosmétiques avec l'IA",
   "paywallDescription": "Vous avez la possibilité d'obtenir un abonnement Premium pendant 3 jours gratuitement, puis {price} par semaine. Annulez à tout moment.",

@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "उज्ज्वल गुलाबी और बैंगनी थीम",
   "scanAnalysis": "स्कैन विश्लेषण",
   "ingredients": "सामग्री",
+  "frontLabelType": "सामने का लेबल",
+  "ingredientsType": "सामग्री",
+  "analyzeButton": "विश्लेषण करें",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

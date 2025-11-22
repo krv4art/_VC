@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "66910998225",
+    "project_id": "gen-lang-client-0852586620",
+    "storage_bucket": "gen-lang-client-0852586620.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66910998225:android:04da84b1ba3a0ffe3b7ff0",
+        "android_client_info": {
+          "package_name": "com.ai.cosmetic.scanner.beauty.ingredients.analyzer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5bIUUFAM1TRinmOQwYgBtvXKFC3ZekuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

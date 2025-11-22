@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Chủ đề hồng và tím tươi sáng",
   "scanAnalysis": "Phân Tích Quét",
   "ingredients": "thành phần",
+  "frontLabelType": "Nhãn phía trước",
+  "ingredientsType": "Thành phần",
+  "analyzeButton": "Phân tích",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

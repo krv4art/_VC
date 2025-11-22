@@ -20,6 +20,7 @@ import '../l10n/app_localizations.dart';
 import '../theme/theme_extensions_v2.dart';
 import '../widgets/animated/animated_card.dart';
 import '../widgets/animated/animated_button.dart' as btn;
+import '../services/analytics_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -39,6 +40,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   void initState() {
     super.initState();
     _initializeAnimations();
+    // Log screen view
+    AnalyticsService().logScreenView(screenName: 'profile_screen');
   }
 
   void _initializeAnimations() {

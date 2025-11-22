@@ -230,6 +230,9 @@
   "vibrantThemeDescription": "Jasný růžový a fialový motiv",
   "scanAnalysis": "Analýza skenování",
   "ingredients": "ingredience",
+  "frontLabelType": "Přední štítek",
+  "ingredientsType": "Přísady",
+  "analyzeButton": "Analyzovat",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

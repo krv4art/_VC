@@ -9,6 +9,7 @@ import '../services/subscription_service.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import '../constants/app_dimensions.dart';
 import '../widgets/common/app_spacer.dart';
+import '../services/analytics_service.dart';
 
 enum Plan { monthly, yearly }
 
@@ -34,6 +35,9 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
   @override
   void initState() {
     super.initState();
+    // Log screen view
+    AnalyticsService().logScreenView(screenName: 'paywall_screen');
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -137,6 +141,12 @@ class _ModernPaywallScreenState extends State<ModernPaywallScreen>
       setState(() => _isLoading = false);
 
       if (success) {
+        // Log subscription purchase
+        await AnalyticsService().logSubscriptionPurchase(
+          subscriptionType: _selectedPackage!.identifier,
+          price: _selectedPackage!.storeProduct.price,
+          currency: _selectedPackage!.storeProduct.currencyCode ?? 'USD',
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Subscription successful!')),
         );

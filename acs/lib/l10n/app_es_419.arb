@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Tema rosa y morado brillante",
   "scanAnalysis": "Análisis de Escaneo",
   "ingredients": "ingredientes",
+  "frontLabelType": "Etiqueta frontal",
+  "ingredientsType": "Ingredientes",
+  "analyzeButton": "Analizar",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

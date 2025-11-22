@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Élénk rózsaszín és lila téma",
   "scanAnalysis": "Szkennelési elemzés",
   "ingredients": "összetevők",
+  "frontLabelType": "Elülső címke",
+  "ingredientsType": "Összetevők",
+  "analyzeButton": "Elemezés",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

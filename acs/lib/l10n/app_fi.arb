@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Kirkas pinkki ja violetti teema",
   "scanAnalysis": "Skannausanalyysi",
   "ingredients": "ainesosaa",
+  "frontLabelType": "Etiketti",
+  "ingredientsType": "Ainesosat",
+  "analyzeButton": "Analysoi",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

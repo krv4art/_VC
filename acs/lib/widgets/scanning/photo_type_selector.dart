@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../models/scan_image.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Виджет выбора типа фотографии для сканирования с кнопкой анализа
 class PhotoTypeSelector extends StatelessWidget {
@@ -25,6 +26,7 @@ class PhotoTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -34,7 +36,7 @@ class PhotoTypeSelector extends StatelessWidget {
             child: _buildTypeCard(
               context: context,
               type: ImageType.frontLabel,
-              label: 'Главная',
+              label: l10n.frontLabelType,
               icon: Icons.label_outline,
               image: frontLabelImage,
             ),
@@ -47,7 +49,7 @@ class PhotoTypeSelector extends StatelessWidget {
             child: _buildTypeCard(
               context: context,
               type: ImageType.ingredients,
-              label: 'Состав',
+              label: l10n.ingredientsType,
               icon: Icons.list_alt,
               image: ingredientsImage,
             ),
@@ -65,6 +67,7 @@ class PhotoTypeSelector extends StatelessWidget {
   }
 
   Widget _buildAnalyzeButton(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isEnabled = _hasAnyImage;
 
     return GestureDetector(
@@ -103,7 +106,7 @@ class PhotoTypeSelector extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Анализ',
+              l10n.analyzeButton,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: isEnabled ? Colors.white : Colors.white.withOpacity(0.5),

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:acs/l10n/app_localizations.dart';
 
 /// Тип изображения в сканировании
 enum ImageType {
@@ -10,12 +12,24 @@ enum ImageType {
 
 /// Расширение для работы с ImageType
 extension ImageTypeExtension on ImageType {
+  /// Получить локализованное название типа изображения
+  String getDisplayName(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (this) {
+      case ImageType.frontLabel:
+        return l10n.frontLabelType;
+      case ImageType.ingredients:
+        return l10n.ingredientsType;
+    }
+  }
+
+  /// Старое свойство для обратной совместимости (возвращает английский текст)
   String get displayName {
     switch (this) {
       case ImageType.frontLabel:
-        return 'Главная этикетка';
+        return 'Front Label';
       case ImageType.ingredients:
-        return 'Состав';
+        return 'Ingredients';
     }
   }
 

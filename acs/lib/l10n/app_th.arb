@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "ธีมสีชมพูและม่วงสดใส",
   "scanAnalysis": "วิเคราะห์การสแกน",
   "ingredients": "ส่วนผสม",
+  "frontLabelType": "ฉลากหน้า",
+  "ingredientsType": "ส่วนประกอบ",
+  "analyzeButton": "วิเคราะห์",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

@@ -244,11 +244,20 @@
   "vibrantThemeDescription": "Bright pink and purple theme",
   "scanAnalysis": "Scan Analysis",
   "ingredients": "ingredients",
+  "frontLabelType": "Front Label",
+  "ingredientsType": "Ingredients",
+  "analyzeButton": "Analyze",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },
   "@ingredients": {
     "description": "Label for number of ingredients"
+  },
+  "@frontLabelType": {
+    "description": "Label for front label photo type"
+  },
+  "@ingredientsType": {
+    "description": "Label for ingredients photo type"
   },
   "aiBotSettings": "AI Settings",
   "botName": "Bot Name",

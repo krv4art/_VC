@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Helles rosa und lila Thema",
   "scanAnalysis": "Scan-Analyse",
   "ingredients": "Zutaten",
+  "frontLabelType": "Vorderetikett",
+  "ingredientsType": "Inhaltsstoffe",
+  "analyzeButton": "Analysieren",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },
@@ -307,6 +310,8 @@
   "noAds": "100% werbefrei",
   "noAdsDesc": "Für diejenigen, die ihre Zeit schätzen",
   "multiLanguage": "Kennt fast alle Sprachen der Welt",
+  "scansThisWeek": "Scans diese Woche",
+  "messagesToday": "Nachrichten heute",
   "multiLanguageDesc": "Verbesserter Übersetzer",
   "paywallTitle": "Entdecken Sie die Geheimnisse Ihrer Kosmetik mit KI",
   "paywallDescription": "Sie haben die Möglichkeit, ein Premium-Abonnement für 3 Tage kostenlos zu erhalten, danach {price} pro Woche. Jederzeit kündbar.",

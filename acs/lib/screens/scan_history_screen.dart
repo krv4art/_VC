@@ -16,6 +16,7 @@ import '../services/usage_tracking_service.dart';
 import 'package:provider/provider.dart';
 import '../constants/app_dimensions.dart';
 import '../widgets/common/app_spacer.dart';
+import '../services/analytics_service.dart';
 
 class ScanHistoryScreen extends StatefulWidget {
   const ScanHistoryScreen({super.key});
@@ -34,6 +35,8 @@ class _ScanHistoryScreenState extends State<ScanHistoryScreen>
     super.initState();
     _initializeAnimations();
     _loadScanHistory();
+    // Log screen view
+    AnalyticsService().logScreenView(screenName: 'scan_history_screen');
   }
 
   void _initializeAnimations() {

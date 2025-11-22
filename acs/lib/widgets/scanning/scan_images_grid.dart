@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../models/scan_image.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Виджет для отображения и управления несколькими фотографиями в сканировании
 class ScanImagesGrid extends StatelessWidget {
@@ -22,6 +23,7 @@ class ScanImagesGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final frontLabel = images
         .where((img) => img.type == ImageType.frontLabel)
         .firstOrNull;
@@ -42,7 +44,7 @@ class ScanImagesGrid extends StatelessWidget {
           // Главная этикетка
           _buildImageSlot(
             context: context,
-            label: 'Главная этикетка',
+            label: l10n.frontLabelType,
             image: frontLabel,
             type: ImageType.frontLabel,
             onAdd: () => onAddImage(ImageType.frontLabel),
@@ -58,7 +60,7 @@ class ScanImagesGrid extends StatelessWidget {
           // Состав ингредиентов
           _buildImageSlot(
             context: context,
-            label: 'Состав ${ingredientImages.length + 1}',
+            label: '${l10n.ingredientsType} ${ingredientImages.length + 1}',
             image: ingredientImages.lastOrNull,
             type: ImageType.ingredients,
             onAdd: () => onAddImage(ImageType.ingredients),

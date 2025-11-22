@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Temă roz și mov strălucitoare",
   "scanAnalysis": "Analiză Scanare",
   "ingredients": "ingrediente",
+  "frontLabelType": "Etichetă față",
+  "ingredientsType": "Ingrediente",
+  "analyzeButton": "Analizează",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

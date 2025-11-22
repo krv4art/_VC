@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "밝은 핑크와 퍼플 테마",
   "scanAnalysis": "스캔 분석",
   "ingredients": "성분",
+  "frontLabelType": "앞 라벨",
+  "ingredientsType": "재료",
+  "analyzeButton": "분석",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

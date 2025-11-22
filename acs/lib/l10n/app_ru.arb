@@ -244,11 +244,20 @@
   "vibrantThemeDescription": "Яркая розово-фиолетовая тема",
   "scanAnalysis": "Анализ сканирования",
   "ingredients": "ингредиентов",
+  "frontLabelType": "Главная этикетка",
+  "ingredientsType": "Состав",
+  "analyzeButton": "Анализ",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },
   "@ingredients": {
     "description": "Label for number of ingredients"
+  },
+  "@frontLabelType": {
+    "description": "Label for front label photo type"
+  },
+  "@ingredientsType": {
+    "description": "Label for ingredients photo type"
   },
   "aiBotSettings": "Настройка ИИ",
   "botName": "Имя бота",

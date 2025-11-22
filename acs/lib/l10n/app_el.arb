@@ -230,6 +230,9 @@
   "vibrantThemeDescription": "Φωτεινό ροζ και μωβ θέμα",
   "scanAnalysis": "Ανάλυση Σάρωσης",
   "ingredients": "συστατικά",
+  "frontLabelType": "Μπροστινή ετικέτα",
+  "ingredientsType": "Συστατικά",
+  "analyzeButton": "Ανάλυση",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

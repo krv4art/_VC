@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "鮮やかなピンクとパープルのテーマ",
   "scanAnalysis": "スキャン分析",
   "ingredients": "成分",
+  "frontLabelType": "フロントラベル",
+  "ingredientsType": "成分",
+  "analyzeButton": "分析",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

@@ -22,6 +22,7 @@ import '../services/scanning/image_analysis_service.dart';
 import '../services/scanning/scanning_animation_controller.dart';
 import '../models/scan_image.dart';
 import 'photo_confirmation_screen.dart';
+import '../services/analytics_service.dart';
 
 class ScanningScreen extends StatefulWidget {
   const ScanningScreen({super.key});
@@ -57,6 +58,8 @@ class _ScanningScreenState extends State<ScanningScreen>
     _animationController.initializeAnimations();
     _animationController.startAnimations();
     _initializeCamera();
+    // Log screen view
+    AnalyticsService().logScreenView(screenName: 'scanning_screen');
   }
 
   Future<void> _initializeCamera() async {
@@ -67,6 +70,10 @@ class _ScanningScreenState extends State<ScanningScreen>
         _isFlashlightOn =
             _cameraManager.controller?.value.flashMode == FlashMode.torch;
       });
+      // Log camera open event on first init
+      if (_capturedImages.isEmpty) {
+        await AnalyticsService().logCameraOpen();
+      }
     }
   }
 
@@ -252,6 +259,9 @@ class _ScanningScreenState extends State<ScanningScreen>
     final l10n = AppLocalizations.of(context)!;
 
     try {
+      // Log gallery open event
+      await AnalyticsService().logGalleryOpen();
+
       // Stop camera before picking from gallery
       await _cameraManager.stopCamera();
 
@@ -474,7 +484,6 @@ class _ScanningScreenState extends State<ScanningScreen>
                 onGalleryTap: _pickImageFromGallery,
                 onFlashlightTap: _toggleFlashlight,
                 isFlashlightOn: _isFlashlightOn,
-                selectedImageType: _selectedImageType,
               ),
 
             // Индикатор фокусировки

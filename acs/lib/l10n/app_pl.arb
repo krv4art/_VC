@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Jasny różowy i fioletowy motyw",
   "scanAnalysis": "Analiza Skanowania",
   "ingredients": "składników",
+  "frontLabelType": "Przednia etykieta",
+  "ingredientsType": "Składniki",
+  "analyzeButton": "Analizuj",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

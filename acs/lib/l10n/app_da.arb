@@ -230,6 +230,9 @@
   "vibrantThemeDescription": "Lyst pink og lilla tema",
   "scanAnalysis": "Scananalyse",
   "ingredients": "ingredienser",
+  "frontLabelType": "Forside etiket",
+  "ingredientsType": "Ingredienser",
+  "analyzeButton": "Analyser",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

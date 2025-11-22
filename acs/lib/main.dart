@@ -22,6 +22,7 @@ import 'services/rating_service.dart';
 import 'services/usage_tracking_service.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'providers/chat_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,15 @@ void main() async {
   // Инициализация фабрики баз данных для веба
   if (kIsWeb) {
     databaseFactory = databaseFactoryFfiWeb;
+  }
+
+  // Инициализация Firebase (только на мобильных платформах)
+  if (!kIsWeb) {
+    try {
+      await Firebase.initializeApp();
+    } catch (e) {
+      debugPrint('Firebase initialization error: $e');
+    }
   }
 
   // Инициализация конфигурации приложения

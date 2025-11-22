@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "明亮的粉紫主題",
   "scanAnalysis": "掃描分析",
   "ingredients": "成分",
+  "frontLabelType": "前標籤",
+  "ingredientsType": "成分",
+  "analyzeButton": "分析",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

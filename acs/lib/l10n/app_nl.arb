@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Helder roze en paars thema",
   "scanAnalysis": "Scananalyse",
   "ingredients": "ingrediënten",
+  "frontLabelType": "Vooretiket",
+  "ingredientsType": "Ingrediënten",
+  "analyzeButton": "Analyseren",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

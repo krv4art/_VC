@@ -13,6 +13,7 @@ import '../constants/app_dimensions.dart';
 import '../widgets/common/app_spacer.dart';
 import '../widgets/poll_widget.dart';
 import '../widgets/usage_indicator_widget.dart';
+import '../services/analytics_service.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -54,6 +55,8 @@ class _HomepageScreenState extends State<HomepageScreen>
     WidgetsBinding.instance.addObserver(this);
     _initializeAnimations();
     _isInitialized = true;
+    // Log screen view
+    AnalyticsService().logScreenView(screenName: 'homepage_screen');
   }
 
   @override

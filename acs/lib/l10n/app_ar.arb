@@ -230,6 +230,9 @@
   "vibrantThemeDescription": "سمة وردية وبنفسجية مشرقة",
   "scanAnalysis": "تحليل المسح",
   "ingredients": "مكونات",
+  "frontLabelType": "الملصق الأمامي",
+  "ingredientsType": "المكونات",
+  "analyzeButton": "تحليل",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

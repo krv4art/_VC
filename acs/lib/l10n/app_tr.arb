@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Parlak pembe ve mor tema",
   "scanAnalysis": "Tarama Analizi",
   "ingredients": "içerik",
+  "frontLabelType": "Ön etiket",
+  "ingredientsType": "İçindekiler",
+  "analyzeButton": "Analiz Et",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

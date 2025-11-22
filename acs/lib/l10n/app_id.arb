@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Tema pink dan ungu cerah",
   "scanAnalysis": "Analisis Pemindaian",
   "ingredients": "bahan",
+  "frontLabelType": "Label depan",
+  "ingredientsType": "Bahan-bahan",
+  "analyzeButton": "Analisis",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

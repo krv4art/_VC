@@ -15,6 +15,7 @@ import '../theme/theme_extensions_v2.dart';
 import '../widgets/animated/animated_card.dart';
 import '../constants/app_dimensions.dart';
 import '../widgets/common/app_spacer.dart';
+import '../services/analytics_service.dart';
 
 class AnalysisResultsScreen extends StatefulWidget {
   final AnalysisResult result;
@@ -41,6 +42,14 @@ class _AnalysisResultsScreenState extends State<AnalysisResultsScreen>
   void initState() {
     super.initState();
     _initializeAnimations();
+    // Log screen view with product info
+    AnalyticsService().logScreenView(
+      screenName: 'analysis_results_screen',
+      parameters: {
+        'product_brand': widget.result.brandName ?? 'unknown',
+        'product_type': widget.result.productType ?? 'unknown',
+      },
+    );
   }
 
   void _initializeAnimations() {

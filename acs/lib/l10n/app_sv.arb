@@ -243,6 +243,9 @@
   "vibrantThemeDescription": "Ljust rosa och lila tema",
   "scanAnalysis": "Skannanalys",
   "ingredients": "ingredienser",
+  "frontLabelType": "Frometikett",
+  "ingredientsType": "Ingredienser",
+  "analyzeButton": "Analysera",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },

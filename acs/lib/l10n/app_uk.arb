@@ -244,6 +244,9 @@
   "vibrantThemeDescription": "Яскрава рожево-фіолетова тема",
   "scanAnalysis": "Аналіз сканування",
   "ingredients": "інгредієнтів",
+  "frontLabelType": "Передня етикетка",
+  "ingredientsType": "Інгредієнти",
+  "analyzeButton": "Аналізувати",
   "@scanAnalysis": {
     "description": "Title for scan analysis card in chat"
   },
@@ -295,6 +298,8 @@
   "unlimitedScansDesc": "Вивчайте косметику без обмежень",
   "unlimitedChats": "Необмежені чати",
   "unlimitedChatsDesc": "Персональний ШІ-консультант 24/7",
+  "scansThisWeek": "Сканувань на цьому тижні",
+  "messagesToday": "Повідомлень сьогодні",
   "upgradeToPremium": "Оформити Premium",
   "historyLimitReachedMessage": "Оформіть підписку Premium для доступу до повної історії сканувань!",
   "upgradeToView": "Переглянути з Premium",

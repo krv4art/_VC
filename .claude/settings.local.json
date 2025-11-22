@@ -15,7 +15,9 @@
       "Bash(flutter run:*)",
       "Bash(flutter build:*)",
       "Bash(node:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Improve scanning screen transitions and camera management\n\n- Remove processing overlay during photo confirmation transition\n- Use instant PageRouteBuilder transition (no animation)\n- Return to scanning screen after photo confirmation (not to analysis)\n- Stop camera on screen exit (back button, system back)\n- Analysis triggered only by dedicated button\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Improve scanning screen transitions and camera management\n\n- Remove processing overlay during photo confirmation transition\n- Use instant PageRouteBuilder transition (no animation)\n- Return to scanning screen after photo confirmation (not to analysis)\n- Stop camera on screen exit (back button, system back)\n- Analysis triggered only by dedicated button\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Keep camera preview during analysis, show brand name in history\n\n- Don''t stop camera immediately when starting analysis\n- Show product brand name in scan history instead of ingredient count\n- Replace image when re-capturing same photo type\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(flutter pub get:*)"
     ],
     "deny": [],
     "ask": []
