@@ -233,8 +233,8 @@ class _RatingRequestDialogState extends State<RatingRequestDialog> {
 
   Widget _buildActionButton() {
     final l10n = AppLocalizations.of(context)!;
-    final bool isTopRating = _rating == 5;
-    final String text = isTopRating ? l10n.rateOnGooglePlay : l10n.rate;
+    final bool isHighRating = _rating >= 4; // 4 или 5 звезд - переход в Google Play
+    final String text = isHighRating ? l10n.rateOnGooglePlay : l10n.rate;
     final bool isButtonActive = _rating > 0;
 
     return SizedBox(
@@ -258,11 +258,11 @@ class _RatingRequestDialogState extends State<RatingRequestDialog> {
         child: ElevatedButton(
           onPressed: isButtonActive
               ? () async {
-                  if (isTopRating) {
+                  if (isHighRating) {
                     // Сохраняем navigator ДО асинхронных операций
                     final navigator = Navigator.of(context);
 
-                    // Пользователь поставил 5 звезд - отмечаем оценку как завершенную
+                    // Пользователь поставил 4 или 5 звезд - отмечаем оценку как завершенную
                     await RatingService().markRatingCompleted();
 
                     final Uri url = Uri.parse(
@@ -276,7 +276,7 @@ class _RatingRequestDialogState extends State<RatingRequestDialog> {
                     }
                     if (mounted) navigator.pop();
                   } else {
-                    // Низкая оценка (1-4 звезды) - отправляем в Telegram
+                    // Низкая оценка (1-3 звезды) - отправляем в Telegram и показываем форму обратной связи
                     TelegramService().sendNegativeFeedback(
                       rating: _rating,
                       feedback: 'User gave $_rating stars',

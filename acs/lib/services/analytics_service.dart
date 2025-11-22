@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 /// Сервис для управления аналитикой приложения
 class AnalyticsService {
   static final AnalyticsService _instance = AnalyticsService._internal();
-  late FirebaseAnalytics _analytics;
+  FirebaseAnalytics? _analytics;
   bool _isInitialized = false;
 
   factory AnalyticsService() {
@@ -12,8 +12,10 @@ class AnalyticsService {
   }
 
   AnalyticsService._internal() {
-    _analytics = FirebaseAnalytics.instance;
-    _isInitialized = !kIsWeb;
+    if (!kIsWeb) {
+      _analytics = FirebaseAnalytics.instance;
+      _isInitialized = true;
+    }
   }
 
   /// Проверяет, инициализирована ли аналитика
@@ -26,7 +28,7 @@ class AnalyticsService {
   }) async {
     if (!_isInitialized) return;
     try {
-      await _analytics.logScreenView(
+      await _analytics?.logScreenView(
         screenName: screenName,
         parameters: parameters,
       );
@@ -43,7 +45,7 @@ class AnalyticsService {
   }) async {
     if (!_isInitialized) return;
     try {
-      await _analytics.logEvent(
+      await _analytics?.logEvent(
         name: 'product_scan',
         parameters: {
           'product_name': productName,
@@ -60,7 +62,7 @@ class AnalyticsService {
   Future<void> logGalleryOpen() async {
     if (!_isInitialized) return;
     try {
-      await _analytics.logEvent(
+      await _analytics?.logEvent(
         name: 'gallery_open',
       );
     } catch (e) {
@@ -72,7 +74,7 @@ class AnalyticsService {
   Future<void> logCameraOpen() async {
     if (!_isInitialized) return;
     try {
-      await _analytics.logEvent(
+      await _analytics?.logEvent(
         name: 'camera_open',
       );
     } catch (e) {
@@ -89,7 +91,7 @@ class AnalyticsService {
   }) async {
     if (!_isInitialized) return;
     try {
-      await _analytics.logEvent(
+      await _analytics?.logEvent(
         name: 'subscription_purchase',
         parameters: {
           'subscription_type': subscriptionType,
@@ -110,7 +112,7 @@ class AnalyticsService {
   }) async {
     if (!_isInitialized) return;
     try {
-      await _analytics.logEvent(
+      await _analytics?.logEvent(
         name: 'feature_used',
         parameters: {
           'feature_name': featureName,
@@ -130,7 +132,7 @@ class AnalyticsService {
   }) async {
     if (!_isInitialized) return;
     try {
-      await _analytics.logEvent(
+      await _analytics?.logEvent(
         name: 'app_error',
         parameters: {
           'error_code': errorCode,
@@ -152,7 +154,7 @@ class AnalyticsService {
   }) async {
     if (!_isInitialized) return;
     try {
-      await _analytics.logEvent(
+      await _analytics?.logEvent(
         name: 'view_item',
         parameters: {
           'item_id': itemId,
@@ -173,7 +175,7 @@ class AnalyticsService {
   }) async {
     if (!_isInitialized) return;
     try {
-      await _analytics.logEvent(
+      await _analytics?.logEvent(
         name: eventName,
         parameters: parameters,
       );
@@ -186,7 +188,7 @@ class AnalyticsService {
   Future<void> setUserId(String userId) async {
     if (!_isInitialized) return;
     try {
-      await _analytics.setUserId(id: userId);
+      await _analytics?.setUserId(id: userId);
     } catch (e) {
       debugPrint('Analytics error: $e');
     }
@@ -199,7 +201,7 @@ class AnalyticsService {
   }) async {
     if (!_isInitialized) return;
     try {
-      await _analytics.setUserProperty(name: name, value: value);
+      await _analytics?.setUserProperty(name: name, value: value);
     } catch (e) {
       debugPrint('Analytics error: $e');
     }
@@ -209,7 +211,7 @@ class AnalyticsService {
   Future<void> clearUserId() async {
     if (!_isInitialized) return;
     try {
-      await _analytics.setUserId(id: null);
+      await _analytics?.setUserId(id: null);
     } catch (e) {
       debugPrint('Analytics error: $e');
     }

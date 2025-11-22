@@ -580,44 +580,6 @@ class _HomepageScreenState extends State<HomepageScreen>
                     AppSpacer.v32(),
                   ],
 
-                  // Subscription card - показываем отдельно, без заголовка, только если не оформлена
-                  if (!userState.isPremium) ...[
-                    AnimatedBuilder(
-                      animation: _settingsController,
-                      builder: (context, child) {
-                        return FadeTransition(
-                          opacity: _settingsController,
-                          child: SlideTransition(
-                            position:
-                                Tween<Offset>(
-                                  begin: const Offset(-0.2, 0),
-                                  end: Offset.zero,
-                                ).animate(
-                                  CurvedAnimation(
-                                    parent: _settingsController,
-                                    curve: const Interval(
-                                      0.1,
-                                      0.4,
-                                      curve: Curves.easeOutCubic,
-                                    ),
-                                  ),
-                                ),
-                            child: _buildSettingItem(
-                              context,
-                              l10n.subscription,
-                              Icons.card_membership_outlined,
-                              () => context.push('/modern-paywall'),
-                              withBottomMargin: false,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-
-                  // Отступ перед Poll Widget
-                  AppSpacer.v32(),
-
                   // Poll Widget - добавлен под секцией настроек с анимацией
                   AnimatedBuilder(
                     animation: _pollAnimation,

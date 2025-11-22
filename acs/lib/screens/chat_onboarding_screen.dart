@@ -5,6 +5,7 @@ import '../theme/app_theme.dart';
 import '../theme/theme_extensions_v2.dart';
 import '../providers/user_state.dart';
 import '../providers/ai_bot_provider.dart';
+import '../providers/theme_provider_v2.dart';
 import '../l10n/app_localizations.dart';
 import '../widgets/onboarding/chat_option_button.dart';
 import '../widgets/animated/animated_ai_avatar.dart';
@@ -25,6 +26,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   String? _selectedAgeRange;
   final List<String> _selectedAllergies = [];
   String? _selectedAction; // 'scan' or 'chat'
+  AppThemeType? _selectedTheme; // Selected theme
 
   // For custom allergies input
   final TextEditingController _customAllergyController = TextEditingController();
@@ -145,14 +147,16 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
       case 0:
         return l10n.onboardingGreeting;
       case 1:
-        return l10n.selectYourSkinTypeDescription;
+        return l10n.selectPreferredTheme;
       case 2:
-        return l10n.selectYourAgeDescription;
+        return l10n.selectYourSkinTypeDescription;
       case 3:
-        return l10n.selectIngredientsAllergicSensitive;
+        return l10n.selectYourAgeDescription;
       case 4:
-        return l10n.enterYourName;
+        return l10n.selectIngredientsAllergicSensitive;
       case 5:
+        return l10n.enterYourName;
+      case 6:
         return l10n.selectYourActionDescription;
       default:
         return '';
@@ -164,14 +168,16 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
       case 0:
         return true; // Шаг приветствия - кнопка всегда активна
       case 1:
-        return true; // Шаг типа кожи - кнопка всегда активна, можно пропустить
+        return true; // Шаг выбора темы - кнопка всегда активна, можно пропустить
       case 2:
-        return true; // Шаг возраста - кнопка всегда активна, можно пропустить
+        return true; // Шаг типа кожи - кнопка всегда активна, можно пропустить
       case 3:
-        return true; // Шаг аллергенов - кнопка всегда активна, можно пропустить
+        return true; // Шаг возраста - кнопка всегда активна, можно пропустить
       case 4:
-        return true; // Шаг имени - кнопка всегда активна, можно пропустить
+        return true; // Шаг аллергенов - кнопка всегда активна, можно пропустить
       case 5:
+        return true; // Шаг имени - кнопка всегда активна, можно пропустить
+      case 6:
         return false; // Шаг выбора действия - кнопка скрыта, выбор действия навигирует напрямую
       default:
         return false;
@@ -179,14 +185,13 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
   }
 
   Future<void> _handleNextStep() async {
-    if (_currentStep < 5) {
+    if (_currentStep < 6) {
       await _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
-    // Step 5 handles navigation directly through action selection
-    // No need for else block here as action buttons will handle navigation
+    // Step 6 handles navigation directly through action selection
   }
 
   Future<void> _handleActionSelection(String action) async {
@@ -208,17 +213,20 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
     if (name.isNotEmpty) {
       await userState.updateUserInfo(name, null);
     }
+
+    // Theme is already applied when user selects it, no need to reapply
+
     await userState.completeOnboarding();
 
     if (!mounted) return;
 
     // Navigate based on selected action
     if (action == 'scan') {
-      // Navigate to scanning screen
       context.go('/scanning');
     } else if (action == 'chat') {
-      // Navigate to chat screen
       context.go('/chat');
+    } else {
+      context.go('/home');
     }
   }
 
@@ -247,7 +255,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
           controller: _pageController,
           onPageChanged: _handlePageChanged,
           physics: const BouncingScrollPhysics(),
-          itemCount: 6,
+          itemCount: 7,
           itemBuilder: (context, index) {
             return Column(
               children: [
@@ -434,7 +442,7 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              _currentStep == 5 ? l10n.finish : l10n.next,
+                              l10n.next,
                               maxLines: 1,
                               overflow: TextOverflow.visible,
                             ),
@@ -458,14 +466,16 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
       case 0:
         return _buildWelcomeStep(context);
       case 1:
-        return _buildSkinTypeStep(l10n);
+        return _buildThemeStep(l10n);
       case 2:
-        return _buildAgeStep(l10n);
+        return _buildSkinTypeStep(l10n);
       case 3:
-        return _buildAllergiesStep(l10n);
+        return _buildAgeStep(l10n);
       case 4:
-        return _buildNameStep(l10n);
+        return _buildAllergiesStep(l10n);
       case 5:
+        return _buildNameStep(l10n);
+      case 6:
         return _buildActionChoiceStep(l10n);
       default:
         return const SizedBox.shrink();
@@ -846,5 +856,148 @@ class _ChatOnboardingScreenState extends State<ChatOnboardingScreen>
         ),
       ],
     );
+  }
+
+  Widget _buildThemeStep(AppLocalizations l10n) {
+    final themeProvider = context.watch<ThemeProviderV2>();
+
+    // Get light themes only
+    final lightThemes = AppThemeType.values
+        .where(
+          (theme) =>
+              !theme.name.startsWith('dark') &&
+              theme != AppThemeType.dark,
+        )
+        .toList();
+
+    return Column(
+      children: [
+        // Dark mode toggle
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              themeProvider.isDarkTheme ? l10n.lightMode : l10n.darkTheme,
+              style: TextStyle(
+                fontSize: 14,
+                color: context.colors.onBackground,
+              ),
+            ),
+            AppSpacer.h8(),
+            IconButton(
+              onPressed: () {
+                if (_selectedTheme != null) {
+                  setState(() {
+                    _selectedTheme = _getLightVariant(_selectedTheme!);
+                  });
+                  if (themeProvider.isDarkTheme) {
+                    themeProvider.setTheme(_selectedTheme!);
+                  } else {
+                    themeProvider.setTheme(_getDarkVariant(_selectedTheme!));
+                  }
+                } else {
+                  themeProvider.toggleTheme();
+                }
+              },
+              icon: Icon(
+                themeProvider.isDarkTheme
+                    ? Icons.light_mode
+                    : Icons.dark_mode,
+                color: context.colors.primary,
+                size: AppDimensions.iconMedium,
+              ),
+            ),
+          ],
+        ),
+        AppSpacer.v16(),
+        // Theme cards
+        ...lightThemes.map((theme) {
+          final isSelected = _selectedTheme == theme ||
+              _selectedTheme == _getDarkVariant(theme);
+          final themeIcon = themeProvider.getThemeIcon(theme);
+
+          return Padding(
+            padding: EdgeInsets.only(bottom: AppDimensions.space12),
+            child: ChatOptionButton(
+              icon: themeIcon,
+              label: _getThemeDisplayName(
+                themeProvider.isDarkTheme ? _getDarkVariant(theme) : theme,
+                l10n,
+              ),
+              isSelected: isSelected,
+              onTap: () {
+                setState(() {
+                  _selectedTheme = theme;
+                });
+                if (themeProvider.isDarkTheme) {
+                  themeProvider.setTheme(_getDarkVariant(theme));
+                } else {
+                  themeProvider.setTheme(theme);
+                }
+              },
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  AppThemeType _getDarkVariant(AppThemeType lightTheme) {
+    switch (lightTheme) {
+      case AppThemeType.natural:
+        return AppThemeType.dark;
+      case AppThemeType.ocean:
+        return AppThemeType.darkOcean;
+      case AppThemeType.forest:
+        return AppThemeType.darkForest;
+      case AppThemeType.sunset:
+        return AppThemeType.darkSunset;
+      case AppThemeType.vibrant:
+        return AppThemeType.darkVibrant;
+      default:
+        return AppThemeType.dark;
+    }
+  }
+
+  AppThemeType _getLightVariant(AppThemeType theme) {
+    switch (theme) {
+      case AppThemeType.dark:
+        return AppThemeType.natural;
+      case AppThemeType.darkOcean:
+        return AppThemeType.ocean;
+      case AppThemeType.darkForest:
+        return AppThemeType.forest;
+      case AppThemeType.darkSunset:
+        return AppThemeType.sunset;
+      case AppThemeType.darkVibrant:
+        return AppThemeType.vibrant;
+      default:
+        return theme;
+    }
+  }
+
+  String _getThemeDisplayName(AppThemeType theme, AppLocalizations l10n) {
+    switch (theme) {
+      case AppThemeType.natural:
+        return l10n.naturalTheme;
+      case AppThemeType.dark:
+        return l10n.darkNatural;
+      case AppThemeType.ocean:
+        return l10n.oceanTheme;
+      case AppThemeType.darkOcean:
+        return l10n.darkOcean;
+      case AppThemeType.forest:
+        return l10n.forestTheme;
+      case AppThemeType.darkForest:
+        return l10n.darkForest;
+      case AppThemeType.sunset:
+        return l10n.sunsetTheme;
+      case AppThemeType.darkSunset:
+        return l10n.darkSunset;
+      case AppThemeType.vibrant:
+        return l10n.vibrantTheme;
+      case AppThemeType.darkVibrant:
+        return l10n.darkVibrant;
+    }
   }
 }

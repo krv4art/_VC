@@ -415,6 +415,13 @@ class ImageAnalysisService {
               },
             )
             .toList(),
+        // Additional fields for complete history display
+        'is_cosmetic_label': result.isCosmeticLabel,
+        'humorous_message': result.humorousMessage,
+        'ai_summary': result.aiSummary,
+        'product_type': result.productType,
+        'brand_name': result.brandName,
+        'premium_insights': result.premiumInsights?.toJson(),
       },
       scanDate: DateTime.now(),
     );
